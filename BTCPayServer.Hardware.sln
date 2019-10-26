@@ -1,13 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.26124.0
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29411.108
 MinimumVisualStudioVersion = 15.0.26124.0
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BTCPayServer.Bridge", "BTCPayServer.Bridge\BTCPayServer.Bridge.csproj", "{E54675AA-679D-440B-B82C-52FC2E119C34}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BTCPayServer.Bridge", "BTCPayServer.Bridge\BTCPayServer.Bridge.csproj", "{E54675AA-679D-440B-B82C-52FC2E119C34}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BTCPayServer.Hardware.Tests", "BTCPayServer.Hardware.Tests\BTCPayServer.Hardware.Tests.csproj", "{BF1E1201-5EA8-4A94-9D27-33297457110B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BTCPayServer.Hardware.Tests", "BTCPayServer.Hardware.Tests\BTCPayServer.Hardware.Tests.csproj", "{BF1E1201-5EA8-4A94-9D27-33297457110B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BTCPayServer.HWI", "BTCPayServer.HWI\BTCPayServer.HWI.csproj", "{88707123-2BDD-4B1A-A288-4E19D83D9009}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BTCPayServer.Hwi", "BTCPayServer.Hwi\BTCPayServer.Hwi.csproj", "{88707123-2BDD-4B1A-A288-4E19D83D9009}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,9 +17,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 		Release|x64 = Release|x64
 		Release|x86 = Release|x86
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{E54675AA-679D-440B-B82C-52FC2E119C34}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -58,5 +55,11 @@ Global
 		{88707123-2BDD-4B1A-A288-4E19D83D9009}.Release|x64.Build.0 = Release|Any CPU
 		{88707123-2BDD-4B1A-A288-4E19D83D9009}.Release|x86.ActiveCfg = Release|Any CPU
 		{88707123-2BDD-4B1A-A288-4E19D83D9009}.Release|x86.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3F83C389-8E86-47DA-9364-EF91FD4CF56A}
 	EndGlobalSection
 EndGlobal
