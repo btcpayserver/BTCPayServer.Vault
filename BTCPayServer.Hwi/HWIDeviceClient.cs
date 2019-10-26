@@ -7,9 +7,9 @@ using NBitcoin;
 
 namespace BTCPayServer.Hwi
 {
-    public class HWIDeviceClient
+    public class HwiDeviceClient
     {
-        public HWIDeviceClient(HwiClient hwiClient, DeviceSelector deviceSelector, HardwareWalletModels model)
+        public HwiDeviceClient(HwiClient hwiClient, DeviceSelector deviceSelector, HardwareWalletModels model)
         {
             HwiClient = hwiClient ?? throw new ArgumentNullException(nameof(hwiClient));
             DeviceSelector = deviceSelector ?? throw new ArgumentNullException(nameof(deviceSelector));

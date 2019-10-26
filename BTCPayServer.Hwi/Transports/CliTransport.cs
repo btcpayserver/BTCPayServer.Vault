@@ -10,18 +10,18 @@ using Microsoft.Extensions.Logging;
 using NBitcoin.Logging;
 using Microsoft.Extensions;
 
-namespace BTCPayServer.Hwi
+namespace BTCPayServer.Hwi.Transports
 {
-	public class HwiProcessBridge : IHWIProcess
+	public class CliTransport : ITransport
 	{
         protected SemaphoreSlim _SemaphoreSlim = new SemaphoreSlim(1, 1);
         private readonly string hwiPath;
 
-        public HwiProcessBridge(): this(null)
+        public CliTransport(): this(null)
         {
 
         }
-        public HwiProcessBridge(string hwiPath)
+        public CliTransport(string hwiPath)
         {
             this.hwiPath = hwiPath ?? "hwi";
         }

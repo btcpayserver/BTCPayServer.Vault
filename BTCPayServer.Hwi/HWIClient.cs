@@ -11,6 +11,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using BTCPayServer.Helpers;
+using BTCPayServer.Hwi.Transports;
 
 namespace BTCPayServer.Hwi
 {
@@ -19,7 +20,7 @@ namespace BTCPayServer.Hwi
 		#region PropertiesAndMembers
 
 		public Network Network { get; }
-        public IHWIProcess Bridge { get; set; } = new HwiProcessBridge();
+        public ITransport Bridge { get; set; } = new CliTransport();
 
         #endregion PropertiesAndMembers
 
@@ -89,10 +90,10 @@ namespace BTCPayServer.Hwi
 			return version;
 		}
 
-        public async Task<IEnumerable<HWIDeviceClient>> EnumerateDevices(CancellationToken cancellationToken = default)
+        public async Task<IEnumerable<HwiDeviceClient>> EnumerateDevices(CancellationToken cancellationToken = default)
         {
             var entries = await EnumerateEntriesAsync(cancellationToken).ConfigureAwait(false);
-            return entries.Select(e => new HWIDeviceClient(this, e.DeviceSelector, e.Model)).ToArray();
+            return entries.Select(e => new HwiDeviceClient(this, e.DeviceSelector, e.Model)).ToArray();
         }
 
         public async Task<IEnumerable<HwiEnumerateEntry>> EnumerateEntriesAsync(CancellationToken cancellationToken = default)

@@ -7,6 +7,7 @@ using NBitcoin;
 using Xunit;
 using Xunit.Abstractions;
 using BTCPayServer.Hwi;
+using BTCPayServer.Hwi.Transports;
 
 namespace BTCPayServer.Hardware.Tests
 {
@@ -14,10 +15,10 @@ namespace BTCPayServer.Hardware.Tests
     {
         public HwiTests(ITestOutputHelper testOutput)
         {
-            HwiProcessBridge bridge = new HwiProcessBridge();
+            CliTransport bridge = new CliTransport();
             Client = new HwiClient(Network.RegTest)
             {
-                Bridge = new HwiProcessBridge(@"C:\Users\NicolasDorier\Downloads\hwi-1.0.3-windows-amd64\hwi.exe")
+                Bridge = new CliTransport(@"hwi.exe")
                 {
                     Logger = new XUnitLogger("Bridge", testOutput)
                 }
