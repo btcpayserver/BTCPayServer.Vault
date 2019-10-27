@@ -6,6 +6,30 @@ using Xunit.Abstractions;
 
 namespace BTCPayServer.Hardware.Tests
 {
+    class XUnitLoggerFactory : ILoggerFactory
+    {
+        public XUnitLoggerFactory(ITestOutputHelper testOutput)
+        {
+            TestOutput = testOutput;
+        }
+
+        public ITestOutputHelper TestOutput { get; }
+
+        public void AddProvider(ILoggerProvider provider)
+        {
+            
+        }
+
+        public ILogger CreateLogger(string categoryName)
+        {
+            return new XUnitLogger(categoryName, TestOutput);
+        }
+
+        public void Dispose()
+        {
+            
+        }
+    }
     class XUnitLogger : ILogger
     {
         class NullDisposable : IDisposable

@@ -15,30 +15,33 @@ namespace BTCPayServer.Hardware.Tests
     {
         public HwiTests(ITestOutputHelper testOutput)
         {
-            CliTransport bridge = new CliTransport();
-            Client = new HwiClient(Network.RegTest)
-            {
-                Bridge = new CliTransport(@"hwi.exe")
-                {
-                    Logger = new XUnitLogger("Bridge", testOutput)
-                }
-            };
-            Logger = new XUnitLogger("Test", testOutput);
+            LoggerFactory = new XUnitLoggerFactory(testOutput);
+            Logger = LoggerFactory.CreateLogger("Tests");
         }
 
+        ILoggerFactory LoggerFactory;
         ILogger Logger;
-        HwiClient Client; 
+
+
         [Fact]
-        public async Task Test1()
+        public async Task CanGetVersion()
         {
-            var version = await Client.GetVersionAsync();
-            Logger.LogInformation("Version: " + version);
-            var device = (await Client.EnumerateDevices()).First();
-            await device.PromptPin();
-            var pin = 0;
-            await device.SendPin(pin);
-            var xpub = await (device.GetXpubAsync(new KeyPath("1'")));
-            Logger.LogInformation("XPub: " + xpub.Network);
+            var tester = await CreateTester();
+            await tester.Client.GetVersionAsync();
+        }
+
+        [Fact]
+        [Trait("Device", "Device")]
+        public async Task CanGetXPub()
+        {
+            var tester = await CreateTester();
+            await tester.EnsureHasDevice();
+            await tester.Device.GetXpubAsync(new KeyPath("1'"));
+        }
+
+        Task<HwiTester> CreateTester()
+        {
+            return HwiTester.CreateAsync(LoggerFactory);
         }
     }
 }
