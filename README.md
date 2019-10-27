@@ -25,7 +25,7 @@ namespace BTCPayServer.Bridge
     {
         static async Task Main(string[] args)
         {
-            // This line will download hwi process in the process current directory
+            // This line will download hwi program in the process current directory
             await HwiVersions.v1_0_3.Current.EnsureIsDeployed();
 
             var hwiClient = new HwiClient(Network.Main);
