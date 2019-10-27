@@ -1,7 +1,14 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
+using System.IO;
+using System.Net.Http;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading.Tasks;
+using NBitcoin.DataEncoders;
+using System.Security.Cryptography;
+using System.Security;
 
 namespace BTCPayServer.Hwi.Deployment
 {
@@ -49,8 +56,70 @@ namespace BTCPayServer.Hwi.Deployment
 
     public class HwiDownloadInfo
     {
+        static HttpClient HttpClient = new HttpClient() { Timeout = TimeSpan.FromMinutes(10.0) };
         public string Link { get; set; }
         public string Hash { get; set; }
         public IExtractor Extractor { get; set; }
+        private static string GetFileHash(string processName)
+        {
+            byte[] checksum;
+            using (var stream = File.Open(processName, FileMode.Open, FileAccess.Read))
+            using (var bufferedStream = new BufferedStream(stream, 1024 * 32))
+            {
+                var sha = new SHA256Managed();
+                checksum = sha.ComputeHash(bufferedStream);
+            }
+            return Encoders.Hex.EncodeData(checksum);
+        }
+
+        /// <summary>
+        /// Download HWI, extract, check the hash and returns the full path to the executable
+        /// </summary>
+        /// <param name="destinationDirectory">Destination where to put the executable</param>
+        /// <returns>The full path to the hwi executable</returns>
+        public async Task<string> EnsureIsDeployed(string destinationDirectory = null)
+        {
+            destinationDirectory = string.IsNullOrEmpty(destinationDirectory) ? "." : destinationDirectory;
+            var processName = RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? "hwi.exe" : "hwi";
+            var processFullPath = Path.Combine(destinationDirectory, processName);
+            bool hasDownloaded = false;
+
+download:
+            if (!File.Exists(processFullPath))
+            {
+                var data = await HttpClient.GetStreamAsync(Link);
+                var downloadedFile = Path.Combine(destinationDirectory, Link.Split('/').Last());
+                try
+                {
+                    using (var fs = File.Open(downloadedFile, FileMode.Create, FileAccess.ReadWrite))
+                    {
+                        await data.CopyToAsync(fs);
+                    }
+                    await Extractor.Extract(downloadedFile, processFullPath);
+                    hasDownloaded = true;
+                }
+                finally
+                {
+                    if (File.Exists(downloadedFile))
+                        File.Delete(downloadedFile);
+                }
+            }
+            if (File.Exists(processFullPath))
+            {
+                if (Hash != GetFileHash(processFullPath))
+                {
+                    if (hasDownloaded)
+                    {
+                        throw new SecurityException($"Incorrect hash for {processFullPath}");
+                    }
+                    else
+                    {
+                        File.Delete(processFullPath);
+                        goto download;
+                    }
+                }
+            }
+            return processFullPath;
+        }
     }
 }
