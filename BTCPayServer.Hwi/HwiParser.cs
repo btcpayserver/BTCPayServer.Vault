@@ -144,23 +144,6 @@ namespace BTCPayServer.Hwi
 			return response;
 		}
 
-		public static BitcoinExtPubKey ParseExtPubKey(string json, Network network)
-		{
-            var expectedNetwork = network;
-            if (network.NetworkType != NetworkType.Mainnet)
-                network = network.NetworkSet.Testnet;
-			if (JsonHelpers.TryParseJToken(json, out JToken token))
-			{
-				var extPubKeyString = token["xpub"]?.ToString().Trim();
-				var extPubKey = string.IsNullOrEmpty(extPubKeyString) ? null : NBitcoinHelpers.BetterParseExtPubKey(extPubKeyString, network);
-				return extPubKey.GetWif(expectedNetwork);
-			}
-			else
-			{
-				throw new FormatException($"Could not parse extpubkey: {json}.");
-			}
-		}
-
 		public static BitcoinAddress ParseAddress(string json, Network network)
 		{
             var expectedNetwork = network;

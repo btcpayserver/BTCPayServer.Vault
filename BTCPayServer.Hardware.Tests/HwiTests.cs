@@ -39,6 +39,30 @@ namespace BTCPayServer.Hardware.Tests
             await tester.Device.GetXpubAsync(new KeyPath("1'"));
         }
 
+
+        [Fact]
+        [Trait("Device", "Device")]
+        public async Task CanSignMessage()
+        {
+            var tester = await CreateTester();
+            var signature = await tester.Device.SignMessageAsync("I am satoshi", new KeyPath("44'/1'/0'/0/0"));
+            var xpub = await tester.Device.GetXpubAsync(new KeyPath("44'/1'/0'/0/0"));
+            Assert.True(xpub.GetPublicKey().VerifyMessage("I am satoshi", signature));
+        }
+
+        [Fact]
+        [Trait("Device", "Device")]
+        public async Task CanDisplayAddress()
+        {
+            var tester = await CreateTester();
+            await tester.Device.DisplayAddress(ScriptPubKeyType.Legacy, GetKeyPath(ScriptPubKeyType.Legacy).Derive("0/1"));
+            if (tester.Network.Consensus.SupportSegwit)
+            {
+                await tester.Device.DisplayAddress(ScriptPubKeyType.Segwit, GetKeyPath(ScriptPubKeyType.Segwit).Derive("0/1"));
+                await tester.Device.DisplayAddress(ScriptPubKeyType.SegwitP2SH, GetKeyPath(ScriptPubKeyType.SegwitP2SH).Derive("0/1"));
+            }
+        }
+
         [Fact]
         [Trait("Device", "Device")]
         public async Task CanSign()

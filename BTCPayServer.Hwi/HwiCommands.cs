@@ -7,7 +7,6 @@ namespace BTCPayServer.Hwi
 	public enum HwiCommands
 	{
 		Enumerate,
-		GetMasterXpub,
 		SignTx,
 		GetXpub,
 		SignMessage,

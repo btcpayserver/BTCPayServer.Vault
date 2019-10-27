@@ -21,6 +21,7 @@ namespace BTCPayServer.Hwi
 
 		public Network Network { get; }
         public ITransport Bridge { get; set; } = new CliTransport();
+        public bool IgnoreInvalidNetwork { get; set; }
 
         #endregion PropertiesAndMembers
 

@@ -33,6 +33,7 @@ namespace BTCPayServer.Hardware.Tests
             _HwiLogger = loggerFactory.CreateLogger("CliTransport");
             Client = new HwiClient(Network)
             {
+                IgnoreInvalidNetwork = true,
                 Bridge = new CliTransport(hwiPath)
                 {
                     Logger = _HwiLogger

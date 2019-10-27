@@ -3,7 +3,10 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using BTCPayServer.Helpers;
 using NBitcoin;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace BTCPayServer.Hwi
 {
@@ -47,19 +50,62 @@ namespace BTCPayServer.Hwi
                 commandArguments: new[] { keyPathString },
                 cancellationToken).ConfigureAwait(false);
 
-            return HwiParser.ParseExtPubKey(response, HwiClient.Network);
+            return ParseExtPubKey(response);
         }
 
-        public async Task<BitcoinAddress> DisplayAddress(ScriptPubKeyType addressType, KeyPath keyPath, CancellationToken cancellationToken = default)
+        public async Task<string> SignMessageAsync(string message, KeyPath keyPath, CancellationToken cancellationToken = default)
         {
+            if (message == null)
+                throw new ArgumentNullException(nameof(message));
             if (keyPath == null)
                 throw new ArgumentNullException(nameof(keyPath));
             var response = await SendCommandAsync(
+                command: HwiCommands.SignMessage,
+                commandArguments: new[] { message, keyPath.ToString(true, "h") },
+                cancellationToken).ConfigureAwait(false);
+            if (!JsonHelpers.TryParseJToken(response, out JToken token))
+                throw new InvalidOperationException($"Invalid response from hwi");
+            var signature = token["signature"]?.ToString().Trim();
+            if (signature == null)
+                throw new InvalidOperationException($"Invalid response from hwi");
+            return signature;
+        }
+
+        private BitcoinExtPubKey ParseExtPubKey(string response)
+        {
+            if (!JsonHelpers.TryParseJToken(response, out JToken token))
+                throw new InvalidOperationException($"Invalid response from hwi");
+            var extPubKeyString = token["xpub"]?.ToString().Trim();
+            if (extPubKeyString == null)
+                throw new InvalidOperationException($"Invalid response from hwi");
+            return NBitcoinHelpers.BetterParseExtPubKey(extPubKeyString, this.HwiClient.Network, HwiClient.IgnoreInvalidNetwork);
+        }
+
+        public async Task DisplayAddress(ScriptPubKeyType addressType, KeyPath keyPath, CancellationToken cancellationToken = default)
+        {
+            if (keyPath == null)
+                throw new ArgumentNullException(nameof(keyPath));
+            List<string> commandArguments = new List<string>();
+            commandArguments.Add("--path");
+            commandArguments.Add(keyPath.ToString(true, "h"));
+
+            switch (addressType)
+            {
+                case ScriptPubKeyType.Segwit:
+                    commandArguments.Add("--wpkh");
+                    break;
+                case ScriptPubKeyType.SegwitP2SH:
+                    commandArguments.Add("--sh_wpkh");
+                    break;
+            }
+
+            var response = await SendCommandAsync(
                 command: HwiCommands.DisplayAddress,
-                commandArguments: new[] { "--path", keyPath.ToString(true, "h"), ToString(addressType) },
+                commandArguments: commandArguments.ToArray(),
                 cancellationToken).ConfigureAwait(false);
 
-            return HwiParser.ParseAddress(response, HwiClient.Network);
+            if (!HwiClient.IgnoreInvalidNetwork)
+                HwiParser.ParseAddress(response, HwiClient.Network);
         }
 
         public async Task<PSBT> SignTx(PSBT psbt, CancellationToken cancellationToken = default)
@@ -97,21 +143,6 @@ namespace BTCPayServer.Hwi
             await SendCommandAsync(
                 command: HwiCommands.Restore,
                 cancellationToken: cancellationToken).ConfigureAwait(false);
-        }
-
-        private string ToString(ScriptPubKeyType addressType)
-        {
-            switch (addressType)
-            {
-                case ScriptPubKeyType.Legacy:
-                    return "";
-                case ScriptPubKeyType.Segwit:
-                    return " --wpkh";
-                case ScriptPubKeyType.SegwitP2SH:
-                    return " --sh_wpkh";
-                default:
-                    throw new NotSupportedException($"AddressType not supported {addressType}");
-            }
         }
         private Task<string> SendCommandAsync(HwiCommands? command = null, string[] commandArguments = null, CancellationToken cancellationToken = default)
         {
