@@ -49,7 +49,7 @@ namespace BTCPayServer.Hardware.Tests
 
         public async Task EnsureHasDevice()
         {
-            Device = (await Client.EnumerateDevices()).FirstOrDefault();
+            Device = (await Client.EnumerateDevicesAsync()).FirstOrDefault();
             if (Device == null)
                 throw new InvalidOperationException("No device supported by HWI has been plugged");
         }

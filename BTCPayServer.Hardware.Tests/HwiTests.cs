@@ -36,7 +36,7 @@ namespace BTCPayServer.Hardware.Tests
         public async Task CanGetXPub()
         {
             var tester = await CreateTester();
-            await tester.Device.GetXpubAsync(new KeyPath("1'"));
+            await tester.Device.GetXPubAsync(new KeyPath("1'"));
         }
 
 
@@ -46,7 +46,7 @@ namespace BTCPayServer.Hardware.Tests
         {
             var tester = await CreateTester();
             var signature = await tester.Device.SignMessageAsync("I am satoshi", new KeyPath("44'/1'/0'/0/0"));
-            var xpub = await tester.Device.GetXpubAsync(new KeyPath("44'/1'/0'/0/0"));
+            var xpub = await tester.Device.GetXPubAsync(new KeyPath("44'/1'/0'/0/0"));
             Assert.True(xpub.GetPublicKey().VerifyMessage("I am satoshi", signature));
         }
 
@@ -55,11 +55,11 @@ namespace BTCPayServer.Hardware.Tests
         public async Task CanDisplayAddress()
         {
             var tester = await CreateTester();
-            await tester.Device.DisplayAddress(ScriptPubKeyType.Legacy, GetKeyPath(ScriptPubKeyType.Legacy).Derive("0/1"));
+            await tester.Device.DisplayAddressAsync(ScriptPubKeyType.Legacy, GetKeyPath(ScriptPubKeyType.Legacy).Derive("0/1"));
             if (tester.Network.Consensus.SupportSegwit)
             {
-                await tester.Device.DisplayAddress(ScriptPubKeyType.Segwit, GetKeyPath(ScriptPubKeyType.Segwit).Derive("0/1"));
-                await tester.Device.DisplayAddress(ScriptPubKeyType.SegwitP2SH, GetKeyPath(ScriptPubKeyType.SegwitP2SH).Derive("0/1"));
+                await tester.Device.DisplayAddressAsync(ScriptPubKeyType.Segwit, GetKeyPath(ScriptPubKeyType.Segwit).Derive("0/1"));
+                await tester.Device.DisplayAddressAsync(ScriptPubKeyType.SegwitP2SH, GetKeyPath(ScriptPubKeyType.SegwitP2SH).Derive("0/1"));
             }
         }
 
@@ -70,13 +70,13 @@ namespace BTCPayServer.Hardware.Tests
             var tester = await CreateTester();
 
             // Should show we are sending 2.0 BTC three time
-            var psbt = await tester.Device.SignTx(await CreatePSBT(tester, ScriptPubKeyType.Legacy));
+            var psbt = await tester.Device.SignPSBTAsync(await CreatePSBT(tester, ScriptPubKeyType.Legacy));
             AssertFullySigned(tester, psbt);
             if (tester.Network.Consensus.SupportSegwit)
             {
-                psbt = await tester.Device.SignTx(await CreatePSBT(tester, ScriptPubKeyType.Segwit));
+                psbt = await tester.Device.SignPSBTAsync(await CreatePSBT(tester, ScriptPubKeyType.Segwit));
                 AssertFullySigned(tester, psbt);
-                psbt = await tester.Device.SignTx(await CreatePSBT(tester, ScriptPubKeyType.SegwitP2SH));
+                psbt = await tester.Device.SignPSBTAsync(await CreatePSBT(tester, ScriptPubKeyType.SegwitP2SH));
                 AssertFullySigned(tester, psbt);
             }
         }
@@ -91,7 +91,7 @@ namespace BTCPayServer.Hardware.Tests
         private async Task<PSBT> CreatePSBT(HwiTester tester, ScriptPubKeyType addressType)
         {
             var accountKeyPath = new RootedKeyPath(tester.Device.Fingerprint.Value, GetKeyPath(addressType));
-            var accountKey = await tester.Device.GetXpubAsync(accountKeyPath.KeyPath);
+            var accountKey = await tester.Device.GetXPubAsync(accountKeyPath.KeyPath);
             Logger.LogInformation($"Signing with xpub {accountKeyPath}: {accountKey}...");
             List<Transaction> knownTransactions = new List<Transaction>();
             TransactionBuilder builder = accountKey.Network.CreateTransactionBuilder();

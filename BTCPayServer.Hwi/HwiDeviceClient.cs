@@ -25,14 +25,14 @@ namespace BTCPayServer.Hwi
         public HardwareWalletModels Model { get; }
         public HDFingerprint? Fingerprint { get; }
 
-        public Task PromptPin(CancellationToken cancellationToken = default)
+        public Task PromptPinAsync(CancellationToken cancellationToken = default)
         {
             return SendCommandAsync(
                 command: HwiCommands.PromptPin,
                 cancellationToken: cancellationToken);
         }
 
-        public Task SendPin(int pin, CancellationToken cancellationToken = default)
+        public Task SendPinAsync(int pin, CancellationToken cancellationToken = default)
         {
             return SendCommandAsync(
                 command: HwiCommands.SendPin,
@@ -40,7 +40,7 @@ namespace BTCPayServer.Hwi
                 cancellationToken);
         }
 
-        public async Task<BitcoinExtPubKey> GetXpubAsync(KeyPath keyPath, CancellationToken cancellationToken = default)
+        public async Task<BitcoinExtPubKey> GetXPubAsync(KeyPath keyPath, CancellationToken cancellationToken = default)
         {
             if (keyPath == null)
                 throw new ArgumentNullException(nameof(keyPath));
@@ -81,7 +81,7 @@ namespace BTCPayServer.Hwi
             return NBitcoinHelpers.BetterParseExtPubKey(extPubKeyString, this.HwiClient.Network, HwiClient.IgnoreInvalidNetwork);
         }
 
-        public async Task DisplayAddress(ScriptPubKeyType addressType, KeyPath keyPath, CancellationToken cancellationToken = default)
+        public async Task DisplayAddressAsync(ScriptPubKeyType addressType, KeyPath keyPath, CancellationToken cancellationToken = default)
         {
             if (keyPath == null)
                 throw new ArgumentNullException(nameof(keyPath));
@@ -108,7 +108,7 @@ namespace BTCPayServer.Hwi
                 HwiParser.ParseAddress(response, HwiClient.Network);
         }
 
-        public async Task<PSBT> SignTx(PSBT psbt, CancellationToken cancellationToken = default)
+        public async Task<PSBT> SignPSBTAsync(PSBT psbt, CancellationToken cancellationToken = default)
         {
             if (psbt == null)
                 throw new ArgumentNullException(nameof(psbt));
