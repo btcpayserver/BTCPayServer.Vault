@@ -128,7 +128,10 @@ namespace BTCPayServer.Hwi.Transports
             await _SemaphoreSlim.WaitAsync(cancel).ConfigureAwait(false);
             try
             {
-                Logger.LogDebug($"{startInfo.FileName} {startInfo.Arguments}");
+                if (Logger.IsEnabled(LogLevel.Debug))
+                {
+                    Logger.LogDebug($"{startInfo.FileName} {string.Join(' ', startInfo.ArgumentList)}");
+                }
                 Process process = Process.Start(startInfo);
                 await process.WaitForExitAsync(cancel).ConfigureAwait(false);
                 return process;

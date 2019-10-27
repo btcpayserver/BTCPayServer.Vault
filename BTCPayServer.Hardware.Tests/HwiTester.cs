@@ -23,24 +23,27 @@ namespace BTCPayServer.Hardware.Tests
         private ILogger _logger;
         private ILogger _HwiLogger;
 
-        public HwiTester(ILoggerFactory loggerFactory)
+        public HwiTester(ILoggerFactory loggerFactory, string hwiPath)
         {
+            if (hwiPath == null)
+                throw new ArgumentNullException(nameof(hwiPath));
+            if (loggerFactory == null)
+                throw new ArgumentNullException(nameof(loggerFactory));
             _logger = loggerFactory.CreateLogger("HwiTester");
             _HwiLogger = loggerFactory.CreateLogger("CliTransport");
+            Client = new HwiClient(Network)
+            {
+                Bridge = new CliTransport(hwiPath)
+                {
+                    Logger = _HwiLogger
+                }
+            };
         }
 
         public static async Task<HwiTester> CreateAsync(ILoggerFactory loggerFactory)
         {
-            var tester = new HwiTester(loggerFactory);
             var hwi = await HwiVersions.v1_0_3.Current.EnsureIsDeployed();
-            tester.Client = new HwiClient(tester.Network)
-            {
-                Bridge = new CliTransport(hwi)
-                {
-                    Logger = tester._HwiLogger
-                }
-            };
-            return tester;
+            return new HwiTester(loggerFactory, hwi);
         }
 
         public async Task EnsureHasDevice()

@@ -9,16 +9,18 @@ namespace BTCPayServer.Hwi
 {
     public class HwiDeviceClient
     {
-        public HwiDeviceClient(HwiClient hwiClient, DeviceSelector deviceSelector, HardwareWalletModels model)
+        public HwiDeviceClient(HwiClient hwiClient, DeviceSelector deviceSelector, HardwareWalletModels model, HDFingerprint? fingerprint)
         {
             HwiClient = hwiClient ?? throw new ArgumentNullException(nameof(hwiClient));
             DeviceSelector = deviceSelector ?? throw new ArgumentNullException(nameof(deviceSelector));
             Model = model;
+            Fingerprint = fingerprint;
         }
 
         public HwiClient HwiClient { get; }
         public DeviceSelector DeviceSelector { get; }
         public HardwareWalletModels Model { get; }
+        public HDFingerprint? Fingerprint { get; }
 
         public Task PromptPin(CancellationToken cancellationToken = default)
         {
@@ -68,15 +70,11 @@ namespace BTCPayServer.Hwi
 
             var response = await SendCommandAsync(
                 command: HwiCommands.SignTx,
+                commandArguments: new string[] { psbtString },
                 cancellationToken: cancellationToken).ConfigureAwait(false);
 
             PSBT signedPsbt = HwiParser.ParsePsbt(response, HwiClient.Network);
-
-            if (!signedPsbt.IsAllFinalized())
-            {
-                signedPsbt.Finalize();
-            }
-
+            signedPsbt.TryFinalize(out var e);
             return signedPsbt;
         }
 

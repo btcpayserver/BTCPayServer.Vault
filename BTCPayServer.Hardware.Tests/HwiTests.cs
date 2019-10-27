@@ -8,6 +8,7 @@ using Xunit;
 using Xunit.Abstractions;
 using BTCPayServer.Hwi;
 using BTCPayServer.Hwi.Transports;
+using System.Collections.Generic;
 
 namespace BTCPayServer.Hardware.Tests
 {
@@ -26,7 +27,7 @@ namespace BTCPayServer.Hardware.Tests
         [Fact]
         public async Task CanGetVersion()
         {
-            var tester = await CreateTester();
+            var tester = await CreateTester(false);
             await tester.Client.GetVersionAsync();
         }
 
@@ -35,13 +36,111 @@ namespace BTCPayServer.Hardware.Tests
         public async Task CanGetXPub()
         {
             var tester = await CreateTester();
-            await tester.EnsureHasDevice();
             await tester.Device.GetXpubAsync(new KeyPath("1'"));
         }
 
-        Task<HwiTester> CreateTester()
+        [Fact]
+        [Trait("Device", "Device")]
+        public async Task CanSign()
         {
-            return HwiTester.CreateAsync(LoggerFactory);
+            var tester = await CreateTester();
+
+            // Should show we are sending 2.0 BTC three time
+            var psbt = await tester.Device.SignTx(await CreatePSBT(tester, ScriptPubKeyType.Legacy));
+            AssertFullySigned(tester, psbt);
+            if (tester.Network.Consensus.SupportSegwit)
+            {
+                psbt = await tester.Device.SignTx(await CreatePSBT(tester, ScriptPubKeyType.Segwit));
+                AssertFullySigned(tester, psbt);
+                psbt = await tester.Device.SignTx(await CreatePSBT(tester, ScriptPubKeyType.SegwitP2SH));
+                AssertFullySigned(tester, psbt);
+            }
+        }
+
+        private static void AssertFullySigned(HwiTester tester, PSBT psbt)
+        {
+            var txbuilder = tester.Network.CreateTransactionBuilder();
+            txbuilder.AddCoins(psbt.Inputs.Select(i => i.GetCoin()));
+            Assert.True(txbuilder.Verify(psbt.ExtractTransaction()), "The transaction should be fully signed");
+        }
+
+        private async Task<PSBT> CreatePSBT(HwiTester tester, ScriptPubKeyType addressType)
+        {
+            var accountKeyPath = new RootedKeyPath(tester.Device.Fingerprint.Value, GetKeyPath(addressType));
+            var accountKey = await tester.Device.GetXpubAsync(accountKeyPath.KeyPath);
+            Logger.LogInformation($"Signing with xpub {accountKeyPath}: {accountKey}...");
+            List<Transaction> knownTransactions = new List<Transaction>();
+            TransactionBuilder builder = accountKey.Network.CreateTransactionBuilder();
+            CreateCoin(builder, knownTransactions, addressType, Money.Coins(1.0m), accountKey, "0/0");
+            CreateCoin(builder, knownTransactions, addressType, Money.Coins(1.2m), accountKey, "0/1");
+            builder.Send(new Key().PubKey.GetScriptPubKey(addressType), Money.Coins(2.0m));
+            builder.SetChange(accountKey.Derive(new KeyPath("1/0")).ExtPubKey.PubKey.GetScriptPubKey(addressType));
+            builder.SendEstimatedFees(new FeeRate(1.0m));
+            var psbt = builder.BuildPSBT(false);
+            psbt.AddTransactions(knownTransactions.ToArray());
+            psbt.AddKeyPath(accountKey, new KeyPath[] { new KeyPath("0/0"), new KeyPath("0/1"), new KeyPath("1/0") });
+            psbt.RebaseKeyPaths(accountKey, accountKeyPath);
+            return psbt;
+        }
+
+        private KeyPath GetKeyPath(ScriptPubKeyType addressType)
+        {
+            switch (addressType)
+            {
+                case ScriptPubKeyType.Legacy:
+                    return new KeyPath("44'/1'/0'");
+                case ScriptPubKeyType.Segwit:
+                    return new KeyPath("84'/1'/0'");
+                case ScriptPubKeyType.SegwitP2SH:
+                    return new KeyPath("49'/1'/0'");
+                default:
+                    throw new NotSupportedException(addressType.ToString());
+            }
+        }
+
+        private void CreateCoin(TransactionBuilder builder, List<Transaction> knownTransactions, ScriptPubKeyType addressType, Money money, BitcoinExtPubKey xpub, string path)
+        {
+            var pubkey = xpub.Derive(new KeyPath(path)).ExtPubKey.PubKey;
+            if (addressType == ScriptPubKeyType.Legacy)
+            {
+                var prevTx = xpub.Network.CreateTransaction();
+                prevTx.Inputs.Add(RandomOutpoint(), new Key().ScriptPubKey);
+                var txout = prevTx.Outputs.Add(money, pubkey.GetScriptPubKey(addressType));
+                var coin = new Coin(new OutPoint(prevTx, 0), txout);
+                builder.AddCoins(coin);
+                knownTransactions.Add(prevTx);
+            }
+            if (addressType == ScriptPubKeyType.Segwit)
+            {
+                var outpoint = RandomOutpoint();
+                var txout = xpub.Network.Consensus.ConsensusFactory.CreateTxOut();
+                txout.Value = money;
+                txout.ScriptPubKey = pubkey.GetScriptPubKey(addressType);
+                var coin = new Coin(outpoint, txout);
+                builder.AddCoins(coin);
+            }
+            if (addressType == ScriptPubKeyType.SegwitP2SH)
+            {
+                var outpoint = RandomOutpoint();
+                var txout = xpub.Network.Consensus.ConsensusFactory.CreateTxOut();
+                txout.Value = money;
+                txout.ScriptPubKey = pubkey.GetScriptPubKey(addressType);
+                var coin = new Coin(outpoint, txout).ToScriptCoin(pubkey.GetScriptPubKey(ScriptPubKeyType.Segwit));
+                builder.AddCoins(coin);
+            }
+        }
+
+        private static OutPoint RandomOutpoint()
+        {
+            return new OutPoint(RandomUtils.GetUInt256(), 0);
+        }
+
+        async Task<HwiTester> CreateTester(bool needDevice = true)
+        {
+            var tester = await HwiTester.CreateAsync(LoggerFactory);
+            if (needDevice)
+                await tester.EnsureHasDevice();
+            return tester;
         }
     }
 }

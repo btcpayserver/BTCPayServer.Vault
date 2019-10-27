@@ -93,7 +93,7 @@ namespace BTCPayServer.Hwi
         public async Task<IEnumerable<HwiDeviceClient>> EnumerateDevices(CancellationToken cancellationToken = default)
         {
             var entries = await EnumerateEntriesAsync(cancellationToken).ConfigureAwait(false);
-            return entries.Select(e => new HwiDeviceClient(this, e.DeviceSelector, e.Model)).ToArray();
+            return entries.Select(e => new HwiDeviceClient(this, e.DeviceSelector, e.Model, e.Fingerprint)).ToArray();
         }
 
         public async Task<IEnumerable<HwiEnumerateEntry>> EnumerateEntriesAsync(CancellationToken cancellationToken = default)
