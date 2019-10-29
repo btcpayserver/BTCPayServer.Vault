@@ -13,15 +13,18 @@ namespace BTCPayServer.Hwi.Transports
         static HttpClient HttpClientSingleton = new HttpClient();
         private readonly string _url;
         private HttpClient httpClient;
-        public const string LocalHwiServerUri = "http://127.0.0.1:65092/hwi-bridge/v1";
+        public const string LocalHwiServerUri = "http://127.0.0.1:65092";
         /// <summary>
         /// Create a new instance of HttpTransport
         /// </summary>
-        /// <param name="url">The endpoint of the HWI server (default: http://127.0.0.1:65092/hwi-bridge/v1)</param>
+        /// <param name="url">The endpoint of the HWI server (default: http://127.0.0.1:65092)</param>
         /// <param name="httpClient">The HttpClient to use (default: A singleton)</param>
         public HttpTransport(string url = LocalHwiServerUri, HttpClient httpClient = null)
         {
             _url = url ?? LocalHwiServerUri;
+            if (!_url.EndsWith("/"))
+                _url += "/";
+            _url += "hwi-bridge/v1";
             this.httpClient = httpClient ?? HttpClientSingleton;
         }
 

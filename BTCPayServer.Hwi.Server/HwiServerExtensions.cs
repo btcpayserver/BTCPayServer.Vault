@@ -22,6 +22,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddCors();
             services.AddSingleton(HwiVersions.v1_0_3);
             services.AddHostedService<HwiDownloadTask>();
+            services.AddScoped<HwiServer>();
             services.AddSingleton<ITransport>(provider =>
             {
                 return new CliTransport()
@@ -43,42 +44,10 @@ namespace Microsoft.Extensions.DependencyInjection
                 app.UseCors(policy => policy.AllowAnyOrigin().WithMethods("POST"));
                 app.Run(async ctx =>
                 {
-                    var transport = ctx.RequestServices.GetRequiredService<ITransport>();
-                    if (await TryExtractArguments(ctx.Request, ctx.RequestAborted) is string[] args)
-                    {
-                        var response = await transport.SendCommandAsync(args, ctx.RequestAborted);
-                        ctx.Response.StatusCode = 200;
-                        await ctx.Response.WriteAsync(response, ctx.RequestAborted);
-                    }
-                    else
-                    {
-                        ctx.Response.StatusCode = 404;
-                    }
+                    await ctx.RequestServices.GetRequiredService<HwiServer>().Handle(ctx);
                 });
             });
             return applicationBuilder;
-        }
-
-        private static async Task<string[]> TryExtractArguments(HttpRequest request, CancellationToken cancellationToken)
-        {
-            var document = await JsonDocument.ParseAsync(request.Body, cancellationToken: cancellationToken);
-            if (document.RootElement.TryGetProperty("params", out var parameters) &&
-                parameters.ValueKind is JsonValueKind.Array)
-            {
-                var len = parameters.GetArrayLength();
-                if (len > 255)
-                    return null;
-                string[] result = new string[len];
-                int i = 0;
-                foreach (var array in parameters.EnumerateArray())
-                {
-                    if (array.ValueKind != JsonValueKind.String)
-                        return null;
-                    result[i++] = array.GetString();
-                }
-                return result;
-            }
-            return null;
         }
     }
 }
