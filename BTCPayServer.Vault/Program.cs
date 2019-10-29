@@ -13,7 +13,7 @@ using Microsoft.AspNetCore.Hosting.Server.Features;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 
-namespace BTCPayServer.Bridge
+namespace BTCPayServer.Vault
 {
     class Program
     {

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using BTCPayServer.Hwi.Transports;
 using Microsoft.AspNetCore.Http;
 
-namespace BTCPayServer.Hwi.Server
+namespace BTCPayServer.Vault.HWI
 {
     internal class HwiServer
     {

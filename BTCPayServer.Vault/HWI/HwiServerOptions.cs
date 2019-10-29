@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace BTCPayServer.Hwi.Server
+namespace BTCPayServer.Vault.HWI
 {
     public class HwiServerOptions
     {

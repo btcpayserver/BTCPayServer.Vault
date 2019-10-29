@@ -13,7 +13,6 @@ using System.Net;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Hosting.Server.Features;
 using Microsoft.AspNetCore.Builder;
-using BTCPayServer.Hwi.Server;
 
 namespace BTCPayServer.Hardware.Tests
 {

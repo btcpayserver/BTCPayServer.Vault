@@ -8,7 +8,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
-namespace BTCPayServer.Hwi.Server
+namespace BTCPayServer.Vault.HWI
 {
     internal class HwiDownloadTask : IHostedService
     {
