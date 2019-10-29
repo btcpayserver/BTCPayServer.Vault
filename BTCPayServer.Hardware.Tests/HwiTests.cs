@@ -2,13 +2,18 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions;
+using Microsoft.Extensions.DependencyInjection;
 using NBitcoin;
 using Xunit;
 using Xunit.Abstractions;
 using BTCPayServer.Hwi;
 using BTCPayServer.Hwi.Transports;
 using System.Collections.Generic;
+using System.Net;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Hosting.Server.Features;
+using Microsoft.AspNetCore.Builder;
+using BTCPayServer.Hwi.Server;
 
 namespace BTCPayServer.Hardware.Tests
 {
@@ -28,7 +33,41 @@ namespace BTCPayServer.Hardware.Tests
         public async Task CanGetVersion()
         {
             var tester = await CreateTester(false);
-            await tester.Client.GetVersionAsync();
+            Logger.LogInformation((await tester.Client.GetVersionAsync()).ToString());
+        }
+
+        [Fact]
+        public async Task CanGetVersionViaHttpTransport()
+        {
+            var host = new WebHostBuilder()
+                .ConfigureServices(services =>
+                {
+                    services.AddSingleton<ILoggerFactory>(LoggerFactory);
+                    services.AddHwiServer();
+                })
+                .Configure(app =>
+                {
+                    app.UseHwiServer();
+                })
+                .UseKestrel(kestrel =>
+                {
+                    kestrel.Listen(IPAddress.Loopback, 0);
+                })
+                .Build();
+            try
+            {
+                await host.StartAsync();
+                var address = host.ServerFeatures.Get<IServerAddressesFeature>().Addresses.First();
+                var version = await new HwiClient(Network.Main)
+                {
+                    Transport = new HttpTransport(address)
+                }.GetVersionAsync();
+                Logger.LogInformation(version.ToString());
+            }
+            finally
+            {
+                await host.StopAsync();
+            }
         }
 
         [Fact]

@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using NBitcoin.DataEncoders;
 using System.Security.Cryptography;
 using System.Security;
+using System.Threading;
 
 namespace BTCPayServer.Hwi.Deployment
 {
@@ -77,7 +78,7 @@ namespace BTCPayServer.Hwi.Deployment
         /// </summary>
         /// <param name="destinationDirectory">Destination where to put the executable</param>
         /// <returns>The full path to the hwi executable</returns>
-        public async Task<string> EnsureIsDeployed(string destinationDirectory = null)
+        public async Task<string> EnsureIsDeployed(string destinationDirectory = null, CancellationToken cancellationToken = default)
         {
             destinationDirectory = string.IsNullOrEmpty(destinationDirectory) ? "." : destinationDirectory;
             var processName = RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? "hwi.exe" : "hwi";
@@ -93,7 +94,7 @@ download:
                 {
                     using (var fs = File.Open(downloadedFile, FileMode.Create, FileAccess.ReadWrite))
                     {
-                        await data.CopyToAsync(fs);
+                        await data.CopyToAsync(fs, cancellationToken);
                     }
                     await Extractor.Extract(downloadedFile, processFullPath);
                     hasDownloaded = true;

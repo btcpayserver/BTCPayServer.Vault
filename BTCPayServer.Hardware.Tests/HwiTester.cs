@@ -34,7 +34,7 @@ namespace BTCPayServer.Hardware.Tests
             Client = new HwiClient(Network)
             {
                 IgnoreInvalidNetwork = true,
-                Bridge = new CliTransport(hwiPath)
+                Transport = new CliTransport(hwiPath)
                 {
                     Logger = _HwiLogger
                 }

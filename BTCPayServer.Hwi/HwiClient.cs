@@ -20,7 +20,7 @@ namespace BTCPayServer.Hwi
 		#region PropertiesAndMembers
 
 		public Network Network { get; }
-        public ITransport Bridge { get; set; } = new CliTransport();
+        public ITransport Transport { get; set; } = new CliTransport();
         public bool IgnoreInvalidNetwork { get; set; }
 
         #endregion PropertiesAndMembers
@@ -77,7 +77,17 @@ namespace BTCPayServer.Hwi
                                                         CancellationToken cancellationToken = default)
         {
             var arguments = HwiParser.ToArgumentString(deviceSelector, Network, options, command, commandArguments);
-            return await Bridge.SendCommandAsync(arguments, cancellationToken).ConfigureAwait(false);
+            var response = await Transport.SendCommandAsync(arguments, cancellationToken).ConfigureAwait(false);
+            ThrowIfError(response);
+            return response;
+        }
+
+        public static void ThrowIfError(string responseString)
+        {
+            if (HwiParser.TryParseErrors(responseString, out HwiException error))
+            {
+                throw error;
+            }
         }
 
 

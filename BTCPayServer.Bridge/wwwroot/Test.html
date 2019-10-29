@@ -1,0 +1,19 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <script type="text/javascript">
+        var request = new XMLHttpRequest();
+        request.open('POST', 'http://sampleapi.example.com:65092/hwi-bridge/v1');
+        request.onload = function () {
+            document.getElementById("output").innerText = request.responseText;
+        };
+        request.send("{\"params\": [ \" hey \"]}");
+    </script>
+</head>
+<body>
+    <div id="output"></div>
+</body>
+</html>

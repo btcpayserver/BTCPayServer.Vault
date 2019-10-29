@@ -6,7 +6,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\BTCPayServer.Hwi.Server\BTCPayServer.Hwi.Server.csproj" />
     <ProjectReference Include="..\BTCPayServer.Hwi\BTCPayServer.Hwi.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="wwwroot\Test.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

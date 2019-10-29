@@ -89,12 +89,7 @@ namespace BTCPayServer.Hwi.Transports
                         ? "{\"success\":\"true\"}"
                         : $"{{\"success\":\"false\",\"error\":\"Process terminated with exit code: {exitCode}.\"}}";
                 }
-                Logger.LogDebug($"Output: {responseString}");
-                ThrowIfError(responseString);
-                if (exitCode != 0)
-                {
-                    throw new HwiException(HwiErrorCode.UnknownError, $"'hwi {arguments}' exited with incorrect exit code: {exitCode}.");
-                }
+                Logger.LogDebug($"Exit code: exit code: {exitCode}, Output: {responseString}");
             }
             catch (Exception ex)
 			{
@@ -114,14 +109,6 @@ namespace BTCPayServer.Hwi.Transports
 
 			return responseString;
 		}
-
-        public static void ThrowIfError(string responseString)
-        {
-            if (HwiParser.TryParseErrors(responseString, out HwiException error))
-            {
-                throw error;
-            }
-        }
 
         private async Task<Process> StartProcess(ProcessStartInfo startInfo, CancellationToken cancel)
         {
