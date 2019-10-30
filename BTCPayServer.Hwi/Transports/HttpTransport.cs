@@ -14,6 +14,7 @@ namespace BTCPayServer.Hwi.Transports
         private readonly string _url;
         private HttpClient httpClient;
         public const string LocalHwiServerUri = "http://127.0.0.1:65092";
+        public const int LocalHwiDefaultPort = 65092;
         /// <summary>
         /// Create a new instance of HttpTransport
         /// </summary>

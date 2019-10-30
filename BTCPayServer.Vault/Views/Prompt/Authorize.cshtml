@@ -1,0 +1,11 @@
+﻿@model BTCPayServer.Vault.Views.Prompt.AuthorizeViewModel
+
+<html>
+    <body>
+        <div>Do you want to authorize @Model.Origin?</div>
+        <form method="POST">
+            <button name="command" type="submit" value="confirm">Confirm</button>
+            <button name="command" type="submit" value="cancel">Cancel</button>
+        </form>
+    </body>
+</html>

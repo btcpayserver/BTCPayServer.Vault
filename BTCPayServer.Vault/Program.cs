@@ -12,6 +12,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Hosting.Server.Features;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Hosting;
+using Microsoft.AspNetCore.Hosting.Server;
 
 namespace BTCPayServer.Vault
 {
@@ -19,37 +21,27 @@ namespace BTCPayServer.Vault
     {
         static async Task Main(string[] args)
         {
-            var host = new WebHostBuilder()
-                .ConfigureServices(services =>
+            using var host = Host.CreateDefaultBuilder(args)
+                .ConfigureLogging(log => log.AddConsole().SetMinimumLevel(LogLevel.Trace))
+                .ConfigureWebHostDefaults(webHost =>
                 {
-                    services.AddHwiServer();
-                })
-                .ConfigureLogging(log => log.AddConsole())
-                .Configure(app =>
-                {
-                    app.UseStaticFiles();
-                    app.UseHwiServer();
-                })
-                .UseKestrel(kestrel =>
-                {
-                    kestrel.Listen(IPAddress.Loopback, 65092);
+                    webHost
+                    .UseKestrel(kestrel =>
+                    {
+                        kestrel.ListenLocalhost(HttpTransport.LocalHwiDefaultPort);
+                    })
+                    .UseStartup<Startup>();
                 })
                 .Build();
-            try
+            
+            await host.StartAsync();
+            var environment = host.Services.GetService<IWebHostEnvironment>();
+            if (!environment.IsDevelopment())
             {
-                await host.StartAsync();
-                var version = await new HwiClient(Network.Main)
-                {
-                    Transport = new HttpTransport()
-                }.GetVersionAsync();
-                var address = host.ServerFeatures.Get<IServerAddressesFeature>().Addresses.First();
-                Console.WriteLine("Listening on " + address);
-                Console.ReadLine();
+                var address = host.Services.GetService<IServer>().Features.Get<IServerAddressesFeature>().Addresses.First();
+                ProcessBrowser.Instance.OpenBrowser(address + "/Test.html");
             }
-            finally
-            {
-                await host.StopAsync();
-            }
+            await host.WaitForShutdownAsync();
         }
     }
 }

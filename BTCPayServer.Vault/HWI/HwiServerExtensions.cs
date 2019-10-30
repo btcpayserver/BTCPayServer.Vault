@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using BTCPayServer.Hwi;
 using BTCPayServer.Hwi.Deployment;
 using BTCPayServer.Hwi.Transports;
+using BTCPayServer.Vault;
 using BTCPayServer.Vault.HWI;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -27,7 +28,7 @@ namespace Microsoft.Extensions.DependencyInjection
             {
                 return new CliTransport()
                 {
-                    Logger = provider.GetRequiredService<ILoggerFactory>().CreateLogger("BTCPayServer.Hwi.Server.Cli")
+                    Logger = provider.GetRequiredService<ILoggerFactory>().CreateLogger(LoggerNames.HwiServerCli)
                 };
             });
             if (configure != null)

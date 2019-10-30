@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Text;
 using System.Text.Json;
@@ -6,29 +7,66 @@ using System.Threading;
 using System.Threading.Tasks;
 using BTCPayServer.Hwi.Transports;
 using Microsoft.AspNetCore.Http;
+using NicolasDorier.RateLimits;
+using Microsoft.Extensions.Logging;
 
 namespace BTCPayServer.Vault.HWI
 {
     internal class HwiServer
     {
+        static object ThrottleSingletonObject = new object();
         private readonly ITransport Transport;
+        private readonly IPermissionPrompt _permissionPrompt;
+        private readonly RateLimitService _rateLimitService;
+        private readonly ILogger _logger;
 
-        public HwiServer(ITransport transport)
+        public HwiServer(ITransport transport, 
+                        IPermissionPrompt permissionPrompt, 
+                        RateLimitService rateLimitService,
+                        ILoggerFactory loggerFactory)
         {
             Transport = transport;
+            _permissionPrompt = permissionPrompt;
+            _rateLimitService = rateLimitService;
+            _logger = loggerFactory.CreateLogger(LoggerNames.HwiServer);
         }
 
         internal async Task Handle(HttpContext ctx)
         {
-            if (await TryExtractArguments(ctx.Request, ctx.RequestAborted) is string[] args)
+            if (ctx.Request.Path.Value == "")
             {
+                if (!(await TryExtractArguments(ctx.Request, ctx.RequestAborted) is string[] args))
+                {
+                    ctx.Response.StatusCode = 400;
+                    return;
+                }
                 var response = await Transport.SendCommandAsync(args, ctx.RequestAborted);
                 ctx.Response.StatusCode = 200;
                 await ctx.Response.WriteAsync(response, ctx.RequestAborted);
+                return;
             }
-            else
+            else if (ctx.Request.Path.StartsWithSegments("/request-permission"))
             {
-                ctx.Response.StatusCode = 404;
+                if (!ctx.Request.Headers.TryGetValue("Origin", out var origin))
+                {
+                    ctx.Response.StatusCode = 400;
+                    return;
+                }
+
+                if (!await _rateLimitService.Throttle(RateLimitZones.Prompt, ThrottleSingletonObject, ctx.RequestAborted))
+                {
+                    ctx.Response.StatusCode = 429;
+                    return;
+                }
+                if (!await _permissionPrompt.AskPermission(origin, ctx.RequestAborted))
+                {
+                    _logger.LogInformation($"Permission to {origin} got denied");
+                    ctx.Response.StatusCode = 401;
+                    return;
+                }
+                _logger.LogInformation($"Permission to {origin} got granted");
+                ctx.Response.StatusCode = 200;
+                return;
             }
         }
 

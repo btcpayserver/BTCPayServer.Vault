@@ -293,3 +293,5 @@ BTCPayServer/wwwroot/bundles/*
 !BTCPayServer/wwwroot/bundles/.gitignore
 
 .vscode
+hwi.exe
+hwi

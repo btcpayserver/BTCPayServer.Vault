@@ -13,6 +13,7 @@ using System.Net;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Hosting.Server.Features;
 using Microsoft.AspNetCore.Builder;
+using BTCPayServer.Vault;
 
 namespace BTCPayServer.Hardware.Tests
 {
@@ -52,6 +53,7 @@ namespace BTCPayServer.Hardware.Tests
                 {
                     kestrel.Listen(IPAddress.Loopback, 0);
                 })
+                .UseStartup<Startup>()
                 .Build();
             try
             {

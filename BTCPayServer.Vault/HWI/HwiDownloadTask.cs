@@ -21,7 +21,7 @@ namespace BTCPayServer.Vault.HWI
             if (hwiVersion == null)
                 throw new ArgumentNullException(nameof(hwiVersion));
             _hwiVersion = hwiVersion;
-            _logger = loggerFactory.CreateLogger("BTCPayServer.Hwi.Server");
+            _logger = loggerFactory.CreateLogger(LoggerNames.HwiServer);
             _deployementDirectory = option.Value.HwiDeploymentDirectory;
         }
         public async Task StartAsync(CancellationToken cancellationToken)

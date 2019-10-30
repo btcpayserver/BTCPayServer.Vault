@@ -6,14 +6,25 @@
     <title></title>
     <script type="text/javascript">
         var request = new XMLHttpRequest();
-        request.open('POST', 'http://sampleapi.example.com:65092/hwi-bridge/v1');
+        request.open('GET', 'http://sampleapi.example.com:65092/hwi-bridge/v1/request-permission');
         request.onload = function () {
-            document.getElementById("output").innerText = request.responseText;
+            var granted = request.status == 200;
+            document.getElementById("permissionResult").innerText = granted ? "OK" : "Failed";
+            request = new XMLHttpRequest();
+            request.open('POST', 'http://sampleapi.example.com:65092/hwi-bridge/v1');
+            request.send("{\"params\": [ \"--version\"]}");
+            request.onload = function () {
+                granted = request.status == 200;
+                document.getElementById("askingResult").innerText = granted ? "OK" : "Failed";
+                document.getElementById("versionResult").innerText = request.responseText;
+            };
         };
-        request.send("{\"params\": [ \" hey \"]}");
+        request.send();
     </script>
 </head>
 <body>
-    <div id="output"></div>
+    <div>Asking permission: <span id="permissionResult"></span></div>
+    <div>Asking HWI: <span id="askingResult"></span></div>
+    <div>Asking version: <span id="versionResult"></span></div>
 </body>
 </html>

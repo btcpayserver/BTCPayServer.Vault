@@ -1,0 +1,36 @@
+﻿@using BTCPayServer.Vault;
+@{
+    bool allowDismiss = true;
+    string severityCSS = string.Empty;
+    string message = string.Empty;
+    string html = string.Empty;
+    if (this.TempData.TryGetValue(WellKnownTempData.SuccessMessage, out var success))
+    {
+        severityCSS = "info";
+        message = (string)success;
+    }
+    if (this.TempData.TryGetValue(WellKnownTempData.ErrorMessage, out var error))
+    {
+        severityCSS = "danger";
+        message = (string)error;
+    }
+}
+@if (!string.IsNullOrEmpty(message))
+{
+    <div class="alert alert-@severityCSS @(allowDismiss? "alert-dismissible":"" )" role="alert">
+        @if (allowDismiss)
+        {
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        }
+        @if (!string.IsNullOrEmpty(message))
+        {
+            @message
+        }
+        @if (!string.IsNullOrEmpty(html))
+        {
+            @message
+        }
+    </div>
+}

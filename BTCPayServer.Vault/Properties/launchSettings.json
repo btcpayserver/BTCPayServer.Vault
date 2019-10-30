@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "BTCPayServer.Vault": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "http://127.0.0.1:65092"
+    }
+  }
+}
