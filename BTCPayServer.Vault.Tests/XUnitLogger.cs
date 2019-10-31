@@ -4,7 +4,7 @@ using System.Text;
 using Microsoft.Extensions.Logging;
 using Xunit.Abstractions;
 
-namespace BTCPayServer.Hardware.Tests
+namespace BTCPayServer.Vault.Tests
 {
     class XUnitLoggerFactory : ILoggerFactory
     {

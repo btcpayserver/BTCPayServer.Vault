@@ -7,9 +7,9 @@
     <Copyright>Copyright © BTCPay Server</Copyright>
     <Description>A wrapper library around the hwi bitcoin-core project</Description>
     <PackageTags>bitcoin,hwi</PackageTags>
-    <PackageProjectUrl>https://github.com/btcpayserver/BTCPayServer.Hardware</PackageProjectUrl>
+    <PackageProjectUrl>https://github.com/btcpayserver/BTCPayServer.Vault</PackageProjectUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <RepositoryUrl>https://github.com/btcpayserver/BTCPayServer.Hardware</RepositoryUrl>
+    <RepositoryUrl>https://github.com/btcpayserver/BTCPayServer.Vault</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <LangVersion>8.0</LangVersion>
   </PropertyGroup>
