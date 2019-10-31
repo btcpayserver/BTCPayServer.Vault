@@ -15,7 +15,7 @@ using Microsoft.AspNetCore.Hosting.Server.Features;
 using Microsoft.AspNetCore.Builder;
 using BTCPayServer.Vault;
 
-namespace BTCPayServer.Hardware.Tests
+namespace BTCPayServer.Vault.Tests
 {
     public class HwiTests
     {

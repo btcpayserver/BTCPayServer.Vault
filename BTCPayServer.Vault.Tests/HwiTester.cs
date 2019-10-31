@@ -15,7 +15,7 @@ using Microsoft.Extensions.Logging;
 using BTCPayServer.Hwi.Transports;
 using NBitcoin;
 
-namespace BTCPayServer.Hardware.Tests
+namespace BTCPayServer.Vault.Tests
 {
     public class HwiTester
     {
