@@ -1,11 +1,11 @@
 [![NuGet](https://img.shields.io/nuget/v/BTCPayServer.Hwi.svg)](https://www.nuget.org/packages/BTCPayServer.Hwi) 
 
-# BTCPayServer.Hardware
+# BTCPayServer.Vault
 
 This project is composed of two parts:
 
-* [BTCPayServer.Hwi](BTCPayServer.Hwi): An easy to use library wrapping the command line interface of the [hwi project](https://github.com/bitcoin-core/HWI). ([nuget](https://www.nuget.org/packages/BTCPayServer.Hwi))
-* [BTCPayServer.Bridge](BTCPayServer.Bridge): A simple local web server providing access to the hardware wallet physically connected to your computer via hwi.
+* [BTCPayServer.Hwi](BTCPayServer.Hwi): An easy to use library ([nuget](https://www.nuget.org/packages/BTCPayServer.Hwi)) wrapping the command line interface of the [hwi project](https://github.com/bitcoin-core/HWI).
+* [BTCPayServer.Vault](BTCPayServer.Vault): A simple local web server providing access to the hardware wallet physically connected to your computer via hwi.
 
 ## How to use BTCPayServer.Hwi
 
@@ -19,7 +19,7 @@ using BTCPayServer.Hwi;
 using BTCPayServer.Hwi.Deployment;
 using NBitcoin;
 
-namespace BTCPayServer.Bridge
+namespace BTCPayServer.Vault
 {
     class Program
     {
@@ -45,7 +45,7 @@ namespace BTCPayServer.Bridge
 
 ```
 
-You can find some other example on how to use this library in [BTCPayServer.Hardware.Tests/HwiTests.cs](BTCPayServer.Hardware.Tests/HwiTests.cs).
+You can find some other example on how to use this library in [BTCPayServer.Vault.Tests/HwiTests.cs](BTCPayServer.Vault.Tests/HwiTests.cs).
 
 ## Licence
 
