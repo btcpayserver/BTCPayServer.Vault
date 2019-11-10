@@ -1,6 +1,31 @@
-﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
-<!DOCTYPE html>
+﻿@model ICollection<BTCPayServer.Vault.Services.GrantedPermission>
 
-<partial name="StatusMessage" />
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 
-Sweet Home
+@{
+    ViewData["Title"] = "Permissions";
+}
+
+<div class="row">
+    <table class="table table-bordered dataTable" id="dataTable" width="100%" cellspacing="0" role="grid" aria-describedby="dataTable_info" style="width: 100%;">
+        <thead>
+            <tr>
+                <th rowspan="1" colspan="1">Website</th>
+                <th rowspan="1" colspan="1">Granted date</th>
+                <th rowspan="1" colspan="1">Last accessed date</th>
+                <th rowspan="1" colspan="1">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var permission in Model)
+            {
+                <tr role="row" class="odd">
+                    <td class="sorting_1">@permission.Origin</td>
+                    <td>@permission.Created</td>
+                    <td>@permission.LastAccessed</td>
+                    <td><a asp-action="RevokePermission" asp-route-origin="@permission.Origin">Revoke</a></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

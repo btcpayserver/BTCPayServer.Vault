@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
+using BTCPayServer.Vault.Services;
 using BTCPayServer.Vault.Views.Prompt;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,10 +11,12 @@ namespace BTCPayServer.Vault.Controllers
     public class PromptController : Controller
     {
         private readonly Prompts _prompts;
+        private readonly PermissionsService _permissionsService;
 
-        public PromptController(Prompts prompts)
+        public PromptController(Prompts prompts, PermissionsService permissionsService)
         {
             _prompts = prompts;
+            _permissionsService = permissionsService;
         }
 
         [Route("authorize")]
@@ -24,7 +28,7 @@ namespace BTCPayServer.Vault.Controllers
         }
         [Route("authorize")]
         [HttpPost]
-        public IActionResult Authorize(uint id, string command)
+        public async Task<IActionResult> Authorize(uint id, string command)
         {
             var confirm = command == "confirm";
             if (!_prompts.TryGetPrompt(id, out var prompt) ||
@@ -32,6 +36,7 @@ namespace BTCPayServer.Vault.Controllers
                 return NotFound();
             if (confirm)
             {
+                await _permissionsService.Grant(prompt.Origin);
                 TempData[WellKnownTempData.SuccessMessage] = $"Authorization to {prompt.Origin} granted";
             }
             else

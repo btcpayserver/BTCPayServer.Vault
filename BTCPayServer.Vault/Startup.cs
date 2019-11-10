@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using BTCPayServer.Vault.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
@@ -17,7 +18,12 @@ namespace BTCPayServer.Vault
             services.AddScoped<HWI.IPermissionPrompt, PermissionPrompt>();
             services.AddSingleton<IBrowser>(ProcessBrowser.Instance);
             services.AddSingleton<Prompts>();
+            services.AddSingleton<PermissionsService>();
             services.AddRateLimits();
+#if DEBUG
+            services.AddMvc()
+                    .AddRazorRuntimeCompilation();
+#endif
             services.AddMvc();
         }
         public void Configure(IApplicationBuilder app, RateLimitService rateLimitService)

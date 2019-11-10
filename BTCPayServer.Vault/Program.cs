@@ -22,7 +22,6 @@ namespace BTCPayServer.Vault
         static async Task Main(string[] args)
         {
             using var host = Host.CreateDefaultBuilder(args)
-                .ConfigureLogging(log => log.AddConsole().SetMinimumLevel(LogLevel.Trace))
                 .ConfigureWebHostDefaults(webHost =>
                 {
                     webHost
@@ -38,9 +37,11 @@ namespace BTCPayServer.Vault
             var environment = host.Services.GetService<IWebHostEnvironment>();
             if (!environment.IsDevelopment())
             {
+                var browser = host.Services.GetService<IBrowser>();
                 var address = host.Services.GetService<IServer>().Features.Get<IServerAddressesFeature>().Addresses.First();
-                ProcessBrowser.Instance.OpenBrowser(address + "/Test.html");
+                browser.OpenBrowser(address + "/Test.html");
             }
+
             await host.WaitForShutdownAsync();
         }
     }

@@ -1,42 +1,49 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>BTCPayServer Vault</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" />
+    <partial name="Header" />
 </head>
-<body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container">
-                <a class="navbar-brand" asp-area="" asp-controller="Main" asp-action="Home">Vault</a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Main" asp-action="Home">Home</a>
-                        </li>
-                    </ul>
+<body id="page-top">
+    <div id="wrapper">
+        <div class="navbar-nav bg-dark sidebar sidebar-dark accordion">
+            <div class="navbar-brand" style="margin-top:50px; margin-bottom:50px;"><img style="max-width:100%;" src="~/images/BTCPayServer.svg" alt="BTCPayServer" /></div>
+            <hr class="sidebar-divider" />
+            @*<li class="nav-item">
+                    <a class="nav-link" href="#">
+                        <i class="nav-icon fas fa-wallet"></i>
+                        <span>Wallets</span>
+                    </a>
+                </li>*@
+            <span class="nav-item">
+                <a class="nav-link" href="#">
+                    <i class="nav-icon fa fa-key"></i>
+                    <span>Permissions</span>
+                </a>
+            </span>
+        </div>
+        <div id="content-wrapper" class="d-flex flex-column">
+            <div id="content">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                            <h1 class="h3 mb-0 text-gray-800">@ViewData["Title"]</h1>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <partial name="StatusMessage" />
+                    </div>
+                    @RenderBody()
                 </div>
             </div>
-        </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
-
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2019 - BTCPayServer
+            <footer class="sticky-footer bg-white">
+                <div class="container my-auto">
+                    <div class="copyright text-center my-auto">
+                        <span>Copyright &copy; BTCPayServer</span>
+                    </div>
+                </div>
+            </footer>
         </div>
-    </footer>
+    </div>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>

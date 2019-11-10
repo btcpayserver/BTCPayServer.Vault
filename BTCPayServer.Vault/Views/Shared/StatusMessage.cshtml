@@ -6,7 +6,7 @@
     string html = string.Empty;
     if (this.TempData.TryGetValue(WellKnownTempData.SuccessMessage, out var success))
     {
-        severityCSS = "info";
+        severityCSS = "success";
         message = (string)success;
     }
     if (this.TempData.TryGetValue(WellKnownTempData.ErrorMessage, out var error))
@@ -17,7 +17,7 @@
 }
 @if (!string.IsNullOrEmpty(message))
 {
-    <div class="alert alert-@severityCSS @(allowDismiss? "alert-dismissible":"" )" role="alert">
+    <div class="col alert alert-@severityCSS @(allowDismiss? "alert-dismissible":"" )" role="alert">
         @if (allowDismiss)
         {
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
