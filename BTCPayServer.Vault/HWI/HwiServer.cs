@@ -9,6 +9,7 @@ using BTCPayServer.Hwi.Transports;
 using Microsoft.AspNetCore.Http;
 using NicolasDorier.RateLimits;
 using Microsoft.Extensions.Logging;
+using BTCPayServer.Vault.Services;
 
 namespace BTCPayServer.Vault.HWI
 {
@@ -18,16 +19,19 @@ namespace BTCPayServer.Vault.HWI
         private readonly ITransport Transport;
         private readonly IPermissionPrompt _permissionPrompt;
         private readonly RateLimitService _rateLimitService;
+        private readonly PermissionsService _permissionsService;
         private readonly ILogger _logger;
 
         public HwiServer(ITransport transport, 
                         IPermissionPrompt permissionPrompt, 
                         RateLimitService rateLimitService,
+                        PermissionsService permissionsService,
                         ILoggerFactory loggerFactory)
         {
             Transport = transport;
             _permissionPrompt = permissionPrompt;
             _rateLimitService = rateLimitService;
+            _permissionsService = permissionsService;
             _logger = loggerFactory.CreateLogger(LoggerNames.HwiServer);
         }
 
@@ -56,6 +60,11 @@ namespace BTCPayServer.Vault.HWI
                 if (!await _rateLimitService.Throttle(RateLimitZones.Prompt, ThrottleSingletonObject, ctx.RequestAborted))
                 {
                     ctx.Response.StatusCode = 429;
+                    return;
+                }
+                if (await _permissionsService.IsGranted(origin))
+                {
+                    ctx.Response.StatusCode = 200;
                     return;
                 }
                 if (!await _permissionPrompt.AskPermission(origin, ctx.RequestAborted))

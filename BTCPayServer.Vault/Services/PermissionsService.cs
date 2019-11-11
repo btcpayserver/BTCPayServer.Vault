@@ -31,6 +31,11 @@ namespace BTCPayServer.Vault.Services
             _permissions.TryRemove(origin, out _);
             return Task.CompletedTask;
         }
+
+        public Task<bool> IsGranted(string origin)
+        {
+            return Task.FromResult(_permissions.TryGetValue(origin, out _));
+        }
     }
 
     public class GrantedPermission

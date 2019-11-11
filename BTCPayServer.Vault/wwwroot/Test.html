@@ -5,21 +5,21 @@
     <meta charset="utf-8" />
     <title></title>
     <script type="text/javascript">
-        var request = new XMLHttpRequest();
-        request.open('GET', 'http://sampleapi.example.com:65092/hwi-bridge/v1/request-permission');
-        request.onload = function () {
-            var granted = request.status == 200;
-            document.getElementById("permissionResult").innerText = granted ? "OK" : "Failed";
-            request = new XMLHttpRequest();
-            request.open('POST', 'http://sampleapi.example.com:65092/hwi-bridge/v1');
-            request.send("{\"params\": [ \"--version\"]}");
+            var request = new XMLHttpRequest();
+            request.open('GET', 'http://sampleapi.example.com:65092/hwi-bridge/v1/request-permission');
             request.onload = function () {
-                granted = request.status == 200;
-                document.getElementById("askingResult").innerText = granted ? "OK" : "Failed";
-                document.getElementById("versionResult").innerText = request.responseText;
+                var granted = request.status == 200;
+                document.getElementById("permissionResult").innerText = granted ? "OK" : "Failed";
+                request = new XMLHttpRequest();
+                request.open('POST', 'http://sampleapi.example.com:65092/hwi-bridge/v1');
+                request.send("{\"params\": [ \"--version\"]}");
+                request.onload = function () {
+                    granted = request.status == 200;
+                    document.getElementById("askingResult").innerText = granted ? "OK" : "Failed";
+                    document.getElementById("versionResult").innerText = request.responseText;
+                };
             };
-        };
-        request.send();
+            request.send();
     </script>
 </head>
 <body>
