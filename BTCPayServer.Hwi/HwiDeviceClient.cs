@@ -36,12 +36,20 @@ namespace BTCPayServer.Hwi
                 cancellationToken: cancellationToken);
         }
 
-        public Task SendPinAsync(int pin, CancellationToken cancellationToken = default)
+        public async Task<bool> SendPinAsync(int pin, CancellationToken cancellationToken = default)
         {
-            return SendCommandAsync(
-                command: HwiCommands.SendPin,
-                commandArguments: new[] { pin.ToString() },
-                cancellationToken);
+            try
+            {
+                await SendCommandAsync(
+                    command: HwiCommands.SendPin,
+                    commandArguments: new[] { pin.ToString() },
+                    cancellationToken).ConfigureAwait(false);
+                return true;
+            }
+            catch (HwiException ex) when (ex.ErrorCode == HwiErrorCode.UnknownError)
+            {
+                return false;
+            }
         }
 
         public async Task<BitcoinExtPubKey> GetXPubAsync(KeyPath keyPath, CancellationToken cancellationToken = default)
