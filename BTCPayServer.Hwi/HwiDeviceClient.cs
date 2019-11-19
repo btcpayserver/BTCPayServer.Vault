@@ -20,6 +20,10 @@ namespace BTCPayServer.Hwi
             Fingerprint = fingerprint;
         }
 
+        /// <summary>
+        /// Password to send along any requests
+        /// </summary>
+        public string Password { get; set; }
         public HwiClient HwiClient { get; }
         public DeviceSelector DeviceSelector { get; }
         public HardwareWalletModels Model { get; }
@@ -146,7 +150,10 @@ namespace BTCPayServer.Hwi
         }
         private Task<string> SendCommandAsync(HwiCommands? command = null, string[] commandArguments = null, CancellationToken cancellationToken = default)
         {
-            return HwiClient.SendCommandAsync(DeviceSelector, null, command, commandArguments, cancellationToken);
+            List<HwiOption> options = new List<HwiOption>();
+            if (!string.IsNullOrEmpty(Password))
+                options.Add(HwiOption.Password(Password));
+            return HwiClient.SendCommandAsync(DeviceSelector, options, command, commandArguments, cancellationToken);
         }
     }
 }
