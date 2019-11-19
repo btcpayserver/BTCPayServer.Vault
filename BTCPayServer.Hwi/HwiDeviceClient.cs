@@ -131,9 +131,7 @@ namespace BTCPayServer.Hwi
                 commandArguments: new string[] { psbtString },
                 cancellationToken: cancellationToken).ConfigureAwait(false);
 
-            PSBT signedPsbt = HwiParser.ParsePsbt(response, HwiClient.Network);
-            signedPsbt.TryFinalize(out var e);
-            return signedPsbt;
+            return HwiParser.ParsePsbt(response, HwiClient.Network);
         }
 
         public async Task WipeAsync(CancellationToken cancellationToken = default)
