@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Hosting.Server;
+using System.IO;
 
 namespace BTCPayServer.Vault
 {
@@ -21,7 +22,11 @@ namespace BTCPayServer.Vault
     {
         static async Task Main(string[] args)
         {
-            using var host = Host.CreateDefaultBuilder(args)
+            var hostBuilder = Host.CreateDefaultBuilder(args);
+#if SINGLE_FILE
+            hostBuilder.UseContentRoot(Path.GetDirectoryName(typeof(Program).Assembly.Location));
+#endif
+            using var host = hostBuilder
                 .ConfigureWebHostDefaults(webHost =>
                 {
                     webHost

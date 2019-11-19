@@ -9,6 +9,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BTCPayServer.Vault.Tests", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BTCPayServer.Hwi", "BTCPayServer.Hwi\BTCPayServer.Hwi.csproj", "{88707123-2BDD-4B1A-A288-4E19D83D9009}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Misc", "Misc", "{12B13AF7-9A7F-4B64-B562-3B5B5BB66F2F}"
+	ProjectSection(SolutionItems) = preProject
+		Build\build.Dockerfile = Build\build.Dockerfile
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

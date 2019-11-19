@@ -14,6 +14,7 @@
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="3.0.0" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.0.0" />
     <PackageReference Include="NicolasDorier.RateLimits" Version="1.1.0" />
+    <PackageReference Include="WebWindow" Version="0.1.0-20191119.2" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="3.0.0" Condition="'$(Configuration)' == 'Debug'" />
   </ItemGroup>
 
@@ -21,9 +22,15 @@
     <ProjectReference Include="..\BTCPayServer.Hwi\BTCPayServer.Hwi.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="wwwroot\images\" />
-  </ItemGroup>
-  
 
+  <PropertyGroup Condition="'$(GithubDistrib)' == 'true'">
+    <PublishSingleFile>true</PublishSingleFile>
+    <PublishTrimmed>true</PublishTrimmed>
+    <SelfContained>true</SelfContained>
+    <DefineConstants>$(DefineConstants);SINGLE_FILE</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup Condition="'$(GithubDistrib)' == 'true'">
+      <!-- Publish everything under wwwroot, all JSON files, all config files and all Razor files -->
+      <Content Update="wwwroot\**" ExcludeFromSingleFile="" />
+  </ItemGroup>
 </Project>
