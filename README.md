@@ -41,6 +41,20 @@ Hardware wallets have been created to protect your money, even if your computer 
 However, while it protects your money, it will not protect your privacy if you allow an untrusted application to access your public keys.
 This is why BTCPayServer Vault always ask permission to user first before allowing any web application to access your hardware wallet.
 
+## How to build?
+
+This is a two step process:
+
+1. Install the latest version of the [.NET Core 3.0 SDK](https://dotnet.microsoft.com/download/dotnet-core/3.0)
+2. Run `dotnet build`
+
+If you want to run it for testing:
+
+```
+cd BTCPayServer.Vault
+dotnet run
+```
+
 ## Licence
 
 This project is under MIT License.
