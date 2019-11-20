@@ -7,45 +7,39 @@ This project is composed of two parts:
 * [BTCPayServer.Hwi](BTCPayServer.Hwi): An easy to use library ([nuget](https://www.nuget.org/packages/BTCPayServer.Hwi)) wrapping the command line interface of the [hwi project](https://github.com/bitcoin-core/HWI).
 * [BTCPayServer.Vault](BTCPayServer.Vault): A simple local web server providing access to the hardware wallet physically connected to your computer via hwi.
 
-## How to use BTCPayServer.Hwi
+## Why BTCPayServer Vault
 
-First, you need to reference the [nuget package](https://www.nuget.org/packages/BTCPayServer.Hwi) in your project.
+The BTCPayServer Vault allows web applications to access your hardware wallet, this enable a better integrated user experience for a user.
 
-```csharp
-using System;
-using System.Linq;
-using System.Threading.Tasks;
-using BTCPayServer.Hwi;
-using BTCPayServer.Hwi.Deployment;
-using NBitcoin;
+## How does the BTCPayServer Vault works
 
-namespace BTCPayServer.Vault
+When running the BTCPayServer Vault, a local webserver is hosted on `http://127.0.0.1:65092` whose web applications, via your local browser, to interact with your hardware wallet.
+
+The protocol is fairly simple:
+
+First, the web application need to make a permission request to the vault by sending a HTTP request `GET` to `http://127.0.0.1:65092/hwi-bridge/v1/request-permission`
+
+This will prompt the user to grant access to the web application and if the user accept, the request returns HTTP 200. Note that internally, the Vault relies on the `ORIGIN` HTTP header to identify the web application requesting access.
+If the access was granted previously, the request returns HTTP 200.
+
+Second, the web application can query the hardware through `POST` requests to `http://127.0.0.1:65092/hwi-bridge/v1`.
+
+```json
 {
-    class Program
-    {
-        static async Task Main(string[] args)
-        {
-            // This line will download hwi program in the process current directory
-            await HwiVersions.v1_0_3.Current.EnsureIsDeployed();
-
-            var hwiClient = new HwiClient(Network.Main);
-
-            // Enumerate the harware wallets on this computer
-            // If your device is not detected and you are on linux,
-            // make sure that you properly applied udev rules.
-            // These are necessary for the devices to be reachable on Linux environments.
-            // See https://github.com/bitcoin-core/HWI/tree/master/hwilib/udev
-            var device = (await hwiClient.EnumerateDevicesAsync()).First();
-
-            // Ask the device to display the segwit address on the BIP32 path "84'/0'/0'/0/0"
-            await device.DisplayAddressAsync(ScriptPubKeyType.Segwit, new KeyPath("84'/0'/0'/0/0"));
-        }
-    }
+    "params": [ "param1", "param2" ]
 }
+````
 
-```
+Those parameters are then passed as-is to [hwi](https://github.com/bitcoin-core/HWI) and the result is returned as a string.
 
-You can find some other example on how to use this library in [BTCPayServer.Vault.Tests/HwiTests.cs](BTCPayServer.Vault.Tests/HwiTests.cs).
+![NuGet](docs/Sequence.png)
+
+## Is it safe?
+
+Hardware wallets have been created to protect your money, even if your computer was compromised.
+
+However, while it protects your money, it will not protect your privacy if you allow an untrusted application to access your public keys.
+This is why BTCPayServer Vault always ask permission to user first before allowing any web application to access your hardware wallet.
 
 ## Licence
 

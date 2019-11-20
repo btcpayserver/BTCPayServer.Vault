@@ -123,6 +123,7 @@ namespace BTCPayServer.Vault.Tests
 
         private static void AssertFullySigned(HwiTester tester, PSBT psbt)
         {
+            Assert.True(psbt.TryFinalize(out _));
             var txbuilder = tester.Network.CreateTransactionBuilder();
             txbuilder.AddCoins(psbt.Inputs.Select(i => i.GetCoin()));
             Assert.True(txbuilder.Verify(psbt.ExtractTransaction()), "The transaction should be fully signed");
