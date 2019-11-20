@@ -13,7 +13,7 @@ The BTCPayServer Vault allows web applications to access your hardware wallet, t
 
 ## How does the BTCPayServer Vault works
 
-When running the BTCPayServer Vault, a local webserver is hosted on `http://127.0.0.1:65092` whose web applications, via your local browser, to interact with your hardware wallet.
+When running the BTCPayServer Vault, a local webserver is hosted on `http://127.0.0.1:65092` which web applications, via your local browser, can connect to interact with your hardware wallet.
 
 The protocol is fairly simple:
 
