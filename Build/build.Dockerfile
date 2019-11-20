@@ -6,8 +6,7 @@ COPY BTCPayServer.Vault/BTCPayServer.Vault.csproj BTCPayServer.Vault/BTCPayServe
 
 ENV  RUNTIME_IDS "win-x64 linux-x64 osx-x64"
 ENV  BUILD_ARGS "-p:Configuration=Release -p:GithubDistrib=true"
-RUN for rid in $RUNTIME_IDS; do dotnet restore --runtime $rid $BUILD_ARGS BTCPayServer.Vault/BTCPayServer.Vault.csproj; done
-
 COPY BTCPayServer.Hwi BTCPayServer.Hwi
 COPY BTCPayServer.Vault BTCPayServer.Vault
-RUN for rid in $RUNTIME_IDS; do dotnet publish --no-restore --framework netcoreapp3.0 --runtime $rid $BUILD_ARGS BTCPayServer.Vault/BTCPayServer.Vault.csproj; done
+RUN for rid in $RUNTIME_IDS; do dotnet publish --framework netcoreapp3.0 --runtime $rid $BUILD_ARGS BTCPayServer.Vault/BTCPayServer.Vault.csproj; done
+
