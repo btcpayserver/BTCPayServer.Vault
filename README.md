@@ -32,7 +32,7 @@ Second, the web application can query the hardware through `POST` requests to `h
 
 Those parameters are then passed as-is to [hwi](https://github.com/bitcoin-core/HWI) and the result is returned as a string.
 
-![NuGet](docs/Sequence.png)
+![NuGet](docs/Sequence.svg)
 
 ## Is it safe?
 
