@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
+using BTCPayServer.Vault.HWI;
 using BTCPayServer.Vault.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -18,6 +20,7 @@ namespace BTCPayServer.Vault
             services.AddScoped<HWI.IPermissionPrompt, PermissionPrompt>();
             services.AddSingleton<IBrowser>(ProcessBrowser.Instance);
             services.AddSingleton<Prompts>();
+            services.Configure<HwiServerOptions>(opt => opt.HwiDeploymentDirectory = Path.GetDirectoryName(typeof(Program).Assembly.Location));
             services.AddSingleton<PermissionsService>();
             services.AddRateLimits();
 #if DEBUG

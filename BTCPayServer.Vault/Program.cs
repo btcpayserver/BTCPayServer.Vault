@@ -23,7 +23,7 @@ namespace BTCPayServer.Vault
         static async Task Main(string[] args)
         {
             var hostBuilder = Host.CreateDefaultBuilder(args);
-#if SINGLE_FILE
+#if RELOCATE_CONTENT
             hostBuilder.UseContentRoot(Path.GetDirectoryName(typeof(Program).Assembly.Location));
 #endif
             using var host = hostBuilder
@@ -44,7 +44,7 @@ namespace BTCPayServer.Vault
             {
                 var browser = host.Services.GetService<IBrowser>();
                 var address = host.Services.GetService<IServer>().Features.Get<IServerAddressesFeature>().Addresses.First();
-                browser.OpenBrowser(address + "/Test.html");
+                browser.OpenBrowser(address);
             }
 
             await host.WaitForShutdownAsync();
