@@ -48,5 +48,3 @@ RUN mkdir -p Output && \
     "-DPRODUCT_PUBLISHER=$COMPANY" \
     "-DPRODUCT_DESCRIPTION=$DESCRIPTION" \
     vault.nsis
-
-COPY . .
