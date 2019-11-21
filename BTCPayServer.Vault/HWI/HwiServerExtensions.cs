@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
@@ -11,6 +12,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -26,7 +28,8 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddScoped<HwiServer>();
             services.AddSingleton<ITransport>(provider =>
             {
-                return new CliTransport()
+                var options = provider.GetRequiredService<IOptions<HwiServerOptions>>();
+                return new CliTransport(options.Value.HwiDeploymentDirectory)
                 {
                     Logger = provider.GetRequiredService<ILoggerFactory>().CreateLogger(LoggerNames.HwiServerCli)
                 };

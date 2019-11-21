@@ -15,15 +15,15 @@ namespace BTCPayServer.Hwi.Transports
 	public class CliTransport : ITransport
 	{
         protected SemaphoreSlim _SemaphoreSlim = new SemaphoreSlim(1, 1);
-        private readonly string hwiPath;
+        private readonly string hwiFolder;
 
         public CliTransport(): this(null)
         {
 
         }
-        public CliTransport(string hwiPath)
+        public CliTransport(string hwiFolder)
         {
-            this.hwiPath = hwiPath ?? "hwi";
+            this.hwiFolder = hwiFolder;
         }
         public bool OpenConsole { get; set; }
         public ILogger Logger { get; set; } = NullLogger.Instance;
@@ -32,8 +32,7 @@ namespace BTCPayServer.Hwi.Transports
 		{
 			string responseString;
 			int exitCode;
-
-			var fileName = hwiPath;
+			var fileName = Path.Combine(hwiFolder, "hwi");
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows) && 
                 !fileName.EndsWith(".exe", StringComparison.OrdinalIgnoreCase))
             {
