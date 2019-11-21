@@ -6,7 +6,7 @@
     <Version>0.0.3</Version>
     <Company>BTCPay Server</Company>
     <Title>BTCPayServer Vault</Title>
-    <Description>Allow webapplication to access your favorite Bitcoin hardware wallet</Description>
+    <Description>Allow web application to access your favorite Bitcoin hardware wallet</Description>
     <ApplicationIcon>../BTCPayServerVault.ico</ApplicationIcon>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
