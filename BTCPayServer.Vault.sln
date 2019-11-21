@@ -14,6 +14,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Misc", "Misc", "{12B13AF7-9
 		Build\build.Dockerfile = Build\build.Dockerfile
 		Build\build.ps1 = Build\build.ps1
 		Build\build.win-x64.Dockerfile = Build\build.win-x64.Dockerfile
+		Build\extract-project-variables.sh = Build\extract-project-variables.sh
 		Build\vault.nsis = Build\vault.nsis
 	EndProjectSection
 EndProject

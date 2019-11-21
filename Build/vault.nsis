@@ -6,9 +6,7 @@
 ;--------------------------------
 ;Variables
 
-  !define PRODUCT_NAME "BTCPayServer Vault"
   !define PRODUCT_WEB_SITE "https://github.com/btcpayserver/BTCPayServer.Vault"
-  !define PRODUCT_PUBLISHER "BTCPayServer team"
   !define PRODUCT_UNINST_KEY "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_NAME}"
 
 ;--------------------------------
@@ -56,15 +54,15 @@
   
   ;VIAddVersionKey - Adds a field in the Version Tab of the File Properties. This can either be a field provided by the system or a user defined field.
   VIAddVersionKey ProductName "${PRODUCT_NAME} Installer"
-  VIAddVersionKey Comments "The installer for ${PRODUCT_NAME}"
-  VIAddVersionKey CompanyName "${PRODUCT_NAME}"
+  VIAddVersionKey Comments "${PRODUCT_DESCRIPTION}"
+  VIAddVersionKey CompanyName "${PRODUCT_PUBLISHER}"
   VIAddVersionKey LegalCopyright "2013-2018 ${PRODUCT_PUBLISHER}"
-  VIAddVersionKey FileDescription "${PRODUCT_NAME} Installer"
+  VIAddVersionKey FileDescription "${PRODUCT_DESCRIPTION}"
   VIAddVersionKey FileVersion ${PRODUCT_VERSION}
   VIAddVersionKey ProductVersion ${PRODUCT_VERSION}
   VIAddVersionKey InternalName "${PRODUCT_NAME} Installer"
   VIAddVersionKey LegalTrademarks "${PRODUCT_NAME} is a trademark of ${PRODUCT_PUBLISHER}" 
-  VIAddVersionKey OriginalFilename "${PRODUCT_NAME}.exe"
+  VIAddVersionKey OriginalFilename "BTCPayServerVault-${PRODUCT_VERSION}-setup.exe"
 
 ;--------------------------------
 ;Interface Settings
@@ -73,14 +71,23 @@
   !define MUI_ABORTWARNING_TEXT "Are you sure you wish to abort the installation of ${PRODUCT_NAME}?"
   
   !define MUI_ICON "../BTCPayServerVault.ico"
+  !define MUI_WELCOMEFINISHPAGE_BITMAP "../Build/nsis-wizard.bmp"
+  !define MUI_HEADERIMAGE
+  !define MUI_HEADERIMAGE_RIGHT
+  !define MUI_HEADERIMAGE_BITMAP "../Build/nsis-header.bmp"
+  !define MUI_UNWELCOMEFINISHPAGE_BITMAP "../Build/nsis-wizard.bmp"
   
 ;--------------------------------
 ;Pages
-
+  !insertmacro MUI_PAGE_WELCOME
   !insertmacro MUI_PAGE_DIRECTORY
   !insertmacro MUI_PAGE_INSTFILES
+  !define MUI_FINISHPAGE_RUN $INSTDIR\bin\BTCPayServer.Vault.exe
+  !define MUI_FINISHPAGE_RUN_TEXT "Launch ${PRODUCT_NAME}"
+  !insertmacro MUI_PAGE_FINISH
   !insertmacro MUI_UNPAGE_CONFIRM
   !insertmacro MUI_UNPAGE_INSTFILES
+
 
 ;--------------------------------
 ;Languages

@@ -4,7 +4,11 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.0</TargetFramework>
     <Version>0.0.2</Version>
+    <Company>BTCPay Server</Company>
+    <Title>BTCPayServer Vault</Title>
+    <Description>Allow webapplication to access your favorite Bitcoin hardware wallet</Description>
     <ApplicationIcon>../BTCPayServerVault.ico</ApplicationIcon>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
 
   <ItemGroup>
