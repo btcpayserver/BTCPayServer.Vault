@@ -1,6 +1,9 @@
 New-Item -Path "Output" -ItemType "Directory" -Force
 rm -Force -Recurse "Output\**"
-docker build -t temp -f build.win-x64.Dockerfile ..
-docker run --rm --name vaultbuild -d temp sleep 100
-docker cp vaultbuild:/source/Build/Output/  .
-docker rm --force vaultbuild
+
+
+foreach ($arch in "win-x64","osx-x64")
+{
+  docker build -t "vault-$arch" -f "build.${arch}.Dockerfile" ..
+  docker run --rm -v "$(pwd)/Output:/opt/Output" "vault-$arch"
+}

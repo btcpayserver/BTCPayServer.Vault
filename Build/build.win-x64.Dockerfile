@@ -48,3 +48,5 @@ RUN mkdir -p Output && \
     "-DPRODUCT_PUBLISHER=$COMPANY" \
     "-DPRODUCT_DESCRIPTION=$DESCRIPTION" \
     vault.nsis
+
+ENTRYPOINT [ "/bin/bash", "-c", "cp /source/Build/Output/* /opt/Output/" ]
