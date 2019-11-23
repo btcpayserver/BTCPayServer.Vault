@@ -68,7 +68,7 @@ RUN source /source/Build/extract-project-variables.sh "/source/BTCPayServer.Vaul
     appfolder="$dmgroot/$TITLE.app" && \
     mkdir -p "$appfolder/Contents" && \
     cp /source/Build/Info.plist "$appfolder/Contents/" && \
-    mv /source/BTCPayServer.Vault/bin/Release/$FRAMEWORK/$RUNTIME/publish "$appfolder/Contents/MacOS" && \
+    mv "$PUBLISH_FOLDER" "$appfolder/Contents/MacOS" && \
     mv /source/Build/hwi "$appfolder/Contents/MacOS/" && \
     mkdir -p "$appfolder/Contents/Resources" && \
     cp /source/Build/BTCPayServerVault.icns "$appfolder/Contents/Resources/" && \

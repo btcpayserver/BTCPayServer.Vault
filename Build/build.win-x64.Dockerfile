@@ -29,7 +29,7 @@ COPY Build/nsis-wizard.bmp Build/nsis-wizard.bmp
 SHELL ["/bin/bash", "-c"]
 RUN cd BTCPayServer.Vault && \
     source ../Build/extract-project-variables.sh "BTCPayServer.Vault.csproj" && \
-    WINEDEBUG=fixme-all wine ../Build/rcedit.exe bin/Release/$FRAMEWORK/$RUNTIME/publish/BTCPayServer.Vault.exe \
+    WINEDEBUG=fixme-all wine ../Build/rcedit.exe "$PUBLISH_FOLDER/BTCPayServer.Vault.exe" \
     --set-icon "$ICON" \
     --set-version-string "LegalCopyright" "$LICENSE" \
     --set-version-string "CompanyName" "$COMPANY" \
