@@ -39,6 +39,7 @@ RUN source Build/extract-project-variables.sh "BTCPayServer.Vault/BTCPayServer.V
     sed -i "s/{ApplicationName}/$TITLE/g" Build/Info.plist
 
 COPY BTCPayServerVault.png /tmp/BTCPayServerVault.png
+COPY Build/Osx Build/Osx
 WORKDIR /tmp
 RUN src=/tmp/BTCPayServerVault.png && \
     dest=/tmp/BTCPayServerVault.iconset && mkdir $dest && \
@@ -63,13 +64,26 @@ RUN src=/tmp/BTCPayServerVault.png && \
     png2icns /source/Build/BTCPayServerVault.icns "$dest"/*png
 
 RUN source /source/Build/extract-project-variables.sh "/source/BTCPayServer.Vault/BTCPayServer.Vault.csproj" && \
-    macfolder=/tmp/Output/$TITLE.App && \
-    mkdir -p "$macfolder/Contents" && \
-    cp /source/Build/Info.plist "$macfolder/Contents/" && \
-    mv /source/BTCPayServer.Vault/bin/Release/$FRAMEWORK/$RUNTIME/publish "$macfolder/Contents/MacOS" && \
-    mv /source/Build/hwi "$macfolder/Contents/MacOS/" && \  
-    mkdir -p "$macfolder/Resources" && \
-    cp /source/Build/BTCPayServerVault.icns "$macfolder/Resources/" && \
+    dmgroot="/tmp/Output/$TITLE" && \
+    appfolder="$dmgroot/$TITLE.app" && \
+    mkdir -p "$appfolder/Contents" && \
+    cp /source/Build/Info.plist "$appfolder/Contents/" && \
+    mv /source/BTCPayServer.Vault/bin/Release/$FRAMEWORK/$RUNTIME/publish "$appfolder/Contents/MacOS" && \
+    mv /source/Build/hwi "$appfolder/Contents/MacOS/" && \
+    mkdir -p "$appfolder/Contents/Resources" && \
+    cp /source/Build/BTCPayServerVault.icns "$appfolder/Contents/Resources/" && \
+    cp /source/Build/BTCPayServerVault.icns "$dmgroot/.VolumeIcon.icns" && \
+    ln -s /Applications "$dmgroot" && \
+    # If one day you need to regenerate the DS_Store in /source/Build/Osx:
+    # 1. Get a Mac
+    # 2. Install XCode
+    # 3. Run "brew install create-dmg"
+    # 4. From an old version of BTCPayServer Vault dmg file, mount the dmg, then extract ".VolumeIcon.icns" and
+    #    ".background/Logo_with_text_small.png" from inside (!hidden)
+    # 5. Create empty dir "mkdir empty"
+    # 6. Run create-dmg --volname "BTCPayServer Vault" --volicon .VolumeIcon.icns --background Logo_with_text_small.png --window-pos 200 120 --window-size 600 440 --app-drop-link 500 150 --icon "BTCPayServer Vault" 110 150 --hdiutil-verbose "btcpay.dmg" empty
+    # 7. Now you can change .background, .fseventsd and .DS_Store from Build/Osx
+    cp -r /source/Build/Osx/. "$dmgroot" && \
     genisoimage -no-cache-inodes \
     -D \
     -l \
@@ -80,8 +94,8 @@ RUN source /source/Build/extract-project-variables.sh "/source/BTCPayServer.Vaul
     -dir-mode 0755 \
     -apple \
     -o uncompressed.dmg \
-    "$macfolder/.." && \
+    "$dmgroot" && \
     mkdir -p /source/Build/Output && \
-    dmg dmg uncompressed.dmg /source/Build/Output/BTCPayServerVault-$VERSION-setup.dmg && rm uncompressed.dmg
+    dmg dmg uncompressed.dmg /source/Build/Output/BTCPayServerVault-$VERSION.dmg && rm uncompressed.dmg
 
 ENTRYPOINT [ "/bin/bash", "-c", "cp /source/Build/Output/* /opt/Output/" ]
