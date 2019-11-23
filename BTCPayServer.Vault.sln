@@ -12,9 +12,12 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Misc", "Misc", "{12B13AF7-9A7F-4B64-B562-3B5B5BB66F2F}"
 	ProjectSection(SolutionItems) = preProject
 		Build\build.Dockerfile = Build\build.Dockerfile
+		Build\build.osx-x64.Dockerfile = Build\build.osx-x64.Dockerfile
 		Build\build.ps1 = Build\build.ps1
 		Build\build.win-x64.Dockerfile = Build\build.win-x64.Dockerfile
 		Build\extract-project-variables.sh = Build\extract-project-variables.sh
+		Build\Info.plist.xml = Build\Info.plist.xml
+		Build\push-new-tag.ps1 = Build\push-new-tag.ps1
 		Build\vault.nsis = Build\vault.nsis
 	EndProjectSection
 EndProject
