@@ -46,6 +46,7 @@ namespace BTCPayServer.Vault.HWI
                 }
                 var response = await Transport.SendCommandAsync(args, ctx.RequestAborted);
                 ctx.Response.StatusCode = 200;
+                ctx.Response.Headers["Content-Type"] = "text/plain";
                 await ctx.Response.WriteAsync(response, ctx.RequestAborted);
                 return;
             }
