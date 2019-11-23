@@ -24,6 +24,9 @@ SHELL ["/bin/bash", "-c"]
 RUN source Build/extract-project-variables.sh "/source/BTCPayServer.Vault/BTCPayServer.Vault.csproj" && \
     mkdir Build/Output && \
     cd "$PUBLISH_FOLDER" && \
-    && tar -czf "/source/Build/Output/BTCPayServerVault-Linux-$VERSION.tar.gz" *
+    cp /source/Build/hwi . && \
+    find . -type f -exec chmod 644 {} \; && \
+    find . -type f \( -name 'hwi' -o -name 'BTCPayServer.Vault' \) -exec chmod +x {} \; && \
+    tar -czf "/source/Build/Output/BTCPayServerVault-Linux-$VERSION.tar.gz" *
 
 ENTRYPOINT [ "/bin/bash", "-c", "cp /source/Build/Output/* /opt/Output/" ]
