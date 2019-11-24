@@ -295,4 +295,4 @@ BTCPayServer/wwwroot/bundles/*
 .vscode
 hwi.exe
 hwi
-Build/Output
+dist/

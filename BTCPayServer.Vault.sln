@@ -9,21 +9,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BTCPayServer.Vault.Tests", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BTCPayServer.Hwi", "BTCPayServer.Hwi\BTCPayServer.Hwi.csproj", "{88707123-2BDD-4B1A-A288-4E19D83D9009}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Misc", "Misc", "{12B13AF7-9A7F-4B64-B562-3B5B5BB66F2F}"
-	ProjectSection(SolutionItems) = preProject
-		Build\BTCPayServer.Vault.desktop = Build\BTCPayServer.Vault.desktop
-		Build\build.debian-x64.Dockerfile = Build\build.debian-x64.Dockerfile
-		Build\build.linux-x64.Dockerfile = Build\build.linux-x64.Dockerfile
-		Build\build.osx-x64.Dockerfile = Build\build.osx-x64.Dockerfile
-		Build\build.ps1 = Build\build.ps1
-		Build\build.win-x64.Dockerfile = Build\build.win-x64.Dockerfile
-		Build\control = Build\control
-		Build\extract-project-variables.sh = Build\extract-project-variables.sh
-		Build\Info.plist.xml = Build\Info.plist.xml
-		Build\push-new-tag.ps1 = Build\push-new-tag.ps1
-		Build\vault.nsis = Build\vault.nsis
-	EndProjectSection
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

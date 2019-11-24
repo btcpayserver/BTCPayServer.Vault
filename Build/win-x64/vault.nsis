@@ -14,7 +14,7 @@
 
   ;Name and file
   Name "${PRODUCT_NAME}"
-  OutFile "Output/BTCPayServerVault-${PRODUCT_VERSION}-setup.exe"
+  OutFile "${DIST}/BTCPayServerVault-${PRODUCT_VERSION}-setup.exe"
 
   ;Default installation folder
   InstallDir "$PROGRAMFILES64\${PRODUCT_NAME}"
@@ -70,19 +70,19 @@
   !define MUI_ABORTWARNING
   !define MUI_ABORTWARNING_TEXT "Are you sure you wish to abort the installation of ${PRODUCT_NAME}?"
   
-  !define MUI_ICON "../BTCPayServerVault.ico"
-  !define MUI_WELCOMEFINISHPAGE_BITMAP "../Build/nsis-wizard.bmp"
+  !define MUI_ICON "${ICON}"
+  !define MUI_WELCOMEFINISHPAGE_BITMAP "${RESOURCES}/nsis-wizard.bmp"
   !define MUI_HEADERIMAGE
   !define MUI_HEADERIMAGE_RIGHT
-  !define MUI_HEADERIMAGE_BITMAP "../Build/nsis-header.bmp"
-  !define MUI_UNWELCOMEFINISHPAGE_BITMAP "../Build/nsis-wizard.bmp"
+  !define MUI_HEADERIMAGE_BITMAP "${RESOURCES}/nsis-header.bmp"
+  !define MUI_UNWELCOMEFINISHPAGE_BITMAP "${RESOURCES}/nsis-wizard.bmp"
   
 ;--------------------------------
 ;Pages
   !insertmacro MUI_PAGE_WELCOME
   !insertmacro MUI_PAGE_DIRECTORY
   !insertmacro MUI_PAGE_INSTFILES
-  !define MUI_FINISHPAGE_RUN $INSTDIR\bin\BTCPayServer.Vault.exe
+  !define MUI_FINISHPAGE_RUN $INSTDIR\bin\${EXECUTABLE}.exe
   !define MUI_FINISHPAGE_RUN_TEXT "Launch ${PRODUCT_NAME}"
   !insertmacro MUI_PAGE_FINISH
   !insertmacro MUI_UNPAGE_CONFIRM
@@ -118,8 +118,7 @@ Section
   
   ;Files to pack into the installer
   SetOutPath $INSTDIR\bin
-  File /r "../BTCPayServer.Vault/bin/Release/netcoreapp3.0/win-x64/publish/*.*"
-  File "hwi.exe"
+  File /r "${PUBLISH_FOLDER}/*.*"
 
   ;Store installation folder
   WriteRegStr HKCU "Software\${PRODUCT_NAME}" "" $INSTDIR
@@ -131,13 +130,13 @@ Section
 
   ;Create desktop shortcut
   DetailPrint "Creating desktop shortcut..."
-  CreateShortCut "$DESKTOP\${PRODUCT_NAME}.lnk" "$INSTDIR\bin\BTCPayServer.Vault.exe" ""
+  CreateShortCut "$DESKTOP\${PRODUCT_NAME}.lnk" "$INSTDIR\bin\${EXECUTABLE}.exe" ""
 
   ;Create start-menu items
   DetailPrint "Creating start-menu items..."
   CreateDirectory "$SMPROGRAMS\${PRODUCT_NAME}"
   CreateShortCut "$SMPROGRAMS\${PRODUCT_NAME}\Uninstall.lnk" "$INSTDIR\Uninstall.exe" "" "$INSTDIR\Uninstall.exe" 0
-  CreateShortCut "$SMPROGRAMS\${PRODUCT_NAME}\${PRODUCT_NAME}.lnk" "$INSTDIR\bin\BTCPayServer.Vault.exe" "" "$INSTDIR\bin\BTCPayServer.Vault.exe" 0
+  CreateShortCut "$SMPROGRAMS\${PRODUCT_NAME}\${PRODUCT_NAME}.lnk" "$INSTDIR\bin\${EXECUTABLE}.exe" "" "$INSTDIR\bin\${EXECUTABLE}.exe" 0
 
   ;Adds an uninstaller possibility to Windows Uninstall or change a program section
   WriteRegStr HKCU "${PRODUCT_UNINST_KEY}" "DisplayName" "$(^Name)"
@@ -145,7 +144,7 @@ Section
   WriteRegStr HKCU "${PRODUCT_UNINST_KEY}" "DisplayVersion" "${PRODUCT_VERSION}"
   WriteRegStr HKCU "${PRODUCT_UNINST_KEY}" "URLInfoAbout" "${PRODUCT_WEB_SITE}"
   WriteRegStr HKCU "${PRODUCT_UNINST_KEY}" "Publisher" "${PRODUCT_PUBLISHER}"
-  WriteRegStr HKCU "${PRODUCT_UNINST_KEY}" "DisplayIcon" "$INSTDIR\BTCPayServerVault.ico"
+  WriteRegStr HKCU "${PRODUCT_UNINST_KEY}" "DisplayIcon" "$INSTDIR\${ICONNAME}"
 
   ;Fixes Windows broken size estimates
   ${GetSize} "$INSTDIR" "/S=0K" $0 $1 $2
