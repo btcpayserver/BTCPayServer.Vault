@@ -1,5 +1,9 @@
 FROM mcr.microsoft.com/dotnet/core/sdk:3.0.101-buster AS builder
+
+# Optimize docker cache, do not make it one layer
 RUN apt-get update
+###
+
 RUN apt-get install -y --no-install-recommends nsis unzip wine
 WORKDIR /source/Build
 RUN wget -qO hwi.zip https://github.com/bitcoin-core/HWI/releases/download/1.0.3/hwi-1.0.3-windows-amd64.zip && \

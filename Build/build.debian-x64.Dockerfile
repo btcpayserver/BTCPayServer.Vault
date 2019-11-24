@@ -1,6 +1,10 @@
 FROM mcr.microsoft.com/dotnet/core/sdk:3.0.101-buster AS builder
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends imagemagick
+
+# Optimize docker cache, do not make it one layer
+RUN apt-get update
+RUN apt-get install -y --no-install-recommends imagemagick
+###
+
 WORKDIR /source/Build
 RUN wget -qO hwi.tar.gz https://github.com/bitcoin-core/HWI/releases/download/1.0.3/hwi-1.0.3-linux-amd64.tar.gz && \
     tar -zxvf hwi.tar.gz -C . hwi && \
