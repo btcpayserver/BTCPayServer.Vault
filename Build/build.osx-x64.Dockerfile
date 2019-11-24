@@ -21,7 +21,6 @@ RUN git clone https://github.com/theuni/libdmg-hfsplus && \
 
 WORKDIR /source
 ENV RUNTIME "osx-x64"
-COPY BTCPayServerVault.ico BTCPayServerVault.ico
 COPY BTCPayServer.Hwi/BTCPayServer.Hwi.csproj BTCPayServer.Hwi/BTCPayServer.Hwi.csproj
 COPY BTCPayServer.Vault/BTCPayServer.Vault.csproj BTCPayServer.Vault/BTCPayServer.Vault.csproj
 ENV BUILD_ARGS "--runtime $RUNTIME -p:Configuration=Release -p:GithubDistrib=true"

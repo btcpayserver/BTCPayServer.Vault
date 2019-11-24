@@ -12,7 +12,6 @@ RUN wget -qO rcedit.exe https://ci.appveyor.com/api/buildjobs/fcus8m4triujcj2b/a
 
 WORKDIR /source
 ENV RUNTIME "win-x64"
-COPY BTCPayServerVault.ico BTCPayServerVault.ico
 COPY BTCPayServer.Hwi/BTCPayServer.Hwi.csproj BTCPayServer.Hwi/BTCPayServer.Hwi.csproj
 COPY BTCPayServer.Vault/BTCPayServer.Vault.csproj BTCPayServer.Vault/BTCPayServer.Vault.csproj
 ENV BUILD_ARGS "--runtime $RUNTIME -p:Configuration=Release -p:GithubDistrib=true"
@@ -20,6 +19,7 @@ RUN dotnet restore $BUILD_ARGS BTCPayServer.Vault/BTCPayServer.Vault.csproj
 COPY BTCPayServer.Hwi BTCPayServer.Hwi
 COPY BTCPayServer.Vault BTCPayServer.Vault
 ENV FRAMEWORK "netcoreapp3.0"
+COPY BTCPayServerVault.ico BTCPayServerVault.ico
 RUN dotnet publish --no-restore --framework $FRAMEWORK $BUILD_ARGS BTCPayServer.Vault/BTCPayServer.Vault.csproj
 
 COPY Build/extract-project-variables.sh Build/extract-project-variables.sh
