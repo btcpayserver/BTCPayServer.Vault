@@ -35,8 +35,7 @@ COPY Build/extract-project-variables.sh Build/extract-project-variables.sh
 COPY Build/Info.plist.xml Build/Info.plist
 SHELL ["/bin/bash", "-c"]
 RUN source Build/extract-project-variables.sh "BTCPayServer.Vault/BTCPayServer.Vault.csproj" && \
-    sed -i "s/{VersionPrefix}/$VERSION/g" Build/Info.plist && \
-    sed -i "s/{ApplicationName}/$TITLE/g" Build/Info.plist
+    replaceProjectVariables Build/Info.plist
 
 COPY BTCPayServerVault.png /tmp/BTCPayServerVault.png
 COPY Build/Osx Build/Osx

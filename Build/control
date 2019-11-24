@@ -1,0 +1,11 @@
+Package: {EXECUTABLE}
+Priority: optional
+Section: utils
+Maintainer: Nicolas Dorier <nicolas.dorier@gmail.com>
+Version: {VERSION}
+Vcs-Git: git://github.com/btcpayserver/BTCPayServer.Vault.git
+Vcs-Browser: https://github.com/btcpayserver/BTCPayServer.Vault
+Architecture: amd64
+License: Open Source (MIT)
+Installed-Size: {SIZEINKB}
+Description: {DESCRIPTION}

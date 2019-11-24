@@ -1,0 +1,9 @@
+Type=Application
+Name={TITLE}
+StartupWMClass={TITLE}
+GenericName={TITLE}
+Comment={DESCRIPTION}
+Icon={EXECUTABLE}
+Terminal=false
+Categories=Office;Finance;
+Keywords=bitcoin;wallet;crypto;blockchain;btcpayserver;
