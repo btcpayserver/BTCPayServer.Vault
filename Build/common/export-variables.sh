@@ -6,11 +6,14 @@ DIST="/source/dist"
 RESOURCES="/source/Build/${RUNTIME}"
 RESOURCES_COMMON="/source/Build/common"
 PROJECT_FILE="/source/BTCPayServer.Vault/BTCPayServer.Vault.csproj"
+VERSION_FILE="/source/BTCPayServer.Vault/Version.csproj"
 LICENSE="$(cat $PROJECT_FILE | sed -n 's/.*<PackageLicenseExpression>\(.*\)<\/PackageLicenseExpression>.*/\1/p')"
 DESCRIPTION="$(cat $PROJECT_FILE | sed -n 's/.*<Description>\(.*\)<\/Description>.*/\1/p')"
 COMPANY="$(cat $PROJECT_FILE | sed -n 's/.*<Company>\(.*\)<\/Company>.*/\1/p')"
 TITLE="$(cat $PROJECT_FILE | sed -n 's/.*<Title>\(.*\)<\/Title>.*/\1/p')"
-VERSION="$(cat $PROJECT_FILE | sed -n 's/.*<Version>\(.*\)<\/Version>.*/\1/p')"
+if [ -f "$VERSION_FILE" ]; then
+    VERSION="$(cat $VERSION_FILE | sed -n 's/.*<Version>\(.*\)<\/Version>.*/\1/p')"
+fi
 PUBLISH_FOLDER="/source/BTCPayServer.Vault/bin/Release/$FRAMEWORK/$RUNTIME/publish"
 EXECUTABLE="$(cat $PROJECT_FILE | sed -n 's/.*<TargetName>\(.*\)<\/TargetName>.*/\1/p')"
 
