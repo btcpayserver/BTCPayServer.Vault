@@ -30,7 +30,7 @@ replaceProjectVariables () {
 }
 
 dotnet_publish () {
-    dotnet publish --no-restore --framework $FRAMEWORK $BUILD_ARGS BTCPayServer.Vault/BTCPayServer.Vault.csproj
+    dotnet publish --no-restore --framework $FRAMEWORK $BUILD_ARGS $ADDITIONAL_PUBLISH_ARGS BTCPayServer.Vault/BTCPayServer.Vault.csproj
 }
 
 dotnet_restore () {
