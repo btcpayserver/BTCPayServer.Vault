@@ -24,14 +24,16 @@
             <DockPanel>
                 <DrawingPresenter DockPanel.Dock="Left" Height="128" Width="128" VerticalAlignment="Center" HorizontalAlignment="Center" Drawing="{DynamicResource warning}" />
                 <StackPanel Margin="10,0,0,0" VerticalAlignment="Center">
-                    <TextBlock>A website is requesting access to hardware wallets connected to your computer.</TextBlock>
-                    <TextBlock>By clicking authorize, you will allow the website to access through your browser:</TextBlock>
-                    <TextBlock>• See all the addresses of wallets plugged to this computer</TextBlock>
-                    <TextBlock>• Enumerate the wallets plugged to this computer</TextBlock>
-                    <TextBlock>• If you grant permissions, you will be to revoke those anytime you want.</TextBlock>
-                    <TextBlock>The granted permission will be in effect until you restart BTCPayServer Vault.</TextBlock>
+                    <TextBlock>A website is requesting access to your hardware wallets.</TextBlock>
+                    <TextBlock>If you accept, the website will be able to:</TextBlock>
+                    <TextBlock Text=" "></TextBlock>
+                    <TextBlock>• Enumerate hardware wallets plugged to your computer</TextBlock>
+                    <TextBlock>• Enumerate your bitcoin addresses</TextBlock>
+                    <TextBlock>• Request you to confirm the signature of a transaction on your hardware wallet</TextBlock>
+                    <TextBlock Text=" "></TextBlock>
+                    <TextBlock>The permission will be in effect until you restart BTCPayServer Vault.</TextBlock>
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="Do you want to grant access to "></TextBlock>
+                        <TextBlock Text="Do you really want to grant access to "></TextBlock>
                         <TextBlock FontWeight="Bold" Text="{Binding Origin}"></TextBlock>
                         <TextBlock>?</TextBlock>
                     </StackPanel>
