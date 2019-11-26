@@ -1,7 +1,8 @@
 # Build system
 
 The process to publish a new version is the following:
-1. Bump BTCPayServer.Vault/Version.csproj version
+1. Bump `BTCPayServer.Vault/Version.csproj` version
+2. Commit and push
 2. Run `Build/push-new-tag.ps1`
 3. Run `build.ps1`
 4. Create a new release on github and upload all files in `dist/` there
