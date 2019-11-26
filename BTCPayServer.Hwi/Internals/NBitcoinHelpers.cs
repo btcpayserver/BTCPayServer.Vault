@@ -15,14 +15,14 @@ namespace BTCPayServer.Helpers
             ExtPubKey epk;
             try
             {
-                epk = ExtPubKey.Parse(extPubKeyString, network); // Starts with "ExtPubKey": "xpub...
+                return new BitcoinExtPubKey(extPubKeyString, network); // Starts with "ExtPubKey": "xpub...
             }
             catch
             {
                 try
                 {
                     // Try hex, Old wallet format was like this.
-                    epk = new ExtPubKey(ByteHelpers.FromHex(extPubKeyString)); // Starts with "ExtPubKey": "hexbytes...
+                    return new ExtPubKey(ByteHelpers.FromHex(extPubKeyString)).GetWif(network); // Starts with "ExtPubKey": "hexbytes...
                 }
                 catch when (ignoreInvalidNetwork)
                 {
@@ -36,10 +36,13 @@ namespace BTCPayServer.Helpers
                         data[i] = versionBytes[i];
                     }
                     extPubKeyString = Encoders.Base58Check.EncodeData(data);
-                    epk = ExtPubKey.Parse(extPubKeyString, network);
+                    return new BitcoinExtPubKey(extPubKeyString, network);
                 }
+                catch
+                {
+                }
+                throw;
             }
-            return epk.GetWif(network);
         }
     }
 }

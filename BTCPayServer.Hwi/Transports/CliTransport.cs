@@ -12,12 +12,12 @@ using Microsoft.Extensions;
 
 namespace BTCPayServer.Hwi.Transports
 {
-	public class CliTransport : ITransport
-	{
+    public class CliTransport : ITransport
+    {
         protected SemaphoreSlim _SemaphoreSlim = new SemaphoreSlim(1, 1);
         private readonly string hwiFolder;
 
-        public CliTransport(): this(null)
+        public CliTransport() : this(null)
         {
 
         }
@@ -25,76 +25,44 @@ namespace BTCPayServer.Hwi.Transports
         {
             this.hwiFolder = hwiFolder;
         }
-        public bool OpenConsole { get; set; }
         public ILogger Logger { get; set; } = NullLogger.Instance;
-
         public async Task<string> SendCommandAsync(string[] arguments, CancellationToken cancel)
-		{
-			string responseString;
-			int exitCode;
-			var fileName = Path.Combine(hwiFolder, "hwi");
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows) && 
+        {
+            string responseString;
+            int exitCode;
+            var fileName = Path.Combine(hwiFolder, "hwi");
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows) &&
                 !fileName.EndsWith(".exe", StringComparison.OrdinalIgnoreCase))
             {
                 fileName += ".exe";
             }
-			var redirectStandardOutput = !OpenConsole;
-			var useShellExecute = OpenConsole;
-			var createNoWindow = !OpenConsole;
-			var windowStyle = OpenConsole ? ProcessWindowStyle.Normal : ProcessWindowStyle.Hidden;
-
-			if (OpenConsole && !RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-			{
-				throw new PlatformNotSupportedException($"{RuntimeInformation.OSDescription} is not supported.");
-				//var escapedArguments = (hwiPath + " " + arguments).Replace("\"", "\\\"");
-				//useShellExecute = false;
-				//if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-				//{
-				//	fileName = "xterm";
-				//	finalArguments = $"-e \"{escapedArguments}\"";
-				//}
-				//else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-				//{
-				//	fileName = "osascript";
-				//	finalArguments = $"-e 'tell application \"Terminal\" to do script \"{escapedArguments}\"'";
-				//}
-			}
 
             ProcessStartInfo startInfo = new ProcessStartInfo
             {
                 FileName = fileName,
-                RedirectStandardOutput = redirectStandardOutput,
-                UseShellExecute = useShellExecute,
-                CreateNoWindow = createNoWindow,
-                WindowStyle = windowStyle
+                RedirectStandardOutput = true,
+                UseShellExecute = false,
+                CreateNoWindow = true,
+                WindowStyle = ProcessWindowStyle.Hidden
             };
 
             foreach (var arg in arguments)
                 startInfo.ArgumentList.Add(arg);
 
             Process process = null;
-			try
+            try
             {
                 process = await StartProcess(startInfo, cancel);
 
                 exitCode = process.ExitCode;
-                if (redirectStandardOutput)
-                {
-                    responseString = await process.StandardOutput.ReadToEndAsync().ConfigureAwait(false);
-                }
-                else
-                {
-                    responseString = exitCode == 0
-                        ? "{\"success\":\"true\"}"
-                        : $"{{\"success\":\"false\",\"error\":\"Process terminated with exit code: {exitCode}.\"}}";
-                }
+                responseString = await process.StandardOutput.ReadToEndAsync().ConfigureAwait(false);
                 Logger.LogDebug($"Exit code: exit code: {exitCode}, Output: {responseString}");
             }
             catch (Exception ex)
-			{
+            {
                 Logger.LogError(default, ex, "Failed to call hwi");
-				throw;
-			}
+                throw;
+            }
             finally
             {
                 try
@@ -106,8 +74,8 @@ namespace BTCPayServer.Hwi.Transports
                 finally { process?.Dispose(); }
             }
 
-			return responseString;
-		}
+            return responseString;
+        }
 
         private async Task<Process> StartProcess(ProcessStartInfo startInfo, CancellationToken cancel)
         {
