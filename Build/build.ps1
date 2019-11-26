@@ -2,7 +2,7 @@ New-Item -Path "..\dist" -ItemType "Directory" -Force
 Remove-Item -Force -Recurse "..\dist\**"
 
 $distFolder="$(Get-Location)\..\dist"
-foreach ($arch in "debian-x64","linux-x64","win-x64","osx-x64")
+foreach ($arch in "debian-x64")
 {
   docker build -t "vault-$arch" -f "$arch/Dockerfile" ..
   docker run --rm -v "${distFolder}:/opt/dist" "vault-$arch"
