@@ -1,0 +1,32 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Style>
+        <Style.Resources>
+            <SolidColorBrush x:Key="btcpay-color-primary">#329f80</SolidColorBrush>
+            <DrawingGroup x:Key="warning">
+                <DrawingGroup.Children>
+                    <GeometryDrawing Brush="#00FFFFFF" Geometry="F1M16,16L0,16 0,0 16,0z" />
+                    <GeometryDrawing Brush="#FFF6F6F6" Geometry="F1M7.7246,15.9219C1.6086,14.1719,0.6986,7.3389,1.0726,3.9709L1.1316,3.4369 7.9996,-9.99999999997669E-05 14.8686,3.4369 14.9276,3.9709C15.3016,7.3389,14.3916,14.1719,8.2756,15.9219L7.9996,15.9999z" />
+                    <GeometryDrawing Brush="#FFFFCC00" Geometry="F1M9,9L7,9 7,4 9,4z M9,12L7,12 7,10 9,10z M13.951,4L8,1 2.049,4C2.049,4 1.058,13 8,15 14.942,13 13.951,4 13.951,4" />
+                    <GeometryDrawing Brush="#FF000000" Geometry="F1M7,12L9,12 9,10 7,10z M7,4L9,4 9,9 7,9z" />
+                </DrawingGroup.Children>
+            </DrawingGroup>
+            <DrawingGroup x:Key="spinner">
+                <DrawingGroup.Children>
+                    <GeometryDrawing Brush="#329f80">
+                        <GeometryDrawing.Geometry>
+                            <EllipseGeometry Rect="0 0 20 20"></EllipseGeometry>
+                        </GeometryDrawing.Geometry>
+                    </GeometryDrawing>
+                    <GeometryDrawing Brush="White">
+                        <GeometryDrawing.Geometry>
+                            <EllipseGeometry Rect="2.5 2.5 15 15"></EllipseGeometry>
+                        </GeometryDrawing.Geometry>
+                    </GeometryDrawing>
+                </DrawingGroup.Children>
+            </DrawingGroup>
+        </Style.Resources>
+    </Style>
+    <Style Selector="TextBlock">
+    </Style>
+</Styles>

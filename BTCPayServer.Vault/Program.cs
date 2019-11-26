@@ -15,6 +15,10 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Hosting.Server;
 using System.IO;
+using Avalonia;
+using Avalonia.Logging.Serilog;
+using Microsoft.AspNetCore.Connections;
+using System.Net.Sockets;
 
 namespace BTCPayServer.Vault
 {
@@ -22,11 +26,9 @@ namespace BTCPayServer.Vault
     {
         static async Task Main(string[] args)
         {
-            var hostBuilder = Host.CreateDefaultBuilder(args);
-#if RELOCATE_CONTENT
-            hostBuilder.UseContentRoot(Path.GetDirectoryName(typeof(Program).Assembly.Location));
-#endif
-            using var host = hostBuilder
+            if (!TestPortFree())
+                return;
+            using var host = Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webHost =>
                 {
                     webHost
@@ -36,18 +38,37 @@ namespace BTCPayServer.Vault
                     })
                     .UseStartup<Startup>();
                 })
+                .ConfigureLogging(l =>
+                {
+                    l.SetMinimumLevel(LogLevel.Warning);
+#if DEBUG
+                    l.AddFilter(LoggerNames.HwiServer, LogLevel.Debug);
+#endif
+                })
                 .Build();
-            
             await host.StartAsync();
-            var environment = host.Services.GetService<IWebHostEnvironment>();
-            if (!environment.IsDevelopment())
-            {
-                var browser = host.Services.GetService<IBrowser>();
-                var address = host.Services.GetService<IServer>().Features.Get<IServerAddressesFeature>().Addresses.First();
-                browser.OpenBrowser(address);
-            }
-
             await host.WaitForShutdownAsync();
         }
+
+        private static bool TestPortFree()
+        {
+            TcpListener listener = new TcpListener(IPAddress.Loopback, HttpTransport.LocalHwiDefaultPort);
+            try
+            {
+                listener.Start();
+                listener.Stop();
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        // Unused, but make the designer happy
+        public static AppBuilder BuildAvaloniaApp()
+    => AppBuilder.Configure<App>()
+        .UsePlatformDetect()
+        .LogToDebug();
     }
 }

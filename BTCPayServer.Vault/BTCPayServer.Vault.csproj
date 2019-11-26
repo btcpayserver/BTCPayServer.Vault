@@ -1,39 +1,52 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <Import Project="Version.csproj" Condition="Exists('Version.csproj')" />
   <PropertyGroup>
     <OutputType>Exe</OutputType>
+    <OutputType Condition=" '$(Configuration)' == 'Release' ">WinExe</OutputType>
     <TargetFramework>netcoreapp3.0</TargetFramework>
     <Company>BTCPay Server</Company>
     <Title>BTCPayServer Vault</Title>
+    <AssemblyTitle>$(Title)</AssemblyTitle>
     <TargetName>BTCPayServer.Vault</TargetName>
     <Description>Allow web application to access your favorite Bitcoin hardware wallet</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.0.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.0.0">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
+    <PackageReference Include="Avalonia" Version="0.9.0-preview7" />
+    <PackageReference Include="AvalonStudio.Shell" Version="0.9.0-preview7" />
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="3.0.0" />
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.0.0" />
     <PackageReference Include="NicolasDorier.RateLimits" Version="1.1.0" />
-    <PackageReference Include="WebWindow" Version="0.1.0-20191119.2" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="3.0.0" Condition="'$(Configuration)' == 'Debug'" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\BTCPayServer.Hwi\BTCPayServer.Hwi.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Update="**\*.xaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
+    <AvaloniaResource Include="**\*.xaml;Assets\*" Exclude="bin\**;obj\**;**\*.xproj;packages\**;@(EmbeddedResource)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="App.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </None>
+    <None Update="MainWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </None>
+    <None Update="Styles.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Assets\" />
+  </ItemGroup>
 
   <PropertyGroup Condition="'$(GithubDistrib)' == 'true'">
     <PublishTrimmed>true</PublishTrimmed>
     <SelfContained>true</SelfContained>
-    <DefineConstants>$(DefineConstants);RELOCATE_CONTENT</DefineConstants>
   </PropertyGroup>
-  <ItemGroup Condition="'$(GithubDistrib)' == 'true'">
-      <!-- Publish everything under wwwroot, all JSON files, all config files and all Razor files -->
-      <Content Update="wwwroot\**" ExcludeFromSingleFile="" />
-  </ItemGroup>
 </Project>

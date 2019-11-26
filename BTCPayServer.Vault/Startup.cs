@@ -18,16 +18,12 @@ namespace BTCPayServer.Vault
             services.AddHwiServer();
             services.AddHttpContextAccessor();
             services.AddScoped<HWI.IPermissionPrompt, PermissionPrompt>();
-            services.AddSingleton<IBrowser>(ProcessBrowser.Instance);
-            services.AddSingleton<Prompts>();
             services.Configure<HwiServerOptions>(opt => opt.HwiDeploymentDirectory = Path.GetDirectoryName(typeof(Program).Assembly.Location));
             services.AddSingleton<PermissionsService>();
             services.AddRateLimits();
-#if DEBUG
-            services.AddMvc()
-                    .AddRazorRuntimeCompilation();
-#endif
             services.AddMvc();
+            services.AddAvalonia<App>();
+            services.AddViewModels();
         }
         public void Configure(IApplicationBuilder app, RateLimitService rateLimitService)
         {
@@ -39,6 +35,7 @@ namespace BTCPayServer.Vault
             {
                 e.MapControllers();
             });
+            app.UseAvalonia();
         }
     }
 }
