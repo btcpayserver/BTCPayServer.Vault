@@ -94,21 +94,33 @@ namespace BTCPayServer.Vault
         public ICommand Accept { get; }
         public ICommand Reject { get; }
 
-        private bool _IsLoading;
+
+        private string _CurrentOperation;
+        public string CurrentOperation
+        {
+            get
+            {
+                return _CurrentOperation;
+            }
+            set
+            {
+                if (value != _CurrentOperation)
+                {
+                    _CurrentOperation = value;
+                    if (PropertyChanged != null)
+                    {
+                        PropertyChanged(this, new PropertyChangedEventArgs("CurrentOperation"));
+                        PropertyChanged(this, new PropertyChangedEventArgs("IsLoading"));
+                    }
+                }
+            }
+        }
+
         public bool IsLoading
         {
             get
             {
-                return _IsLoading;
-            }
-            set
-            {
-                if (value != _IsLoading)
-                {
-                    _IsLoading = value;
-                    if (PropertyChanged != null)
-                        PropertyChanged(this, new PropertyChangedEventArgs("IsLoading"));
-                }
+                return CurrentOperation != null;
             }
         }
 

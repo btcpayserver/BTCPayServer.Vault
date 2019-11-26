@@ -25,12 +25,12 @@ namespace BTCPayServer.Vault
         {
             AvaloniaXamlLoader.Load(this);
             Context = AvaloniaSynchronizationContext.Current as AvaloniaSynchronizationContext;
-            if (AvaloniaLocator.CurrentMutable != null)
+            if (AvaloniaLocator.CurrentMutable?.GetService<IServiceProvider>() is IServiceProvider serviceProvider)
             {
-                ServiceProvider = AvaloniaLocator.CurrentMutable.GetService<IServiceProvider>();
+                ServiceProvider = serviceProvider;
                 var indicator = ServiceProvider.GetRequiredService<IRunningIndicator>();
-                indicator.Running += (_, __) => Context.Post((___) => MainViewModel.IsLoading = true, null);
-                indicator.StoppedRunning += (_, __) => Context.Post((___) => MainViewModel.IsLoading = false, null);
+                indicator.Running += (_, op) => Context.Post((___) => MainViewModel.CurrentOperation = op + "...", null);
+                indicator.StoppedRunning += (_, __) => Context.Post((___) => MainViewModel.CurrentOperation = null, null);
                 DataContext = ServiceProvider.GetRequiredService<MainWindowViewModel>();
             }
         }
