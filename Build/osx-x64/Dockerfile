@@ -65,7 +65,7 @@ RUN $EXPORT_VARIABLES && \
     # 5. Create empty dir "mkdir empty"
     # 6. Run create-dmg --volname "BTCPayServer Vault" --volicon .VolumeIcon.icns --background Logo_with_text_small.png --window-pos 200 120 --window-size 600 440 --app-drop-link 500 150 --icon "BTCPayServer Vault" 110 150 --hdiutil-verbose "btcpay.dmg" empty
     # 7. Now you can change .background, .fseventsd and .DS_Store from Build/Osx
-    cp -r "$RESOURCES/Metadata" "$dmgroot" && \
+    cp -r "$RESOURCES/Metadata/." "$dmgroot" && \
     genisoimage -no-cache-inodes \
     -D \
     -l \
