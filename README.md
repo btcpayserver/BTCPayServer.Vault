@@ -9,17 +9,17 @@ This project is composed of two parts:
 
 ## Why BTCPayServer Vault
 
-The BTCPayServer Vault allows web applications to access your hardware wallet, this enable a better integrated user experience for a user.
+BTCPayServer Vault allows web applications to access your hardware wallet, this enables a better integrated user experience.
 
-## How does the BTCPayServer Vault works
+## How does BTCPayServer Vault work
 
-When running the BTCPayServer Vault, a local webserver is hosted on `http://127.0.0.1:65092` which web applications, via your local browser, can connect to interact with your hardware wallet.
+When running the BTCPayServer Vault, a local webserver is hosted on `http://127.0.0.1:65092` which web applications, via your local browser, can connect to in order to interact with your hardware wallet.
 
 The protocol is fairly simple:
 
-First, the web application need to make a permission request to the vault by sending a HTTP request `GET` to `http://127.0.0.1:65092/hwi-bridge/v1/request-permission`
+First, the web application needs to make a permission request to the Vault by sending a HTTP request `GET` to `http://127.0.0.1:65092/hwi-bridge/v1/request-permission`
 
-This will prompt the user to grant access to the web application and if the user accept, the request returns HTTP 200. Note that internally, the Vault relies on the `ORIGIN` HTTP header to identify the web application requesting access.
+This will prompt the user to grant access to the web application and if the user accepts, the request returns HTTP 200. Note that internally, the Vault relies on the `ORIGIN` HTTP header to identify the web application requesting access.
 If the access was granted previously, the request returns HTTP 200.
 
 Second, the web application can query the hardware through `POST` requests to `http://127.0.0.1:65092/hwi-bridge/v1`.
