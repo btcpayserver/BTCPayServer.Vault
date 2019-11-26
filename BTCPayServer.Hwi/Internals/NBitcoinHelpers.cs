@@ -12,7 +12,6 @@ namespace BTCPayServer.Helpers
         {
             extPubKeyString = Guard.NotNullOrEmptyOrWhitespace(nameof(extPubKeyString), extPubKeyString, trim: true);
 
-            ExtPubKey epk;
             try
             {
                 return new BitcoinExtPubKey(extPubKeyString, network); // Starts with "ExtPubKey": "xpub...
