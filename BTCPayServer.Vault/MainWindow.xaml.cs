@@ -10,11 +10,33 @@ using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 using Avalonia.Threading;
 using BTCPayServer.Vault.HWI;
+using System.Runtime.InteropServices;
 
 namespace BTCPayServer.Vault
 {
     public class MainWindow : Window
     {
+        static Size NormalSize = new Size(622, 220);
+        static Size ExpandedSize = new Size(622, 433);
+        /// <summary>
+        /// Workaround https://github.com/AvaloniaUI/Avalonia/issues/3290 and https://github.com/AvaloniaUI/Avalonia/issues/3291
+        /// Because our app can only have two size we just resize based on the state of IsVisible of the MainViewModel
+        /// </summary>
+        void ResizeHack()
+        {
+            Size newSize = MainViewModel.IsVisible ? ExpandedSize : NormalSize;
+
+            if (newSize != this.ClientSize)
+            {
+                this.ClientSize = newSize;
+                // On Mac, resizing down will make the windows jump down, so we need to set it back up
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX) && newSize == NormalSize)
+                {
+                    this.Position = this.Position.WithY(this.Position.Y - (int)(ExpandedSize.Height - NormalSize.Height));
+                }
+            }
+        }
+
         public MainWindow()
         {
             InitializeComponent();
@@ -34,7 +56,6 @@ namespace BTCPayServer.Vault
                 Indicator.StoppedRunning += OnStoppedRunning;
                 DataContext = ServiceProvider.GetRequiredService<MainWindowViewModel>();
                 MainViewModel.PropertyChanged += MainViewModel_PropertyChanged;
-                this.Opened += MainWindow_Opened;
                 _ResizeHackTimer = new DispatcherTimer(TimeSpan.FromSeconds(1), DispatcherPriority.Normal, (_, __) =>
                 {
                     ResizeHack();
@@ -42,10 +63,9 @@ namespace BTCPayServer.Vault
                         this.Blink();
                 });
                 _ResizeHackTimer.Start();
+                this.ResizeHack();
             }
-            PermissionPanel = this.Get<Panel>("PermissionPanel");
         }
-
         private void MainViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == nameof(MainViewModel.IsVisible))
@@ -56,28 +76,6 @@ namespace BTCPayServer.Vault
                     this.ActivateHack();
                 }, null);
             }
-        }
-        /// <summary>
-        /// Workaround https://github.com/AvaloniaUI/Avalonia/issues/3290 and https://github.com/AvaloniaUI/Avalonia/issues/3291
-        /// </summary>
-        void ResizeHack()
-        {
-            //Console.WriteLine("PanelDesired:" + PermissionPanel.DesiredSize);
-
-            // We hardcode here the PermissionPanel size change
-            if (MainViewModel.IsVisible)
-            {
-                this.ClientSize = new Size(originalSize.Width, originalSize.Height + 213);
-            }
-            else
-            {
-                this.ClientSize = originalSize;
-            }
-        }
-        private Size originalSize;
-        private void MainWindow_Opened(object sender, EventArgs e)
-        {
-            originalSize = this.DesiredSize;
         }
 
         protected override void OnClosing(CancelEventArgs e)
@@ -118,7 +116,6 @@ namespace BTCPayServer.Vault
 
         public IServiceProvider ServiceProvider { get; private set; }
         public IRunningIndicator Indicator { get; private set; }
-        public Panel PermissionPanel { get; private set; }
 
         AvaloniaSynchronizationContext Context;
 

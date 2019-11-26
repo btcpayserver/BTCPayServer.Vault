@@ -35,7 +35,6 @@ namespace BTCPayServer.Vault
             {
                 e.MapControllers();
             });
-            app.UseAvalonia();
         }
     }
 }

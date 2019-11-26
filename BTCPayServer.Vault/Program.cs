@@ -19,35 +19,39 @@ using Avalonia;
 using Avalonia.Logging.Serilog;
 using Microsoft.AspNetCore.Connections;
 using System.Net.Sockets;
+using System.Threading;
 
 namespace BTCPayServer.Vault
 {
     class Program
     {
-        static async Task Main(string[] args)
+        //static SemaphoreSlim _
+        public static void Main(string[] args)
         {
             if (!TestPortFree())
                 return;
-            using var host = Host.CreateDefaultBuilder(args)
-                .ConfigureWebHostDefaults(webHost =>
-                {
-                    webHost
-                    .UseKestrel(kestrel =>
-                    {
-                        kestrel.ListenLocalhost(HttpTransport.LocalHwiDefaultPort);
-                    })
-                    .UseStartup<Startup>();
-                })
-                .ConfigureLogging(l =>
-                {
-                    l.SetMinimumLevel(LogLevel.Warning);
+            var host = Host.CreateDefaultBuilder(args)
+                            .ConfigureWebHostDefaults(webHost =>
+                            {
+                                webHost
+                                .UseKestrel(kestrel =>
+                                {
+                                    kestrel.ListenLocalhost(HttpTransport.LocalHwiDefaultPort);
+                                })
+                                .UseStartup<Startup>();
+                            })
+                            .ConfigureLogging(l =>
+                            {
+                                l.SetMinimumLevel(LogLevel.Trace);
 #if DEBUG
-                    l.AddFilter(LoggerNames.HwiServer, LogLevel.Debug);
+                                l.AddFilter(LoggerNames.HwiServer, LogLevel.Debug);
 #endif
-                })
-                .Build();
-            await host.StartAsync();
-            await host.WaitForShutdownAsync();
+                            })
+                            .Build();
+            host.Services.GetRequiredService<AppBuilder>()
+                         .With(host.Services)
+                         .With(host)
+                         .StartWithClassicDesktopLifetime(args);
         }
 
         private static bool TestPortFree()

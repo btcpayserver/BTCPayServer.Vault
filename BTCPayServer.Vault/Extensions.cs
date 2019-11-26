@@ -22,29 +22,6 @@ namespace BTCPayServer.Vault
 {
     public static class Extensions
     {
-        public static void UseAvalonia(this IApplicationBuilder applicationBuilder)
-        {
-            var appBuilder = applicationBuilder.ApplicationServices.GetRequiredService<AppBuilder>();
-            var lifetime = applicationBuilder.ApplicationServices.GetRequiredService<Microsoft.Extensions.Hosting.IHostApplicationLifetime>();
-            
-            var uithread = new Thread(() =>
-            {
-                try
-                {
-                    appBuilder.With(applicationBuilder.ApplicationServices)
-                              .StartWithClassicDesktopLifetime(Array.Empty<string>());
-                }
-                finally
-                {
-                    lifetime.StopApplication();
-                }
-            })
-            {
-                Name = "Avalonia UI Thread",
-                IsBackground = false
-            };
-            uithread.Start();
-        }
         public static void AddAvalonia<TApp>(this IServiceCollection services) where TApp : Application, new()
         {
             bool useGpuLinux = true;

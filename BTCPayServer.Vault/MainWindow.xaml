@@ -3,14 +3,15 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        CanResize="False"
-        SizeToContent="WidthAndHeight"
+        SizeToContent="Manual"
+        Width="622"
+        Height="433"
         Icon="avares://BTCPayServer.Vault/Assets/BTCPayServerVault-256x256.png"
         x:Class="BTCPayServer.Vault.MainWindow" Padding="20">
-    <StackPanel Orientation="Vertical">
+    <StackPanel Name="RootPanel"  Orientation="Vertical">
         <StackPanel Orientation="Horizontal">
             <Image Source="avares://BTCPayServer.Vault/Assets/BTCPayServerVault-256x256.png" Height="128" Width="128"></Image>
-            <TextBlock FontSize="32" VerticalAlignment="Center" HorizontalAlignment="Left">Welcome to BTCPayServer Vault</TextBlock>
+            <TextBlock FontSize="28" VerticalAlignment="Center" HorizontalAlignment="Right">Welcome to BTCPayServer Vault</TextBlock>
         </StackPanel>
         <Separator HorizontalAlignment="Left" Height="3" Background="{DynamicResource btcpay-color-primary}" Width="128" Margin="0,10,0,15"></Separator>
         <DockPanel>
@@ -20,7 +21,7 @@
                 <TextBlock VerticalAlignment="Center" Margin="5,0,0,0" Text="{Binding CurrentOperation}"></TextBlock>
             </StackPanel>
         </DockPanel>
-        <StackPanel Name="PermissionPanel" IsVisible="{Binding IsVisible}" Margin="0,15,0,0">
+        <StackPanel IsVisible="{Binding IsVisible}" Margin="0,15,0,0">
             <Separator HorizontalAlignment="Left" Height="3" Background="{DynamicResource btcpay-color-primary}" Width="128" Margin="0,0,0,15"></Separator>
             <DockPanel>
                 <DrawingPresenter DockPanel.Dock="Left" Height="128" Width="128" VerticalAlignment="Center" HorizontalAlignment="Center" Drawing="{DynamicResource warning}" />
@@ -34,7 +35,7 @@
                     <TextBlock Text=" "></TextBlock>
                     <TextBlock>The permission will be in effect until you restart BTCPayServer Vault.</TextBlock>
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="Do you really want to grant access to "></TextBlock>
+                        <TextBlock Text="Do you want to grant access to "></TextBlock>
                         <TextBlock FontWeight="Bold" Text="{Binding Origin}"></TextBlock>
                         <TextBlock>?</TextBlock>
                     </StackPanel>
