@@ -1,22 +1,29 @@
 language: minimal
 services:
   - docker
+
 stages:
-  - build
+    - build
+    - pgpsign
+    - name: makerelease
+      if: tag IS present
 
 jobs:
   include:
     - stage: build
-      name: "Create .deb"
       env: RID=debian-x64
-    - stage: build
-      name: "Create .tar.gz"
+      script: ./Build/travis/build.sh
+    -
       env: RID=linux-x64
-    - stage: build
-      name: "Create .dmg"
+      script: ./Build/travis/build.sh
+    - 
       env: RID=osx-x64
-    - stage: build
-      name: "Create setup.exe"
+      script: ./Build/travis/build.sh
+    -
       env: RID=win-x64
+      script: ./Build/travis/build.sh
 
-script: cd Build/ && docker build -t "vault-$RID" -f "$RID/Dockerfile" ..
+    - stage: pgpsign
+      script: ./Build/travis/pgpsign.sh
+    - stage: makerelease
+      script: ./Build/travis/makerelease.sh
