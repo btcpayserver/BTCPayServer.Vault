@@ -125,3 +125,4 @@ output
 .git/
 **/Dockerfile
 dist/
+.travis.yml
