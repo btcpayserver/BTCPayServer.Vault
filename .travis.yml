@@ -1,5 +1,4 @@
-language: csharp
-mono: none
+language: minimal
 services:
   - docker
 stages:
@@ -16,3 +15,5 @@ jobs:
   include:
     - stage: build
       script: cd Build/ && docker build -t "vault-$RID" -f "$RID/Dockerfile" ..
+
+script: echo hello
