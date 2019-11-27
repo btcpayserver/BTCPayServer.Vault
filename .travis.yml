@@ -1,0 +1,15 @@
+language: csharp
+services:
+  - docker
+
+matrix:
+  include:
+    - env: RID=debian-x64
+    - env: RID=linux-x64
+    - env: RID=osx-x64
+    - env: RID=win-x64
+
+jobs:
+  include:
+    - stage: build
+      script: cd Build/ && docker build -t "vault-$RID" -f "$RID/Dockerfile" ..
