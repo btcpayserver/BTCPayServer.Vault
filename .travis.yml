@@ -2,6 +2,8 @@ language: csharp
 mono: none
 services:
   - docker
+stages:
+  - build
 
 matrix:
   include:
