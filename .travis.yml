@@ -4,16 +4,15 @@ services:
 stages:
   - build
 
-matrix:
-  include:
-    - env: RID=debian-x64
-    - env: RID=linux-x64
-    - env: RID=osx-x64
-    - env: RID=win-x64
+env:
+  jobs:
+    - RID=debian-x64
+    - RID=linux-x64
+    - RID=osx-x64
+    - RID=win-x64
 
 jobs:
   include:
     - stage: build
+      name: "Building in docker for $RID"
       script: cd Build/ && docker build -t "vault-$RID" -f "$RID/Dockerfile" ..
-
-script: echo hello
