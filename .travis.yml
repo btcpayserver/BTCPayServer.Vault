@@ -1,3 +1,9 @@
+# This travis file relis on the following environment variable to configure on your travis repository settings:
+# * GITHUB_TOKEN: A github token used to create a new release when a tag is detected (public_repo scope)
+# * AZURE_STORAGE_CONTAINER: The azure storage container name to use (can be anything, lowercase, no strange chars)
+# * AZURE_STORAGE_CONNECTION_STRING: The azure storage connection string (WARNING your need to enclose it with double quotes "")
+# * PGP_KEY: The private PGP key to use to signs all the artifact, in base64 (cat your-pgp.key | base64 -w0)
+
 language: minimal
 services:
   - docker

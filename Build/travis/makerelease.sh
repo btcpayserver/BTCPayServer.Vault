@@ -23,12 +23,14 @@ tar -xf azcopy.tar.gz --strip-components=1
 mkdir -p dist
 ./azcopy cp "https://$AZURE_ACCOUNT_NAME.blob.core.windows.net/$AZURE_STORAGE_CONTAINER/$DIRECTORY_NAME/*" "dist"
 
+release="$(cat Build/RELEASE.md)"
 version="$(echo "$TRAVIS_TAG" | cut -d'/' -f2)"
 payload="$(jq -M --arg "tag_name" "$TRAVIS_TAG" \
    --arg "name" "BTCPayServer Vault $version" \
+   --arg "body" "$release" \
    --argjson "draft" true \
    --argjson "prerelease" true \
-   '. | .tag_name=$tag_name | .name=$name | .draft=$draft | .prerelease=$prerelease' \
+   '. | .tag_name=$tag_name | .name=$name | .body=$body | .draft=$draft | .prerelease=$prerelease' \
    <<<'{}')"
 response="$(curl --fail -s -S -X POST https://api.github.com/repos/$TRAVIS_REPO_SLUG/releases \
     -H "Accept: application/vnd.github.v3+json" \
