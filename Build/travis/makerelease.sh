@@ -28,7 +28,7 @@ version="$(echo "$TRAVIS_TAG" | cut -d'/' -f2)"
 payload="$(jq -M --arg "tag_name" "$TRAVIS_TAG" \
    --arg "name" "BTCPayServer Vault $version" \
    --arg "body" "$release" \
-   --argjson "draft" true \
+   --argjson "draft" false \
    --argjson "prerelease" true \
    '. | .tag_name=$tag_name | .name=$name | .body=$body | .draft=$draft | .prerelease=$prerelease' \
    <<<'{}')"
