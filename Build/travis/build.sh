@@ -3,7 +3,7 @@
 set -e
 
 DOCKER_IMAGE_NAME="vault-$RID"
-docker build -t "$DOCKER_IMAGE_NAME" -f "Build/$RID/Dockerfile" .
+docker build -t "$DOCKER_IMAGE_NAME" $DOCKER_BUILD_ARGS -f "Build/$RID/Dockerfile" .
 docker run --rm -v "$(pwd)/dist:/opt/dist" "$DOCKER_IMAGE_NAME"
 
 if ! [[ "$AZURE_STORAGE_CONNECTION_STRING" ]] || ! [[ "$AZURE_STORAGE_CONTAINER" ]]; then

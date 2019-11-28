@@ -18,7 +18,7 @@ jobs:
   include:
     - stage: build
       env: RID=debian-x64
-      script: ./Build/travis/build.sh
+      script: export DOCKER_BUILD_ARGS="--build-arg PGP_KEY=$PGP_KEY" && ./Build/travis/build.sh
     -
       env: RID=linux-x64
       script: ./Build/travis/build.sh
