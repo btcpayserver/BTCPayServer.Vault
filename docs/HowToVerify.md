@@ -20,12 +20,12 @@ This make sure that the hashes in `SHA256SUMS.asc` are the same as the file, mak
 However, now you want to make sure that Nicolas Dorier signed the binaries.
 
 Nicolas Dorier has a [keybase](https://keybase.io/NicolasDorier) account that allow you to verify that his identity is linked to several well-known social media accounts.
-And as you can see on his profile page, the PGP key `223F DA69 DEBE A82D` is linked to his keybase identity.
+And as you can see on his profile page, the PGP key `62FE 8564 7DED DA2E` is linked to his keybase identity.
 
 You can import this key from keybase:
 
 ```bash
-curl https://keybase.io/nicolasdorier/pgp_keys.asc?fingerprint=015b4c837b245509e4ac8995223fda69debea82d | gpg --import
+curl https://keybase.io/nicolasdorier/pgp_keys.asc?fingerprint=7121bde3555d9be06bddc68162fe85647dedda2e | gpg --import
 ```
 
 Then you can finally check the hashes:
@@ -36,10 +36,10 @@ gpg2 --verify SHA256SUMS.asc
 Which should output something like:
 
 ```
-gpg: Signature made Tue Nov 26 12:01:06 2019 JST
-gpg:                using RSA key 223FDA69DEBEA82D
-gpg: Good signature from "Nicolas Dorier <nicolas.dorier@gmail.com>" [unknown]
+gpg: Signature made Thu Nov 28 01:14:12 2019 JST
+gpg:                using RSA key 62FE85647DEDDA2E
+gpg: Good signature from "BTCPayServer Vault <nicolas.dorier@gmail.com>" [unknown]
 gpg: WARNING: This key is not certified with a trusted signature!
 gpg:          There is no indication that the signature belongs to the owner.
-Primary key fingerprint: 015B 4C83 7B24 5509 E4AC  8995 223F DA69 DEBE A82D
+Primary key fingerprint: 7121 BDE3 555D 9BE0 6BDD  C681 62FE 8564 7DED DA2E
 ```

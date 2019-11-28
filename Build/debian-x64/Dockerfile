@@ -10,6 +10,10 @@ RUN wget -qO /tmp/hwi.tar.gz https://github.com/bitcoin-core/HWI/releases/downlo
     echo "00cb4b2c6eb78d848124e1c3707bdae9c95667f1397dd32cf3b51b579b3a010a /tmp/hwi" | sha256sum -c - && \
     rm /tmp/hwi.tar.gz
 
+SHELL ["/bin/bash", "-c"]
+ARG PGP_KEY=""
+RUN ! [[ "${PGP_KEY}" ]] || apt-get install -y debsigs
+
 WORKDIR /source
 ENV RUNTIME "debian-x64"
 COPY "Build/common" "Build/common"
@@ -17,7 +21,6 @@ ENV EXPORT_VARIABLES "source Build/common/export-variables.sh"
 COPY BTCPayServer.Vault/BTCPayServer.Vault.csproj BTCPayServer.Vault/BTCPayServer.Vault.csproj
 COPY BTCPayServer.Hwi/BTCPayServer.Hwi.csproj BTCPayServer.Hwi/BTCPayServer.Hwi.csproj
 
-SHELL ["/bin/bash", "-c"]
 RUN $EXPORT_VARIABLES && dotnet_restore
 COPY BTCPayServer.Hwi BTCPayServer.Hwi
 COPY BTCPayServer.Vault BTCPayServer.Vault
@@ -47,6 +50,13 @@ RUN $EXPORT_VARIABLES && \
     replaceProjectVariables "$debiandir/usr/share/applications/BTCPayServer.Vault.desktop" && \
     sizeinkb="$(du -k --max-depth=0 $debiandir | cut -f 1)" && \
     sed -i "s/{SIZEINKB}/$sizeinkb/g" "$debiandir/DEBIAN/control" && \
-    dpkg --build "$debiandir" && mv /tmp/debian.deb "$DIST/BTCPayServerVault-$VERSION.deb"
+    dpkg --build "$debiandir" && mv /tmp/debian.deb "$DIST/BTCPayServerVault-$VERSION.deb" && \
+    ( ! [[ "${PGP_KEY}" ]] || \
+    ( \
+        echo "$PGP_KEY" | base64 --decode | gpg --import && \
+        apt-get install -y debsigs && \
+        debsigs --sign=maint "$DIST/BTCPayServerVault-$VERSION.deb" && \
+        echo "The debian package has been pgp signed" \
+    ))
 
 ENTRYPOINT [ "/bin/bash", "-c", "$EXPORT_VARIABLES && cp $DIST/* /opt/dist/" ]
