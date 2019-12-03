@@ -44,6 +44,7 @@ namespace BTCPayServer.Vault
 
         private void Desktop_Startup(object sender, ControlledApplicationLifetimeStartupEventArgs e)
         {
+            var syncContext = AvaloniaSynchronizationContext.Current;
             new Thread(_ =>
             {
                 // Every other solution make deadlocks when the host is disposed
@@ -54,9 +55,9 @@ namespace BTCPayServer.Vault
                         Host.Start();
                         Host.WaitForShutdown();
                     }
-                    catch
+                    catch (Exception)
                     {
-                        AvaloniaSynchronizationContext.Current.Post(_ => { Desktop.Shutdown(1); }, null);
+                        syncContext?.Post(_ => { try { Desktop?.Shutdown(1); } catch { } }, null);
                     }
                 }
             })
