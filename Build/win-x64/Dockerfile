@@ -25,11 +25,11 @@ SHELL ["/bin/bash", "-c"]
 RUN $EXPORT_VARIABLES && dotnet_restore
 COPY BTCPayServer.Hwi BTCPayServer.Hwi
 COPY BTCPayServer.Vault BTCPayServer.Vault
-COPY BTCPayServerVault.png BTCPayServerVault.png
 
 RUN $EXPORT_VARIABLES && \
     dotnet_publish && mv /tmp/hwi.exe "$PUBLISH_FOLDER/"
 
+COPY BTCPayServerVault.png BTCPayServerVault.png
 COPY "Build/${RUNTIME}" "Build/${RUNTIME}"
 RUN $EXPORT_VARIABLES && \
     mkdir -p "/tmp/BTCPayServerVault.ico.tmp" && \
