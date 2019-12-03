@@ -21,7 +21,7 @@ namespace BTCPayServer.Vault.HWI
         {
             try
             {
-                Running?.Invoke(this, arguments.FirstOrDefault());
+                Running?.Invoke(this, arguments.Where(a => !a.Contains('-')).FirstOrDefault() ?? string.Empty);
                 return await _inner.SendCommandAsync(arguments, cancel);
             }
             finally
