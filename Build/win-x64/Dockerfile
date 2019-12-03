@@ -5,7 +5,7 @@ RUN apt-get update
 RUN apt-get install -y --no-install-recommends imagemagick
 ###
 
-RUN apt-get install -y --no-install-recommends nsis unzip wine
+RUN apt-get install -y --no-install-recommends nsis unzip wine xxd
 RUN wget -qO "/tmp/hwi.zip" https://github.com/bitcoin-core/HWI/releases/download/1.0.3/hwi-1.0.3-windows-amd64.zip && \
     unzip "/tmp/hwi.zip" -d "/tmp" && \
     echo "f52ec4c8dd2dbef4aabe28d8a49580bceb54fd609b84c753d6354eeecbd6dc7a /tmp/hwi.exe" | sha256sum -c - && \
@@ -37,7 +37,14 @@ RUN $EXPORT_VARIABLES && \
         convert -background none -resize "!$size" "BTCPayServerVault.png" "PNG32:/tmp/BTCPayServerVault.ico.tmp/BTCPayServerVault-$size.png"; \
     done && \
     convert /tmp/BTCPayServerVault.ico.tmp/*.png /tmp/BTCPayServerVault.ico && \
-    wine /tmp/rcedit.exe "$PUBLISH_FOLDER/$EXECUTABLE.exe" \
+    executable="$PUBLISH_FOLDER/$EXECUTABLE.exe" && \
+    # Workaround https://github.com/dotnet/sdk/issues/3990
+    e_lfanew_loc=$(xxd -p -l1 -s $((16#FC)) "$executable") && \
+    e_lfanew_loc="$((16#$e_lfanew_loc))" && \
+    subsystem_loc=$(($e_lfanew_loc + 84)) && \
+    printf "%06x: 0200" $subsystem_loc | xxd -r - "$executable" && \
+    # End of workaround
+    wine /tmp/rcedit.exe "$executable" \
     --set-icon "/tmp/BTCPayServerVault.ico" \
     --set-version-string "LegalCopyright" "$LICENSE" \
     --set-version-string "CompanyName" "$COMPANY" \
