@@ -28,16 +28,15 @@ COPY BTCPayServer.Vault BTCPayServer.Vault
 COPY BTCPayServerVault.png BTCPayServerVault.png
 
 RUN $EXPORT_VARIABLES && \
+    dotnet_publish && mv /tmp/hwi.exe "$PUBLISH_FOLDER/"
+
+COPY "Build/${RUNTIME}" "Build/${RUNTIME}"
+RUN $EXPORT_VARIABLES && \
     mkdir -p "/tmp/BTCPayServerVault.ico.tmp" && \
     for size in 256x256 48x48 32x32 16x16; do \
         convert -background none -resize "!$size" "BTCPayServerVault.png" "PNG32:/tmp/BTCPayServerVault.ico.tmp/BTCPayServerVault-$size.png"; \
     done && \
     convert /tmp/BTCPayServerVault.ico.tmp/*.png /tmp/BTCPayServerVault.ico && \
-    ADDITIONAL_PUBLISH_ARGS="-p:ApplicationIcon=/tmp/BTCPayServerVault.ico" && \
-    dotnet_publish && mv /tmp/hwi.exe "$PUBLISH_FOLDER/"
-
-COPY "Build/${RUNTIME}" "Build/${RUNTIME}"
-RUN $EXPORT_VARIABLES && \
     wine /tmp/rcedit.exe "$PUBLISH_FOLDER/$EXECUTABLE.exe" \
     --set-icon "/tmp/BTCPayServerVault.ico" \
     --set-version-string "LegalCopyright" "$LICENSE" \
