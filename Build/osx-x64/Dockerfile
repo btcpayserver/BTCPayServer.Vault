@@ -51,6 +51,7 @@ RUN $EXPORT_VARIABLES && \
     appfolder="$dmgroot/$TITLE.app" && \
     mkdir -p "$appfolder/Contents" && \
     cp "$RESOURCES/Info.plist" "$appfolder/Contents/" && \
+    cp "$RESOURCES/entitlements.plist" "$appfolder/Contents/" && \
     mv "$PUBLISH_FOLDER" "$appfolder/Contents/MacOS" && \
     mkdir -p "$appfolder/Contents/Resources" && \
     cp /tmp/BTCPayServerVault.icns "$appfolder/Contents/Resources/" && \

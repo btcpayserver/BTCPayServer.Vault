@@ -32,6 +32,8 @@ payload="$(jq -M --arg "tag_name" "$TRAVIS_TAG" \
    --argjson "prerelease" true \
    '. | .tag_name=$tag_name | .name=$name | .body=$body | .draft=$draft | .prerelease=$prerelease' \
    <<<'{}')"
+echo "Creating release to https://api.github.com/repos/$TRAVIS_REPO_SLUG/releases"
+echo "$payload"
 response="$(curl --fail -s -S -X POST https://api.github.com/repos/$TRAVIS_REPO_SLUG/releases \
     -H "Accept: application/vnd.github.v3+json" \
     -H "Authorization: token $GITHUB_TOKEN" \
