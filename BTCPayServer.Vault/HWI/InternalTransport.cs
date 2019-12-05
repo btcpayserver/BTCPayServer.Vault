@@ -17,11 +17,12 @@ namespace BTCPayServer.Vault.HWI
         }
         public event Action<object, string> Running;
         public event EventHandler StoppedRunning;
+        readonly static string[] commands = "enumerate,getmasterxpub,signtx,getxpub,signmessage,getkeypool,getdescriptors,displayaddress,setup,wipe,restore,backup,promptpin,sendpin".Split(',');
         public async Task<string> SendCommandAsync(string[] arguments, CancellationToken cancel)
         {
             try
             {
-                Running?.Invoke(this, arguments.Where(a => !a.Contains('-')).FirstOrDefault() ?? string.Empty);
+                Running?.Invoke(this, arguments.Where(a => commands.Contains(a.ToLowerInvariant().Trim())).FirstOrDefault() ?? string.Empty);
                 return await _inner.SendCommandAsync(arguments, cancel);
             }
             finally
