@@ -50,7 +50,7 @@ This is a two step process:
 
 If you want to run it for testing:
 
-```
+```bash
 cd BTCPayServer.Vault
 dotnet run
 ```

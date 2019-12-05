@@ -1,10 +1,10 @@
 # Build system
 
 The process to publish a new version is the following:
-1. Bump `BTCPayServer.Vault/Version.csproj` version
-2. Run `Build/push-new-tag.ps1`
-3. Travis should build and create a new release
-4. Fill out the changelog in the release in github, and uncheck draft
+1. Write the changelog on [RELEASE.md](RELEASE.md).
+2. Bump `BTCPayServer.Vault/Version.csproj` version.
+3. Run `Build/push-new-tag.ps1`.
+4. Travis will push the new release to [the latest github release](https://github.com/btcpayserver/BTCPayServer.Vault/releases/latest).
 
 The build system relies on docker to build the packages. 
 Each dockerfile in `<rid>/Dockerfile` will generate a docker image with the package in it.
