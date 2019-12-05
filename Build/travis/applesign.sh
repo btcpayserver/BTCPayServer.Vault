@@ -49,8 +49,12 @@ mkdir -p dist
 download_url="https://$AZURE_ACCOUNT_NAME.blob.core.windows.net/$AZURE_STORAGE_CONTAINER/$DIRECTORY_NAME/$dmg_file"
 echo "Download $download_url to dist/$dmg_file"
 wget -qO "dist/$dmg_file" "https://$AZURE_ACCOUNT_NAME.blob.core.windows.net/$AZURE_STORAGE_CONTAINER/$DIRECTORY_NAME/$dmg_file"
+echo "Downloaded"
 cd dist
-echo "$APPLE_DEV_ID_CERT" | base64 --decode > dev.p12
+if ! (echo "$APPLE_DEV_ID_CERT" | base64 --decode > dev.p12); then
+    echo "Could not decode APPLE_DEV_ID_CERT from base64"
+    exit 1
+fi
 
 dmg_file_writable="$dmg_file.writable.dmg"
 

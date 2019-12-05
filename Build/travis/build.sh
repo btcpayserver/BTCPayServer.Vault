@@ -13,7 +13,6 @@ if [[ "$TRAVIS_TAG" ]]; then
         echo "The tagged version on travis ($travis_version) is different from the csproj ($csproj_version)"
         exit 1
     fi
-    exit 0
 fi
 
 if ! [[ "$AZURE_STORAGE_CONNECTION_STRING" ]] || ! [[ "$AZURE_STORAGE_CONTAINER" ]]; then
