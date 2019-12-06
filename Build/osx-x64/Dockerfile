@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/core/sdk:3.0.101-buster AS builder
+FROM mcr.microsoft.com/dotnet/core/sdk:3.1.100 AS builder
 
 # Optimize docker cache, do not make it one layer
 RUN apt-get update
