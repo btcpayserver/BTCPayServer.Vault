@@ -1,7 +1,7 @@
 #!/bin/bash
 
 BUILD_ARGS="--runtime $RUNTIME -p:Configuration=Release -p:GithubDistrib=true"
-FRAMEWORK="netcoreapp3.0"
+FRAMEWORK="netcoreapp3.1"
 DIST="/source/dist"
 RESOURCES="/source/Build/${RUNTIME}"
 RESOURCES_COMMON="/source/Build/common"

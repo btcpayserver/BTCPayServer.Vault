@@ -1,11 +1,11 @@
-FROM mcr.microsoft.com/dotnet/core/sdk:3.0.101-buster AS builder
+FROM mcr.microsoft.com/dotnet/core/sdk:3.1.100 AS builder
 
 # Optimize docker cache, do not make it one layer
 RUN apt-get update
 RUN apt-get install -y --no-install-recommends imagemagick
 ###
 
-RUN apt-get install -y --no-install-recommends nsis unzip wine xxd
+RUN apt-get install -y --no-install-recommends nsis unzip wine xxd osslsigncode openssl
 RUN wget -qO "/tmp/hwi.zip" https://github.com/bitcoin-core/HWI/releases/download/1.0.3/hwi-1.0.3-windows-amd64.zip && \
     unzip "/tmp/hwi.zip" -d "/tmp" && \
     echo "f52ec4c8dd2dbef4aabe28d8a49580bceb54fd609b84c753d6354eeecbd6dc7a /tmp/hwi.exe" | sha256sum -c - && \
@@ -64,5 +64,30 @@ RUN $EXPORT_VARIABLES && \
     "-DPUBLISH_FOLDER=$PUBLISH_FOLDER" \
     "-DRESOURCES=${RESOURCES}" \
     "$RESOURCES/vault.nsis"
+
+ARG WINDOWS_CERT
+ARG WINDOWS_CERT_PASSWORD
+
+# Let's sign the installer if we can
+RUN ! ([[ "$WINDOWS_CERT" ]] && [[ "$WINDOWS_CERT_PASSWORD" ]]) || (\
+        $EXPORT_VARIABLES && cd "$DIST" && \
+        echo "$WINDOWS_CERT" | base64 --decode > codesign.pfx && \
+        openssl pkcs12 -in codesign.pfx -nocerts \
+            -passin "pass:$WINDOWS_CERT_PASSWORD" -passout "pass:$WINDOWS_CERT_PASSWORD" \
+            -out codesign.key && \
+        openssl pkcs12 -in codesign.pfx -clcerts -nokeys \
+            -passin "pass:$WINDOWS_CERT_PASSWORD" \
+            -out codesign.crt && \
+        installer_file="$(ls -1 *.exe)" && \
+        intaller_file_signed="${installer_file}.signed" && \
+        osslsigncode sign -certs "codesign.crt" -t "http://timestamp.comodoca.com" \
+                        -pass "$WINDOWS_CERT_PASSWORD" \
+                        -in "$installer_file" -out "$intaller_file_signed" \
+                        -key "codesign.key" && \
+        rm codesign.key codesign.pfx "$installer_file" && \
+        mv "$intaller_file_signed" "$installer_file" && \
+        chmod 777 "codesign.crt" && \
+        echo "Installer successfully signed" \
+    )
 
 ENTRYPOINT [ "/bin/bash", "-c", "$EXPORT_VARIABLES && cp $DIST/* /opt/dist/" ]
