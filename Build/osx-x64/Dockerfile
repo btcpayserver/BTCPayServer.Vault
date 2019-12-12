@@ -5,23 +5,12 @@ RUN apt-get update
 RUN apt-get install -y --no-install-recommends imagemagick
 ###
 
-RUN apt-get install -y --no-install-recommends genisoimage git zlib1g-dev cmake make gcc g++ icnsutils
+RUN apt-get install -y --no-install-recommends git icnsutils
 
 RUN wget -qO /tmp/hwi.tar.gz https://github.com/bitcoin-core/HWI/releases/download/1.0.3/hwi-1.0.3-mac-amd64.tar.gz && \
     tar -zxvf /tmp/hwi.tar.gz -C /tmp hwi && \
     echo "b0219f4f51d74e4525dd57a19f1aee9df409a879e041ea65f2d70cf90ac48a32 /tmp/hwi" | sha256sum -c - && \
     rm /tmp/hwi.tar.gz
-
-WORKDIR /tmp
-ENV CC "gcc"
-ENV CXX "g++"
-RUN git clone https://github.com/theuni/libdmg-hfsplus && \
-    cd libdmg-hfsplus && \
-    git checkout libdmg-hfsplus-v0.1 && \
-    cmake . && \
-    make && \
-    cp dmg/dmg /bin && \
-    cd .. && rm -rf libdmg-hfsplus
 
 WORKDIR /source
 ENV RUNTIME "osx-x64"
@@ -66,18 +55,9 @@ RUN $EXPORT_VARIABLES && \
     # 5. Create empty dir "mkdir empty"
     # 6. Run create-dmg --volname "BTCPayServer Vault" --volicon .VolumeIcon.icns --background Logo_with_text_small.png --window-pos 200 120 --window-size 600 440 --app-drop-link 500 150 --icon "BTCPayServer Vault" 110 150 --hdiutil-verbose "btcpay.dmg" empty
     # 7. Now you can change .background, .fseventsd and .DS_Store from Build/Osx
+    # It is impossible to use create-dmg in shell script, because we can't run Apple scripts without a UI.
     cp -r "$RESOURCES/Metadata/." "$dmgroot" && \
-    genisoimage -no-cache-inodes \
-    -D \
-    -l \
-    -probe \
-    -V "$TITLE" \
-    -no-pad \
-    -r \
-    -dir-mode 0755 \
-    -apple \
-    -o uncompressed.dmg \
-    "$dmgroot" && \
-    dmg dmg uncompressed.dmg "$DIST/BTCPayServerVault-$VERSION.dmg" && rm uncompressed.dmg
+    # We need to cd in "$dmgroot", because tar's -C option always add a root folder to the tar otherwise
+    cd "$dmgroot" && shopt -s dotglob && tar -czf "$DIST/BTCPayServerVault-${RUNTIME}-$VERSION.tar.gz" *
 
 ENTRYPOINT [ "/bin/bash", "-c", "$EXPORT_VARIABLES && cp $DIST/* /opt/dist/" ]

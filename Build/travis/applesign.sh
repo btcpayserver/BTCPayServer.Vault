@@ -43,12 +43,13 @@ version="$(cat BTCPayServer.Vault/Version.csproj | sed -n 's/.*<Version>\(.*\)<\
 title="$(cat BTCPayServer.Vault/BTCPayServer.Vault.csproj | sed -n 's/.*<Title>\(.*\)<\/Title>.*/\1/p')"
 AZURE_ACCOUNT_NAME="$(echo "$AZURE_STORAGE_CONNECTION_STRING" | cut -d'=' -f3 | cut -d';' -f1)"
 DIRECTORY_NAME="dist-$TRAVIS_BUILD_ID"
-dmg_file="BTCPayServerVault-$version.dmg"
+RUNTIME="osx-x64"
+tar_file="BTCPayServerVault-${RUNTIME}-$version.tar.gz"
 
 mkdir -p dist
-download_url="https://$AZURE_ACCOUNT_NAME.blob.core.windows.net/$AZURE_STORAGE_CONTAINER/$DIRECTORY_NAME/$dmg_file"
-echo "Download $download_url to dist/$dmg_file"
-wget -qO "dist/$dmg_file" "https://$AZURE_ACCOUNT_NAME.blob.core.windows.net/$AZURE_STORAGE_CONTAINER/$DIRECTORY_NAME/$dmg_file"
+download_url="https://$AZURE_ACCOUNT_NAME.blob.core.windows.net/$AZURE_STORAGE_CONTAINER/$DIRECTORY_NAME/$tar_file"
+echo "Download $download_url to dist/$tar_file"
+wget -qO "dist/$tar_file" "$download_url"
 echo "Downloaded"
 cd dist
 if ! (echo "$APPLE_DEV_ID_CERT" | base64 --decode > dev.p12); then
@@ -56,19 +57,12 @@ if ! (echo "$APPLE_DEV_ID_CERT" | base64 --decode > dev.p12); then
     exit 1
 fi
 
-dmg_file_writable="$dmg_file.writable.dmg"
-
-echo "Mounting the $dmg_file file to $mount_point"
-mount_point="temp"
-sudo hdiutil attach -mountpoint "$mount_point" "$dmg_file" -noverify -nobrowse -noautoopen
-
-dmg_copy="temp-copy"
-echo "Extracting $dmg_file to folder $dmg_copy"
-mkdir "$dmg_copy"
-sudo cp -R -p "$mount_point/" "$dmg_copy"
-hdiutil detach "$mount_point"
-echo "$dmg_file detached"
-rm "$dmg_file"
+dmg_folder="dmg_root"
+app_path="$dmg_folder/$title.app"
+mkdir -p "$dmg_folder"
+tar -C "$dmg_folder" -xvf "$tar_file"
+bundle_id="$(cat "$app_path/Contents/Info.plist" | grep -A1 "CFBundleIdentifier" | sed -n 's/\s*<string>\([^<]*\)<\/string>/\1/p' | xargs)"
+rm "$tar_file"
 
 key_chain="build.keychain"
 key_chain_pass="mysecretpassword"
@@ -80,25 +74,24 @@ CERT_IDENTITY=$(security find-identity -v -p codesigning "$key_chain" | head -1 
 echo "Signing with identity $CERT_IDENTITY"
 security set-key-partition-list -S apple-tool:,apple: -s -k "$key_chain_pass" "$key_chain"
 
-app_path="$dmg_copy/$title.app"
-
 # codesign don't like that the entitlements file path have spaces, so we move it to local folder.
 sudo cp "$app_path/Contents/entitlements.plist" "./"
 echo "Signing $app_path..."
 code_sign_args="--deep --force --options runtime --timestamp --entitlements entitlements.plist"
 sudo codesign $code_sign_args --sign "$CERT_IDENTITY" "$app_path"
 
+dmg_file="BTCPayServerVault-${RUNTIME}-$version.dmg"
 echo "Create $dmg_file with signature"
-sudo hdiutil create "$dmg_file_writable" -ov -volname "$title" -fs HFS+ -srcfolder "$dmg_copy" 
+dmg_file_writable="$dmg_file.writable.dmg"
+sudo hdiutil create "$dmg_file_writable" -ov -volname "$title" -fs HFS+ -srcfolder "$dmg_folder" 
 sudo hdiutil convert "$dmg_file_writable" -format UDZO -o "$dmg_file"
 sudo rm -rf "$dmg_file_writable"
+rm -rf "$dmg_folder"
 
 echo "Signing $dmg_file..."
 sudo codesign $code_sign_args --sign "$CERT_IDENTITY" "$dmg_file"
 echo "DMG signed"
 
-
-bundle_id="$(cat "$app_path/Contents/Info.plist" | grep -A1 "CFBundleIdentifier" | sed -n 's/\s*<string>\([^<]*\)<\/string>/\1/p' | xargs)"
 echo "Notarize $dmg_file with bundle id $bundle_id"
 
 sudo xcrun altool --notarize-app -t osx -f "$dmg_file" --primary-bundle-id "$bundle_id" -u "$APPLE_ID" -p "$APPLE_ID_PASSWORD" --output-format xml | tee notarize_result
@@ -132,3 +125,6 @@ echo "Uploading $BLOB_NAME"
 sudo az storage blob upload -f "$dmg_file" --connection-string "$AZURE_STORAGE_CONNECTION_STRING" -c "$AZURE_STORAGE_CONTAINER" -n "$BLOB_NAME"
 url="$(sudo az storage blob url --connection-string "$AZURE_STORAGE_CONNECTION_STRING" --container-name "$AZURE_STORAGE_CONTAINER" --name "$BLOB_NAME" --protocol "https")"
 echo "Uploaded file to $url"
+
+echo "Deleting $DIRECTORY_NAME/$tar_file"
+sudo az storage blob delete --connection-string "$AZURE_STORAGE_CONNECTION_STRING" -c "$AZURE_STORAGE_CONTAINER" -n "$DIRECTORY_NAME/$tar_file"
