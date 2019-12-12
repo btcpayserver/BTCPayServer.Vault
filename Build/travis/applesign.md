@@ -14,7 +14,7 @@ If you are on linux and try to sign with an apple certificate you need to do the
 2. Enroll in the apple developer program (100USD per year).
 3. Get the apple certificate in a `.p12` file (this is what the rest of this page is about)
 
-Then, the following Here is the script to create your certificate:
+Then, here is the script to create your certificate:
 ```bash
 # Configure those variables to your need
 email="nicolas.dorier@gmail.com"
@@ -34,7 +34,7 @@ This will create a request file as `request.csr` in your current folder.
 
 Upload the `csr` back to apple, this will give you back a `.cer` file.
 
-Save this file as `developerID_application.cer` in the current folder and run
+Save this file as `developerID_application.cer` in the current folder.
 
 Now you need to export this in the `.p12` format, this will bundle the `.cer` and the private key together in the same file.
 
