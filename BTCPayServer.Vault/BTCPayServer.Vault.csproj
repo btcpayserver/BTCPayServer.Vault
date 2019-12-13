@@ -4,7 +4,7 @@
     <OutputType>Exe</OutputType>
     <OutputType Condition=" '$(Configuration)' == 'Release' ">WinExe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <Company>BTCPay Server</Company>
+    <Company>The BTCPayServer Team</Company>
     <Title>BTCPayServer Vault</Title>
     <AssemblyTitle>$(Title)</AssemblyTitle>
     <TargetName>BTCPayServer.Vault</TargetName>
