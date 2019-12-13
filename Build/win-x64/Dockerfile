@@ -39,7 +39,7 @@ RUN $EXPORT_VARIABLES && \
     convert /tmp/BTCPayServerVault.ico.tmp/*.png /tmp/BTCPayServerVault.ico && \
     executable="$PUBLISH_FOLDER/$EXECUTABLE.exe" && \
     # Workaround https://github.com/dotnet/sdk/issues/3990
-    e_lfanew_loc=$(xxd -p -l1 -s $((16#FC)) "$executable") && \
+    e_lfanew_loc=$(xxd -p -l1 -s $((16#3C)) "$executable") && \
     e_lfanew_loc="$((16#$e_lfanew_loc))" && \
     subsystem_loc=$(($e_lfanew_loc + 84)) && \
     printf "%06x: 0200" $subsystem_loc | xxd -r - "$executable" && \
