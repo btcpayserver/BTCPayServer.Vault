@@ -41,7 +41,9 @@ RUN $EXPORT_VARIABLES && \
     # Workaround https://github.com/dotnet/sdk/issues/3990
     e_lfanew_loc=$(xxd -p -l1 -s $((16#3C)) "$executable") && \
     e_lfanew_loc="$((16#$e_lfanew_loc))" && \
-    subsystem_loc=$(($e_lfanew_loc + 84)) && \
+    echo "e_lfanew location is $(printf "%08x" $e_lfanew_loc)" && \
+    subsystem_loc=$(($e_lfanew_loc + 92)) && \
+    echo "subsystem_loc location is $(printf "%08x" $subsystem_loc)" && \
     printf "%06x: 0200" $subsystem_loc | xxd -r - "$executable" && \
     # End of workaround
     wine /tmp/rcedit.exe "$executable" \
