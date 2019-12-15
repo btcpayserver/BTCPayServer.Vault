@@ -76,8 +76,11 @@ namespace BTCPayServer.Vault
 
         public static string GetTitle()
         {
-            return typeof(Extensions).Assembly.GetCustomAttributes(typeof(AssemblyTitleAttribute), false)
+            var title = typeof(Extensions).Assembly.GetCustomAttributes(typeof(AssemblyTitleAttribute), false)
                                               .OfType<AssemblyTitleAttribute>().Select(s => s.Title).Single();
+            var version = typeof(Extensions).Assembly.GetCustomAttributes(typeof(AssemblyInformationalVersionAttribute), false)
+                                              .OfType<AssemblyInformationalVersionAttribute>().Select(s => s.InformationalVersion).Single();
+            return $"{title} (Version: {version})";
         }
 
         static bool DetectLLVMPipeRasterizer()
