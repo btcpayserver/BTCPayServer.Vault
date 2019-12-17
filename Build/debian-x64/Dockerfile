@@ -33,7 +33,7 @@ RUN $EXPORT_VARIABLES && \
     find "$PUBLISH_FOLDER" -type f \( -name 'hwi' -o -name "$EXECUTABLE" \) -exec chmod +x {} \; && \
     debiandir=/tmp/debian && \
     mkdir -p "$debiandir/DEBIAN" && \
-    cp "$RESOURCES/control" "$debiandir/DEBIAN/" && \
+    cp "$RESOURCES/control" "$RESOURCES/postinst" "$debiandir/DEBIAN/" && \
     replaceProjectVariables "$debiandir/DEBIAN/control" && \
     mkdir -p "$debiandir/usr/local/bin" && \
     mv "$PUBLISH_FOLDER" "$debiandir/usr/local/bin/BTCPayServer.Vault.Binaries" && \
@@ -48,6 +48,8 @@ RUN $EXPORT_VARIABLES && \
     mkdir -p "$debiandir/usr/share/applications" && \
     cp "$RESOURCES/BTCPayServer.Vault.desktop" "$debiandir/usr/share/applications/" && \
     replaceProjectVariables "$debiandir/usr/share/applications/BTCPayServer.Vault.desktop" && \
+    mkdir -p "$debiandir/lib/udev/rules.d" && \
+    cp $RESOURCES/udev/* "$debiandir/lib/udev/rules.d/" && \
     sizeinkb="$(du -k --max-depth=0 $debiandir | cut -f 1)" && \
     sed -i "s/{SIZEINKB}/$sizeinkb/g" "$debiandir/DEBIAN/control" && \
     dpkg --build "$debiandir" && mv /tmp/debian.deb "$DIST/BTCPayServerVault-$VERSION.deb" && \

@@ -1,0 +1,15 @@
+#!/bin/sh
+
+if udevadm trigger && \
+   udevadm control --reload-rules; then
+   echo "udevadm successfully ran"
+else
+   echo "Could not execute udevadm, your hardware wallet might not be detected, please execute: 
+   sudo udevadm trigger
+   sudo udevadm control --reload-rules"
+fi
+
+getent group plugdev > /dev/null || groupadd plugdev
+
+echo "In order to give access to your harware wallet to the current, non root user, you need to run:
+sudo usermod -aG plugdev \`whoami\`"
