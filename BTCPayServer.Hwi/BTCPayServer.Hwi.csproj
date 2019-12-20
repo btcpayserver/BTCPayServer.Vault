@@ -14,7 +14,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="NBitcoin" Version="5.0.4" />
+    <PackageReference Include="NBitcoin" Version="5.0.12" />
   </ItemGroup>
 
 </Project>

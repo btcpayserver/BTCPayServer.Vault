@@ -12,8 +12,8 @@
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Avalonia" Version="0.9.0-preview7" />
-    <PackageReference Include="AvalonStudio.Shell" Version="0.9.0-preview7" />
+    <PackageReference Include="Avalonia" Version="0.9.1" />
+    <PackageReference Include="AvalonStudio.Shell" Version="0.9.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="3.0.0" />
     <PackageReference Include="NicolasDorier.RateLimits" Version="1.1.0" />
   </ItemGroup>
