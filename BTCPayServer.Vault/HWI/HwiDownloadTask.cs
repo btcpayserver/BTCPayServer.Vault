@@ -27,7 +27,7 @@ namespace BTCPayServer.Vault.HWI
         public async Task StartAsync(CancellationToken cancellationToken)
         {
             _logger.LogInformation($"Ensuring hwi program is deployed...");
-            var path = await _hwiVersion.Current.EnsureIsDeployed(_deployementDirectory, cancellationToken: cancellationToken);
+            var path = await _hwiVersion.Current.EnsureIsDeployed(_deployementDirectory, enforceHash:false, cancellationToken: cancellationToken);
             _logger.LogInformation($"Hwi program deployed to {path}");
         }
 

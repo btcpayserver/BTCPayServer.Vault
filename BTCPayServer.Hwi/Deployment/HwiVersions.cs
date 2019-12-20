@@ -78,7 +78,7 @@ namespace BTCPayServer.Hwi.Deployment
         /// </summary>
         /// <param name="destinationDirectory">Destination where to put the executable</param>
         /// <returns>The full path to the hwi executable</returns>
-        public async Task<string> EnsureIsDeployed(string destinationDirectory = null, CancellationToken cancellationToken = default)
+        public async Task<string> EnsureIsDeployed(string destinationDirectory = null, bool enforceHash = true, CancellationToken cancellationToken = default)
         {
             destinationDirectory = string.IsNullOrEmpty(destinationDirectory) ? "." : destinationDirectory;
             var processName = RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? "hwi.exe" : "hwi";
@@ -113,7 +113,7 @@ download:
                     {
                         throw new SecurityException($"Incorrect hash for {processFullPath}");
                     }
-                    else
+                    else if (enforceHash)
                     {
                         File.Delete(processFullPath);
                         goto download;
