@@ -26,6 +26,7 @@ namespace BTCPayServer.Vault
         public override void Initialize()
         {
             AvaloniaXamlLoader.Load(this);
+            this.Name = Extensions.GetTitle(false);
         }
         public override void OnFrameworkInitializationCompleted()
         {

@@ -74,13 +74,21 @@ namespace BTCPayServer.Vault
             services.AddSingleton<MainWindowViewModel>();
         }
 
-        public static string GetTitle()
+        public static string GetTitle(bool withVersion = true)
         {
             var title = typeof(Extensions).Assembly.GetCustomAttributes(typeof(AssemblyTitleAttribute), false)
                                               .OfType<AssemblyTitleAttribute>().Select(s => s.Title).Single();
-            var version = typeof(Extensions).Assembly.GetCustomAttributes(typeof(AssemblyInformationalVersionAttribute), false)
-                                              .OfType<AssemblyInformationalVersionAttribute>().Select(s => s.InformationalVersion).Single();
-            return $"{title} (Version: {version})";
+            if (withVersion)
+            {
+                var version = typeof(Extensions).Assembly.GetCustomAttributes(typeof(AssemblyInformationalVersionAttribute), false)
+                                                  .OfType<AssemblyInformationalVersionAttribute>().Select(s => s.InformationalVersion).Single();
+
+                return $"{title} (Version: {version})";
+            }
+            else
+            {
+                return title;
+            }
         }
 
         static bool DetectLLVMPipeRasterizer()
