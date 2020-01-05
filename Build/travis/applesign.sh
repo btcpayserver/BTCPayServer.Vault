@@ -119,7 +119,8 @@ done
 sudo xcrun stapler staple "$dmg_file"
 
 echo "Installing az..."
-brew update && brew install azure-cli
+brew update
+brew install azure-cli || true
 BLOB_NAME="$DIRECTORY_NAME/$dmg_file"
 echo "Uploading $BLOB_NAME"
 sudo az storage blob upload -f "$dmg_file" --connection-string "$AZURE_STORAGE_CONNECTION_STRING" -c "$AZURE_STORAGE_CONTAINER" -n "$BLOB_NAME"
