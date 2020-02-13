@@ -55,6 +55,11 @@ cd BTCPayServer.Vault
 dotnet run
 ```
 
+## Documentation
+
+- [BTCPay Vault announcement](https://blog.btcpayserver.org/btcpay-vault/)
+- [Using BTCPay Vault with BTCPay Server](https://docs.btcpayserver.org/features/vault)
+
 ## Licence
 
 This project is under MIT License.
