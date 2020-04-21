@@ -42,13 +42,13 @@ namespace BTCPayServer.Hwi.Deployment
             Windows = new HwiDownloadInfo()
             {
                 Link = "https://github.com/bitcoin-core/HWI/releases/download/1.1.0/hwi-1.1.0-windows-amd64.zip",
-                Hash = "acfd614a6b39e2a0485eddb705e1897fcc96120b33a44ea7e2eda1ee1ce34f9e",
+                Hash = "cabf83aad91c44c78f6830c31309b9cfa61b900d27c1beb5ee07152e66167853",
                 Extractor = new ZipExtractor()
             },
             Linux = new HwiDownloadInfo()
             {
                 Link = "https://github.com/bitcoin-core/HWI/releases/download/1.1.0/hwi-1.1.0-linux-amd64.tar.gz",
-                Hash = "360f444cfde7f0e6c73a687723d8bf13f3d26ec604fdd2274825088182904b3d",
+                Hash = "1e98a59ee0b99ccac7ec6a62e55bf9fa88650250009aecba50fd10468031ed01",
                 Extractor = new TarExtractor()
             },
             Mac = new HwiDownloadInfo()
