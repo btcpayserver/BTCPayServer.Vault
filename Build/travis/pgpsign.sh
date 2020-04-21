@@ -15,7 +15,10 @@ DIRECTORY_NAME="dist-$TRAVIS_BUILD_ID"
 wget -O azcopy.tar.gz https://aka.ms/downloadazcopy-v10-linux
 tar -xf azcopy.tar.gz --strip-components=1
 mkdir -p dist
-./azcopy cp "https://$AZURE_ACCOUNT_NAME.blob.core.windows.net/$AZURE_STORAGE_CONTAINER/$DIRECTORY_NAME/*" "dist"
+# Our container is public, so the SAS token should not be needed
+# But AzCopy is broken https://github.com/Azure/azure-storage-azcopy/issues/971
+./azcopy cp "https://$AZURE_ACCOUNT_NAME.blob.core.windows.net/$AZURE_STORAGE_CONTAINER/$DIRECTORY_NAME/*?sv=2019-02-02&ss=b&srt=co&sp=rl&se=2100-04-21T15:00:00Z&st=2020-04-21T19:07:13Z&spr=https&sig=5hMGP4ZR3MUVVp4AVxFDS%2BuFY%2FsU4M8%2B2wKOr8utpWI%3D" \
+            "dist"
 cd dist
 for f in *; do
   if [[ "$f" == "SHA256SUMS" ]]; then continue; fi
