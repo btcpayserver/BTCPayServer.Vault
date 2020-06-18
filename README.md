@@ -59,7 +59,7 @@ dotnet run
 
 Video below explains how to use BTCPay Vault with BTCPay Server.
 
-[![](https://raw.githubusercontent.com/btcpayserver/btcpayserver-doc/master/img/thumbnails/BTCPayServerVault.png)](https://www.youtube.com/watch?v=hh_cm8MKl2g)
+[![](https://img.youtube.com/vi/hh_cm8MKl2g/mqdefault.jpg)](https://www.youtube.com/watch?v=hh_cm8MKl2g)
 
 - [BTCPay Vault announcement](https://blog.btcpayserver.org/btcpay-vault/)
 - [Using BTCPay Vault with BTCPay Server](https://docs.btcpayserver.org/features/vault)
