@@ -98,6 +98,7 @@ sudo xcrun altool --notarize-app -t osx -f "$dmg_file" --primary-bundle-id "$bun
 request_id="$(cat notarize_result | grep -A1 "RequestUUID" | sed -n 's/\s*<string>\([^<]*\)<\/string>/\1/p' | xargs)"
 echo "Notarization in progress, request id: $request_id"
 echo "Waiting for approval..."
+local verbose
 while true; do
     echo -n "."
     sleep 10 # We need to wait 10 sec, even for the first loop because Apple might still not have their own data...
@@ -108,6 +109,8 @@ while true; do
         echo "Notarization succeed"
         break
     elif grep -q "Status: in progress" notarization_progress; then
+        continue
+    elif grep -q "Could not find the RequestUUID" notarization_progress; then
         continue
     else
         cat notarization_progress
