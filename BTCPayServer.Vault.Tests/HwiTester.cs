@@ -43,7 +43,7 @@ namespace BTCPayServer.Vault.Tests
 
         public static async Task<HwiTester> CreateAsync(ILoggerFactory loggerFactory)
         {
-            var hwi = await HwiVersions.v1_1_1.Current.EnsureIsDeployed();
+            var hwi = await HwiVersions.v1_1_2.Current.EnsureIsDeployed();
             return new HwiTester(loggerFactory, hwi);
         }
 

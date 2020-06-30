@@ -19,7 +19,7 @@ namespace BTCPayServer.Vault
         static async Task Main(string[] args)
         {
             // This line will download hwi program in the process current directory
-            await HwiVersions.v1_0_3.Current.EnsureIsDeployed();
+            await HwiVersions.v1_1_2.Current.EnsureIsDeployed();
 
             var hwiClient = new HwiClient(Network.Main);
 

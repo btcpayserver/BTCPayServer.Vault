@@ -79,6 +79,27 @@ namespace BTCPayServer.Hwi.Deployment
                 Extractor = new TarExtractor()
             }
         };
+        public static HwiVersion v1_1_2 { get; } = new HwiVersion()
+        {
+            Windows = new HwiDownloadInfo()
+            {
+                Link = "https://github.com/bitcoin-core/HWI/releases/download/1.1.2/hwi-1.1.2-windows-amd64.zip",
+                Hash = "0f3fb7c89740ac2cf245bb8e743c5dd7e686efbda8c4a288869621a63bc32ced",
+                Extractor = new ZipExtractor()
+            },
+            Linux = new HwiDownloadInfo()
+            {
+                Link = "https://github.com/bitcoin-core/HWI/releases/download/1.1.2/hwi-1.1.2-linux-amd64.tar.gz",
+                Hash = "fd6cca20aaa24f4ae4332ca01f1d4c2711247e3ccb8bbea44ee93456f211ea4b",
+                Extractor = new TarExtractor()
+            },
+            Mac = new HwiDownloadInfo()
+            {
+                Link = "https://github.com/bitcoin-core/HWI/releases/download/1.1.2/hwi-1.1.2-mac-amd64.tar.gz",
+                Hash = "630aef7a02cbc08fae95e79bb9c01684650426a6f8e5383cfb040093b05aa0f1",
+                Extractor = new TarExtractor()
+            }
+        };
     }
 
     public class HwiVersion
