@@ -101,7 +101,9 @@ echo "Waiting for approval..."
 while true; do
     echo -n "."
     sleep 10 # We need to wait 10 sec, even for the first loop because Apple might still not have their own data...
+    set +e
     sudo xcrun altool --notarization-info "$request_id" -u "$APPLE_ID" -p "$APPLE_ID_PASSWORD" > notarization_progress
+    set -e
     if grep -q "Status: success" notarization_progress; then
         echo ""
         cat notarization_progress
