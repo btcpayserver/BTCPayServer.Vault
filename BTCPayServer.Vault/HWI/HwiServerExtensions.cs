@@ -23,7 +23,7 @@ namespace Microsoft.Extensions.DependencyInjection
             if (services == null)
                 throw new ArgumentNullException(nameof(services));
             services.AddCors();
-            services.AddSingleton(HwiVersions.v1_1_2);
+            services.AddSingleton(HwiVersions.Latest);
             services.AddHostedService<HwiDownloadTask>();
             services.AddScoped<HwiServer>();
             services.AddSingleton<ITransport>(provider =>
