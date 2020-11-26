@@ -22,6 +22,9 @@ fi
 curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
 az storage container create --name "$AZURE_STORAGE_CONTAINER" --public-access "container"
 sudo apt-get install -y ccrypt
+
+sudo touch dist/secrets
+sudo chmod 777 dist/secrets
 echo "APPLE_DEV_ID_CERT='$APPLE_DEV_ID_CERT'" >> dist/secrets
 echo "APPLE_DEV_ID_CERT_PASSWORD='$APPLE_DEV_ID_CERT_PASSWORD'" >> dist/secrets
 echo "APPLE_ID='$APPLE_ID'" >> dist/secrets
@@ -33,7 +36,7 @@ echo "PGP_KEY='$PGP_KEY'" >> dist/secrets
 echo "WINDOWS_CERT='$WINDOWS_CERT'" >> dist/secrets
 echo "WINDOWS_CERT_PASSWORD='$WINDOWS_CERT_PASSWORD'" >> dist/secrets
 
-ccencrypt dist/secrets -K $ENC_KEY
+sudo ccencrypt dist/secrets -K $ENC_KEY
 
 for file in dist/*; do
     BLOB_NAME="dist-$TRAVIS_BUILD_ID/$(basename -- $file)"
