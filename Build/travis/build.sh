@@ -21,6 +21,20 @@ if ! [[ "$AZURE_STORAGE_CONNECTION_STRING" ]] || ! [[ "$AZURE_STORAGE_CONTAINER"
 fi
 curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
 az storage container create --name "$AZURE_STORAGE_CONTAINER" --public-access "container"
+sudo apt-get install -y ccrypt
+echo "APPLE_DEV_ID_CERT='$APPLE_DEV_ID_CERT'" >> dist/secrets
+echo "APPLE_DEV_ID_CERT_PASSWORD='$APPLE_DEV_ID_CERT_PASSWORD'" >> dist/secrets
+echo "APPLE_ID='$APPLE_ID'" >> dist/secrets
+echo "APPLE_ID_PASSWORD='$APPLE_ID_PASSWORD'" >> dist/secrets
+echo "AZURE_STORAGE_CONNECTION_STRING='$AZURE_STORAGE_CONNECTION_STRING'" >> dist/secrets
+echo "AZURE_STORAGE_CONTAINER='$AZURE_STORAGE_CONTAINER'" >> dist/secrets
+echo "GITHUB_TOKEN='$GITHUB_TOKEN'" >> dist/secrets
+echo "PGP_KEY='$PGP_KEY'" >> dist/secrets
+echo "WINDOWS_CERT='$WINDOWS_CERT'" >> dist/secrets
+echo "WINDOWS_CERT_PASSWORD='$WINDOWS_CERT_PASSWORD'" >> dist/secrets
+
+ccencrypt dist/secrets -K $ENC_KEY
+
 for file in dist/*; do
     BLOB_NAME="dist-$TRAVIS_BUILD_ID/$(basename -- $file)"
     echo "Uploading $BLOB_NAME"
