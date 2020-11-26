@@ -3,14 +3,22 @@
 set -e
 
 DOCKER_IMAGE_NAME="vault-$RID"
+DOCKER_BUILD_ARGS=""
+if [[ "$PGP_KEY" ]]; then
+     DOCKER_BUILD_ARGS="--build-arg "PGP_KEY=$PGP_KEY""
+fi
+if [[ "$WINDOWS_CERT" ]]; then
+     DOCKER_BUILD_ARGS="$DOCKER_BUILD_ARGS --build-arg "WINDOWS_CERT=$WINDOWS_CERT" --build-arg "WINDOWS_CERT_PASSWORD=$WINDOWS_CERT_PASSWORD""
+fi
+
 docker build -t "$DOCKER_IMAGE_NAME" $DOCKER_BUILD_ARGS -f "Build/$RID/Dockerfile" .
 docker run --rm -v "$(pwd)/dist:/opt/dist" "$DOCKER_IMAGE_NAME"
 
-if [[ "$TRAVIS_TAG" ]]; then
-    travis_version="$(echo "$TRAVIS_TAG" | cut -d'/' -f2)"
+if [[ "$GITHUB_REF_NAME" ]]; then
+    ci_version="$(echo "$GITHUB_REF_NAME" | cut -d'/' -f2)"
     csproj_version="v$(cat BTCPayServer.Vault/Version.csproj | sed -n 's/.*<Version>\(.*\)<\/Version>.*/\1/p')"
-    if [[ "$travis_version" != "$csproj_version" ]]; then
-        echo "The tagged version on travis ($travis_version) is different from the csproj ($csproj_version)"
+    if [[ "$ci_version" != "$csproj_version" ]]; then
+        echo "The tagged version on travis ($ci_version) is different from the csproj ($csproj_version)"
         exit 1
     fi
 fi
@@ -21,22 +29,6 @@ if ! [[ "$AZURE_STORAGE_CONNECTION_STRING" ]] || ! [[ "$AZURE_STORAGE_CONTAINER"
 fi
 curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
 az storage container create --name "$AZURE_STORAGE_CONTAINER" --public-access "container"
-sudo apt-get install -y ccrypt
-
-sudo touch dist/secrets
-sudo chmod 777 dist/secrets
-echo "APPLE_DEV_ID_CERT='$APPLE_DEV_ID_CERT'" >> dist/secrets
-echo "APPLE_DEV_ID_CERT_PASSWORD='$APPLE_DEV_ID_CERT_PASSWORD'" >> dist/secrets
-echo "APPLE_ID='$APPLE_ID'" >> dist/secrets
-echo "APPLE_ID_PASSWORD='$APPLE_ID_PASSWORD'" >> dist/secrets
-echo "AZURE_STORAGE_CONNECTION_STRING='$AZURE_STORAGE_CONNECTION_STRING'" >> dist/secrets
-echo "AZURE_STORAGE_CONTAINER='$AZURE_STORAGE_CONTAINER'" >> dist/secrets
-echo "GITHUB_TOKEN='$GITHUB_TOKEN'" >> dist/secrets
-echo "PGP_KEY='$PGP_KEY'" >> dist/secrets
-echo "WINDOWS_CERT='$WINDOWS_CERT'" >> dist/secrets
-echo "WINDOWS_CERT_PASSWORD='$WINDOWS_CERT_PASSWORD'" >> dist/secrets
-
-sudo ccencrypt dist/secrets -K $ENC_KEY
 
 for file in dist/*; do
     BLOB_NAME="dist-$TRAVIS_BUILD_ID/$(basename -- $file)"

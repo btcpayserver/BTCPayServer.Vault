@@ -1,0 +1,59 @@
+name: CI
+
+# Controls when the action will run. 
+on:
+  # Triggers the workflow on push or pull request events but only for the master branch
+  push:
+    branches: [ master ]
+  tags:
+    - 'Vault/*'
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+env:
+  AZURE_STORAGE_CONTAINER: dist
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  debian-x64:
+    name: debian-x64
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: ./Build/CI/build.sh
+        env:
+          RID: debian-x64
+          PGP_KEY: ${{ secrets.PGP_KEY }}
+          AZURE_STORAGE_CONNECTION_STRING: ${{ secrets.AZURE_STORAGE_CONNECTION_STRING }}
+  linux-x64:
+    name: linux-x64
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: ./Build/CI/build.sh
+        env:
+          RID: linux-x64
+          AZURE_STORAGE_CONNECTION_STRING: ${{ secrets.AZURE_STORAGE_CONNECTION_STRING }}
+  osx-x64:
+    name: osx-x64
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: ./Build/CI/build.sh
+        env:
+          RID: osx-x64
+          AZURE_STORAGE_CONNECTION_STRING: ${{ secrets.AZURE_STORAGE_CONNECTION_STRING }}
+  win-x64:
+    name: win-x64
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: ./Build/CI/build.sh
+        env:
+          RID: win-x64
+          WINDOWS_CERT: ${{ secrets.WINDOWS_CERT }}
+          WINDOWS_CERT_PASSWORD: ${{ secrets.WINDOWS_CERT_PASSWORD }}
+          AZURE_STORAGE_CONNECTION_STRING: ${{ secrets.AZURE_STORAGE_CONNECTION_STRING }}
+          
+  
