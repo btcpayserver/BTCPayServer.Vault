@@ -1,8 +1,8 @@
 FROM mcr.microsoft.com/dotnet/core/sdk:3.1.101 AS builder
 
-RUN wget -qO /tmp/hwi.tar.gz https://github.com/bitcoin-core/HWI/releases/download/1.2.0/hwi-1.2.0-linux-amd64.tar.gz && \
+RUN wget -qO /tmp/hwi.tar.gz https://github.com/bitcoin-core/HWI/releases/download/1.2.1/hwi-1.2.1-linux-amd64.tar.gz && \
     tar -zxvf /tmp/hwi.tar.gz -C /tmp hwi && \
-    echo "92c263bd2e5c41a533972900e856e0ee9a004ad507024b38462c69afae361cea /tmp/hwi" | sha256sum -c - && \
+    echo "23ea301117f74561294b5b3ebe1eeb461004aff7e479c4b90a0aaec5924cc677 /tmp/hwi" | sha256sum -c - && \
     rm /tmp/hwi.tar.gz
 
 WORKDIR /source
