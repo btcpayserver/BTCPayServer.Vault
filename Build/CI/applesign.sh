@@ -42,7 +42,7 @@ echo "Starting apple signing..."
 version="$(cat BTCPayServer.Vault/Version.csproj | sed -n 's/.*<Version>\(.*\)<\/Version>.*/\1/p')"
 title="$(cat BTCPayServer.Vault/BTCPayServer.Vault.csproj | sed -n 's/.*<Title>\(.*\)<\/Title>.*/\1/p')"
 AZURE_ACCOUNT_NAME="$(echo "$AZURE_STORAGE_CONNECTION_STRING" | cut -d'=' -f3 | cut -d';' -f1)"
-DIRECTORY_NAME="dist-$TRAVIS_BUILD_ID"
+DIRECTORY_NAME="dist-$GITHUB_RUN_ID"
 RUNTIME="osx-x64"
 tar_file="BTCPayServerVault-${RUNTIME}-$version.tar.gz"
 

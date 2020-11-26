@@ -11,7 +11,7 @@ if ! [[ "$PGP_KEY" ]]; then
 fi
 
 AZURE_ACCOUNT_NAME="$(echo "$AZURE_STORAGE_CONNECTION_STRING" | cut -d'=' -f3 | cut -d';' -f1)"
-DIRECTORY_NAME="dist-$TRAVIS_BUILD_ID"
+DIRECTORY_NAME="dist-$GITHUB_RUN_ID"
 wget -O azcopy.tar.gz https://aka.ms/downloadazcopy-v10-linux
 tar -xf azcopy.tar.gz --strip-components=1
 mkdir -p dist
