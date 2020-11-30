@@ -20,8 +20,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Avalonia" Version="0.9.2" />
-    <PackageReference Include="AvalonStudio.Shell" Version="0.9.2" />
+    <PackageReference Include="Avalonia" Version="0.9.12" />
+    <PackageReference Include="AvalonStudio.Shell" Version="0.9.9" />
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="3.1.1" />
     <PackageReference Include="NicolasDorier.RateLimits" Version="1.1.0" />
   </ItemGroup>
