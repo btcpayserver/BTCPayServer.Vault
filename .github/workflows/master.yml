@@ -84,7 +84,7 @@ jobs:
     name: makerelease
     runs-on: macOS-latest
     needs: [pgpsign, applesign]
-    if: startsWith( github.ref, 'refs/tags/')
+    if: startsWith( github.ref, 'refs/tags/') && !endsWith( github.ref, '-test')
     steps:
       - uses: actions/checkout@v2
       - run: ./Build/CI/makerelease.sh
