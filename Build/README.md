@@ -9,6 +9,10 @@ The process to publish a new version is the following:
 The build system relies on docker to build the packages. 
 Each dockerfile in `<rid>/Dockerfile` will generate a docker image with the package in it.
 
+## Test releases
+
+You can test a release by tagging with `Vault/v[VERSION]-test`. This will create a draft pre release.
+
 ## How to test Debian
 
 The debian package is easy to test, run:

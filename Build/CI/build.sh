@@ -14,7 +14,11 @@ fi
 docker build -t "$DOCKER_IMAGE_NAME" $DOCKER_BUILD_ARGS -f "Build/$RID/Dockerfile" .
 docker run --rm -v "$(pwd)/dist:/opt/dist" "$DOCKER_IMAGE_NAME"
 
-if [[ "$GITHUB_REF_NAME" ]]; then
+if [[ "$GITHUB_REF" ]]; then
+    # GITHUB_REF= refs/tags/Vault/v1.0.6-test
+    GITHUB_REF_NAME="$(echo $GITHUB_REF | cut -d'/' -f4 | cut -d'-' -f1)"
+    GITHUB_REF_NAME="Vault/$GITHUB_REF_NAME"
+    # GITHUB_REF_NAME= Vault/v1.0.6
     ci_version="$(echo "$GITHUB_REF_NAME" | cut -d'/' -f2)"
     csproj_version="v$(cat BTCPayServer.Vault/Version.csproj | sed -n 's/.*<Version>\(.*\)<\/Version>.*/\1/p')"
     if [[ "$ci_version" != "$csproj_version" ]]; then

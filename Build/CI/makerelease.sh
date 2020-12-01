@@ -11,9 +11,22 @@ if ! [[ "$X_GITHUB_TOKEN" ]]; then
     exit 0
 fi
 
-if ! [[ "$GITHUB_REF_NAME" ]]; then
-    echo "Skipping github release (GITHUB_REF_NAME is not set)"
+if ! [[ "$GITHUB_REF" ]]; then
+    echo "Skipping github release (GITHUB_REF is not set)"
     exit 0
+fi
+
+# GITHUB_REF= refs/tags/Vault/v1.0.6-test
+GITHUB_REF_NAME="$(echo $GITHUB_REF | cut -d'/' -f4)"
+GITHUB_REF_NAME="Vault/$GITHUB_REF_NAME"
+# GITHUB_REF_NAME= Vault/v1.0.6-test
+
+draft=false
+prerelease=false
+
+if [[ "$GITHUB_REF_NAME" == *"-test" ]]; then
+    draft=true
+    prerelease=true
 fi
 
 AZURE_ACCOUNT_NAME="$(echo "$AZURE_STORAGE_CONNECTION_STRING" | cut -d'=' -f3 | cut -d';' -f1)"
@@ -28,8 +41,8 @@ version="$(echo "$GITHUB_REF_NAME" | cut -d'/' -f2)"
 payload="$(jq -M --arg "tag_name" "$GITHUB_REF_NAME" \
    --arg "name" "BTCPayServer Vault $version" \
    --arg "body" "$release" \
-   --argjson "draft" false \
-   --argjson "prerelease" true \
+   --argjson "draft" $draft \
+   --argjson "prerelease" $prerelease \
    '. | .tag_name=$tag_name | .name=$name | .body=$body | .draft=$draft | .prerelease=$prerelease' \
    <<<'{}')"
 echo "Creating release to https://api.github.com/repos/$GITHUB_REPOSITORY/releases"
