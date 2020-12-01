@@ -20,10 +20,12 @@ if [[ "$GITHUB_REF" ]]; then
     GITHUB_REF_NAME="Vault/$GITHUB_REF_NAME"
     # GITHUB_REF_NAME= Vault/v1.0.6
     ci_version="$(echo "$GITHUB_REF_NAME" | cut -d'/' -f2)"
-    csproj_version="v$(cat BTCPayServer.Vault/Version.csproj | sed -n 's/.*<Version>\(.*\)<\/Version>.*/\1/p')"
-    if [[ "$ci_version" != "$csproj_version" ]]; then
-        echo "The tagged version on travis ($ci_version) is different from the csproj ($csproj_version)"
-        exit 1
+    if [[ "$ci_version" ]]; then
+        csproj_version="v$(cat BTCPayServer.Vault/Version.csproj | sed -n 's/.*<Version>\(.*\)<\/Version>.*/\1/p')"
+        if [[ "$ci_version" != "$csproj_version" ]]; then
+            echo "The tagged version on travis ($ci_version) is different from the csproj ($csproj_version)"
+            exit 1
+        fi
     fi
 fi
 
