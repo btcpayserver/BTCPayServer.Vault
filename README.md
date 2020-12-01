@@ -11,6 +11,20 @@ This project is composed of two parts:
 
 BTCPayServer Vault allows web applications to access your hardware wallet, this enables a better integrated user experience.
 
+## How to install
+
+### Direct download
+
+The binaries are on our [release page](https://github.com/btcpayserver/BTCPayServer.Vault/releases/latest).
+
+### Via brew (Mac OS only)
+
+You can use brew:
+
+```bash
+brew install btcpayserver-vault
+```
+
 ## How does BTCPayServer Vault work
 
 When running the BTCPayServer Vault, a local webserver is hosted on `http://127.0.0.1:65092` which web applications, via your local browser, can connect to in order to interact with your hardware wallet.
