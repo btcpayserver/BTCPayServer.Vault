@@ -34,6 +34,7 @@ DIRECTORY_NAME="dist-$GITHUB_RUN_ID"
 wget -O azcopy.tar.gz https://aka.ms/downloadazcopy-v10-linux
 tar -xf azcopy.tar.gz --strip-components=1
 mkdir -p dist
+sudo chmod +x ./azcopy
 ./azcopy cp "https://$AZURE_ACCOUNT_NAME.blob.core.windows.net/$AZURE_STORAGE_CONTAINER/$DIRECTORY_NAME/*" "dist"
 
 release="$(cat Build/RELEASE.md)"
