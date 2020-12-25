@@ -1,4 +1,4 @@
-[![NuGet](https://img.shields.io/nuget/v/BTCPayServer.Hwi.svg)](https://www.nuget.org/packages/BTCPayServer.Hwi) [![Build Status](https://travis-ci.org/btcpayserver/BTCPayServer.Vault.svg?branch=master)](https://travis-ci.org/btcpayserver/BTCPayServer.Vault)
+[![NuGet](https://img.shields.io/nuget/v/BTCPayServer.Hwi.svg)](https://www.nuget.org/packages/BTCPayServer.Hwi) [![Build status](https://github.com/btcpayserver/BTCPayServer.Vault/workflows/CI/badge.svg)](https://github.com/btcpayserver/BTCPayServer.Vault/actions?query=workflow%3ACI)
 
 # BTCPayServer.Vault
 
