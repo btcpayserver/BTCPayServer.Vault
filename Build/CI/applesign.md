@@ -28,6 +28,7 @@ Let's create it:
 ```bash
 rsa_key_file="temp.key"
 csr_file_name="request.csr"
+openssl genrsa -out "$rsa_key_file" 2048
 openssl req -new -key "$rsa_key_file" -out "$csr_file_name" -subj "/emailAddress=$email, CN=$common_name, C=$country_code"
 ```
 This will create a request file as `request.csr` in your current folder.
@@ -60,8 +61,4 @@ For travis to sign BTCPayServer.Vault dmg file, you need to convert the certific
 ```bash
 cat $cert_output_file | base64 -w0
 ```
-Then setup your travis environment variable `APPLE_DEV_ID_CERT` to this value **SURROUNDED BY DOUBLE QUOTE ("")**.
 
-Additionally setup the travis environment variable `APPLE_DEV_ID_CERT_PASSWORD`, **SURROUNDED BY DOUBLE QUOTE ("")**.
-
-Did I say that you need to **SURROUND BY DOUBLE QUOTE ("")** any value that you enter in travis environment variable?
