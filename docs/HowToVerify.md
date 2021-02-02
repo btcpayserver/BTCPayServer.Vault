@@ -31,6 +31,11 @@ You can import this key from keybase:
 ```bash
 curl https://keybase.io/nicolasdorier/pgp_keys.asc?fingerprint=7121bde3555d9be06bddc68162fe85647dedda2e | gpg --import
 ```
+or
+```
+keybase pgp pull nicolasdorier
+```
+
 Alternatively, you can just download the file via the browser and run:
 
 ```bash
@@ -47,11 +52,19 @@ sha256sum --check SHA256SUMS.asc
 
 You should see that the file you downloaded has the right hash:
 ```
-BTCPayServerVault-0.0.10-setup.exe: OK
+BTCPayServerVault-1.0.7-setup.exe: OK
 ```
 
+If you are on Windows you can check the hash manually:
+```powershell
+certUtil -hashfile BTCPayServerVault-1.0.7-setup.exe SHA256
+type SHA256SUMS.asc
+```
+And verify the hashes match identically.
+
 Then check the actual signature:
-```bash
+
+```
 gpg --verify SHA256SUMS.asc
 ```
 
