@@ -55,12 +55,21 @@ You should see that the file you downloaded has the right hash:
 BTCPayServerVault-1.0.7-setup.exe: OK
 ```
 
-If you are on Windows you can check the hash manually:
+If you are on Windows you can check the hashes are identical manually:
 ```powershell
 certUtil -hashfile BTCPayServerVault-1.0.7-setup.exe SHA256
 type SHA256SUMS.asc
 ```
-And verify the hashes match identically.
+
+If you are on Mac:
+```
+shasum -a 256 --check SHA256SUMS.asc
+```
+
+You should see that the file you downloaded has the right hash:
+```
+BTCPayServerVault-osx-x64-1.0.7.dmg: OK
+```
 
 Then check the actual signature:
 
