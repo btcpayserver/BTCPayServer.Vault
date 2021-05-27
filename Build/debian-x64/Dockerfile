@@ -7,7 +7,7 @@ RUN apt-get install -y --no-install-recommends imagemagick
 
 RUN wget -qO /tmp/hwi.tar.gz https://github.com/bitcoin-core/HWI/releases/download/1.2.1/hwi-1.2.1-linux-amd64.tar.gz && \
     tar -zxvf /tmp/hwi.tar.gz -C /tmp hwi && \
-    echo "23ea301117f74561294b5b3ebe1eeb461004aff7e479c4b90a0aaec5924cc677 /tmp/hwi" | sha256sum -c - && \
+    echo "ca1f91593b3c0a99269ecbc0f85aced08e2dec4bf263cfb25429e047e63e38d5 /tmp/hwi" | sha256sum -c - && \
     rm /tmp/hwi.tar.gz
 
 SHELL ["/bin/bash", "-c"]
