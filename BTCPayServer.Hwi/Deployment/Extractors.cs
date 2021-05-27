@@ -49,7 +49,7 @@ namespace BTCPayServer.Hwi.Deployment
             process.ArgumentList.Add(directory);
             process.ArgumentList.Add("hwi");
             var extractedPath = Path.Combine(directory, "hwi");
-            Process.Start(process).WaitForExit();
+            System.Diagnostics.Process.Start(process).WaitForExit();
             if (!File.Exists(extractedPath))
                 throw new InvalidOperationException($"hwi was not extracted properly to {extractedPath}");
             if (extractedPath != outputFileName)
