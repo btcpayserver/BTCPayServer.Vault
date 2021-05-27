@@ -13,7 +13,7 @@ RUN wget -qO "/tmp/hwi.zip" https://github.com/bitcoin-core/HWI/releases/downloa
     # Need to setup with rcedit because https://github.com/dotnet/sdk/issues/3943
     # I prebuild the binaries with VS 2019 on commit b807b34a644c86c0b0d89c7f073967e79202731a
     wget -qO "/tmp/rcedit.exe" https://aois.blob.core.windows.net/public/rcedit.exe && \
-    echo "2cfdd6ae51e345f8c70214d626430c8d236336688a87f7d85fc6f3d6a8392da8 /tmp/rcedit.exe" | sha256sum -c -
+    echo "4fd0b81071912fb2534770e7ad6688f6ee1dd227f62748b7fc3272c77337d6a6 /tmp/rcedit.exe" | sha256sum -c -
 
 WORKDIR /source
 ENV RUNTIME "win-x64"
