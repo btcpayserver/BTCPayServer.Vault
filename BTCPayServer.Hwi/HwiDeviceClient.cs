@@ -100,14 +100,17 @@ namespace BTCPayServer.Hwi
             List<string> commandArguments = new List<string>();
             commandArguments.Add("--path");
             commandArguments.Add(keyPath.ToString(true, "h"));
-
+            commandArguments.Add("--addr-type");
             switch (addressType)
             {
+                case ScriptPubKeyType.Legacy:
+                    commandArguments.Add("legacy");
+                    break;
                 case ScriptPubKeyType.Segwit:
-                    commandArguments.Add("--wpkh");
+                    commandArguments.Add("wit");
                     break;
                 case ScriptPubKeyType.SegwitP2SH:
-                    commandArguments.Add("--sh_wpkh");
+                    commandArguments.Add("sh_wit");
                     break;
             }
 

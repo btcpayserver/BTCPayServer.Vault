@@ -312,10 +312,21 @@ namespace BTCPayServer.Hwi
 			options ??= Enumerable.Empty<HwiOption>();
 			var fullOptions = new List<HwiOption>(options);
 
-			if (network.NetworkType != NetworkType.Mainnet)
-			{
-				fullOptions.Insert(0, HwiOption.TestNet);
-			}
+            arguments.Add("--chain");
+            switch (network.NetworkType)
+            {
+                case NetworkType.Mainnet:
+                    arguments.Add("main");
+                    break;
+                case NetworkType.Testnet:
+                    arguments.Add("test");
+                    break;
+                case NetworkType.Regtest:
+                    arguments.Add("regtest");
+                    break;
+                default:
+                    throw new NotSupportedException($"Network not supported ({network.NetworkType})");
+            }
 
             foreach (var option in fullOptions)
             {

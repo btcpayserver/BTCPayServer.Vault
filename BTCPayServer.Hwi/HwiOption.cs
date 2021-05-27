@@ -15,7 +15,6 @@ namespace BTCPayServer.Hwi
 
 		public static HwiOption Password(string password) => new HwiOption(HwiOptions.Password, password);
 
-		public static HwiOption TestNet => new HwiOption(HwiOptions.TestNet);
 		public static HwiOption Version => new HwiOption(HwiOptions.Version);
 
 		private HwiOption(HwiOptions type, string argument = null)

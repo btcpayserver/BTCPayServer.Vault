@@ -29,10 +29,10 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddSingleton<ITransport>(provider =>
             {
                 var options = provider.GetRequiredService<IOptions<HwiServerOptions>>();
-                return new InternalTransport(new CliTransport(options.Value.HwiDeploymentDirectory)
+                return new InternalTransport(new LegacyCompatibilityTransport(new CliTransport(options.Value.HwiDeploymentDirectory)
                 {
                     Logger = provider.GetRequiredService<ILoggerFactory>().CreateLogger(LoggerNames.HwiServerCli)
-                });
+                }));
             });
             services.AddSingleton<IRunningIndicator>(provider =>
             {
