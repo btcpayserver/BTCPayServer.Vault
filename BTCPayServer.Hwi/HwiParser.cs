@@ -144,35 +144,6 @@ namespace BTCPayServer.Hwi
 			return response;
 		}
 
-		public static BitcoinAddress ParseAddress(string json, Network network)
-		{
-            var expectedNetwork = network;
-			// HWI does not support regtest, so the parsing would fail here.
-			if (network.NetworkType == NetworkType.Regtest)
-			{
-				network = network.NetworkSet.Testnet;
-			}
-
-			if (JsonHelpers.TryParseJToken(json, out JToken token))
-			{
-				var addressString = token["address"]?.ToString()?.Trim() ?? null;
-				try
-				{
-					var address = BitcoinAddress.Create(addressString, network);
-					return address.ToNetwork(expectedNetwork);
-				}
-				catch (FormatException)
-				{
-					BitcoinAddress.Create(addressString, network.NetworkType == NetworkType.Mainnet ? network.NetworkSet.Testnet : network.NetworkSet.Mainnet);
-					throw new FormatException("Wrong network.");
-				}
-			}
-			else
-			{
-				throw new FormatException($"Could not parse address: {json}.");
-			}
-		}
-
 		public static PSBT ParsePsbt(string json, Network network)
 		{
 			// HWI does not support regtest, so the parsing would fail here.
@@ -305,28 +276,23 @@ namespace BTCPayServer.Hwi
 
 			throw new FormatException($"Cannot parse version from HWI's response. Response: {hwiResponse}.");
 		}
-
-		internal static string[] ToArgumentString(DeviceSelector deviceSelector, Network network, IEnumerable<HwiOption> options, HwiCommands? command, string[] commandArguments)
+        static Dictionary<ChainName, string> chainNames = new Dictionary<ChainName, string>()
+            {
+                { ChainName.Mainnet, "main" },
+                { ChainName.Testnet, "test" },
+                { ChainName.Regtest, "regtest" },
+                { Bitcoin.Instance.Signet.ChainName, "signet" },
+            };
+        internal static string[] ToArgumentString(DeviceSelector deviceSelector, Network network, IEnumerable<HwiOption> options, HwiCommands? command, string[] commandArguments)
 		{
             List<string> arguments = new List<string>();
 			options ??= Enumerable.Empty<HwiOption>();
 			var fullOptions = new List<HwiOption>(options);
 
+            chainNames.TryGetValue(network.ChainName, out var val);
+            val ??= network.ChainName.ToString().ToLowerInvariant();
             arguments.Add("--chain");
-            switch (network.NetworkType)
-            {
-                case NetworkType.Mainnet:
-                    arguments.Add("main");
-                    break;
-                case NetworkType.Testnet:
-                    arguments.Add("test");
-                    break;
-                case NetworkType.Regtest:
-                    arguments.Add("regtest");
-                    break;
-                default:
-                    throw new NotSupportedException($"Network not supported ({network.NetworkType})");
-            }
+            arguments.Add(val);
 
             foreach (var option in fullOptions)
             {

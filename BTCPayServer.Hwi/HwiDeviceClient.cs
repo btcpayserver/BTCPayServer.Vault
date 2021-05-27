@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using BTCPayServer.Helpers;
 using NBitcoin;
+using NBitcoin.DataEncoders;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -93,7 +94,7 @@ namespace BTCPayServer.Hwi
             return NBitcoinHelpers.BetterParseExtPubKey(extPubKeyString, this.HwiClient.Network, HwiClient.IgnoreInvalidNetwork);
         }
 
-        public async Task DisplayAddressAsync(ScriptPubKeyType addressType, KeyPath keyPath, CancellationToken cancellationToken = default)
+        public async Task<BitcoinAddress> DisplayAddressAsync(ScriptPubKeyType addressType, KeyPath keyPath, CancellationToken cancellationToken = default)
         {
             if (keyPath == null)
                 throw new ArgumentNullException(nameof(keyPath));
@@ -119,9 +120,54 @@ namespace BTCPayServer.Hwi
                 commandArguments: commandArguments.ToArray(),
                 cancellationToken).ConfigureAwait(false);
 
-            if (!HwiClient.IgnoreInvalidNetwork)
-                HwiParser.ParseAddress(response, HwiClient.Network);
+            return ParseAddress(response, HwiClient.Network, HwiClient.IgnoreInvalidNetwork);
         }
+
+        private static BitcoinAddress ParseAddress(string response, Network expectedNetwork, bool ignoreInvalidNetwork)
+        {
+            if (JsonHelpers.TryParseJToken(response, out JToken token) &&
+                            token["address"]?.ToString()?.Trim() is String address)
+            {
+                try
+                {
+                    return BitcoinAddress.Create(address, expectedNetwork);
+                }
+                catch when (ignoreInvalidNetwork)
+                {
+                    var set = expectedNetwork.NetworkSet;
+                    // Some wallet does not really support --chain parameter. So we need to bruteforce the proper format
+                    foreach (var network in new[]
+                    {
+                        set.Mainnet,
+                        set.Testnet,
+                        set.Regtest,
+                        set.GetNetwork(new ChainName("Signet"))
+                    })
+                    {
+                        if (network is null)
+                            continue;
+                        if (network == expectedNetwork)
+                            continue;
+                        try
+                        {
+                            return BitcoinAddress.Create(address, network).ToNetwork(expectedNetwork);
+                        }
+                        catch
+                        {
+
+                        }
+                    }
+                    throw new FormatException(CantParseAddress);
+                }
+                catch (Exception ex)
+                {
+                    throw new FormatException(CantParseAddress, ex);
+                }
+            }
+            throw new FormatException(CantParseAddress);
+        }
+
+        const string CantParseAddress = "The device returned an address which can't be parsed. Please use HwiClient.IgnoreInvalidNetwork=true to ignore.";
 
         public async Task<PSBT> SignPSBTAsync(PSBT psbt, CancellationToken cancellationToken = default)
         {
