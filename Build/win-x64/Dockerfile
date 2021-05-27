@@ -6,7 +6,7 @@ RUN apt-get install -y --no-install-recommends imagemagick
 ###
 
 RUN apt-get install -y --no-install-recommends nsis unzip wine xxd osslsigncode openssl
-RUN wget -qO "/tmp/hwi.zip" https://github.com/bitcoin-core/HWI/releases/download/1.2.1/hwi-1.2.1-windows-amd64.zip && \
+RUN wget -qO "/tmp/hwi.zip" https://github.com/bitcoin-core/HWI/releases/download/2.0.1/hwi-2.0.1-windows-amd64.zip && \
     unzip "/tmp/hwi.zip" -d "/tmp" && \
     echo "b8b21499592a311cfaa18676280807d6bf674d72cef21409ed265069f6582c1b /tmp/hwi.exe" | sha256sum -c - && \
     rm "/tmp/hwi.zip" && \
