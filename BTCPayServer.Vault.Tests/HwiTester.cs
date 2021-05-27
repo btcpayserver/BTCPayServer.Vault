@@ -34,7 +34,7 @@ namespace BTCPayServer.Vault.Tests
             Client = new HwiClient(Network)
             {
                 IgnoreInvalidNetwork = true,
-                Transport = new CliTransport(hwiPath)
+                Transport = new CliTransport(Path.GetDirectoryName(hwiPath))
                 {
                     Logger = _HwiLogger
                 }
