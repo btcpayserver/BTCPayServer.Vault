@@ -4,8 +4,8 @@
 
 This project is composed of two parts:
 
-* [BTCPayServer.Hwi](BTCPayServer.Hwi): An easy to use library ([nuget](https://www.nuget.org/packages/BTCPayServer.Hwi)) wrapping the command line interface of the [hwi project](https://github.com/bitcoin-core/HWI).
-* [BTCPayServer.Vault](BTCPayServer.Vault): A simple local web server providing access to the hardware wallet physically connected to your computer via hwi.
+* [BTCPayServer.Hwi](https://github.com/btcpayserver/BTCPayServer.Vault/tree/master/BTCPayServer.Hwi): An easy to use library ([nuget](https://www.nuget.org/packages/BTCPayServer.Hwi)) wrapping the command line interface of the [hwi project](https://github.com/bitcoin-core/HWI).
+* [BTCPayServer.Vault](https://github.com/btcpayserver/BTCPayServer.Vault/tree/master/BTCPayServer.Vault): A simple local web server providing access to the hardware wallet physically connected to your computer via hwi.
 
 ## Why BTCPayServer Vault
 
@@ -17,7 +17,7 @@ BTCPayServer Vault allows web applications to access your hardware wallet, this 
 
 The binaries are on our [release page](https://github.com/btcpayserver/BTCPayServer.Vault/releases/latest).
 
-### Via brew (Mac OS only)
+### Via brew (macOS only)
 
 You can use brew:
 
@@ -76,7 +76,7 @@ Video below explains how to use BTCPay Vault with BTCPay Server.
 [![](https://img.youtube.com/vi/hh_cm8MKl2g/mqdefault.jpg)](https://www.youtube.com/watch?v=hh_cm8MKl2g)
 
 - [BTCPay Vault announcement](https://blog.btcpayserver.org/btcpay-vault/)
-- [Using BTCPay Vault with BTCPay Server](https://docs.btcpayserver.org/features/vault)
+- [Using BTCPay Vault with BTCPay Server](https://docs.btcpayserver.org/Vault)
 
 ## Licence
 
