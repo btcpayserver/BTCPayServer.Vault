@@ -53,12 +53,12 @@ namespace BTCPayServer.Hwi
                 w.Add(devicePath);
             });
         }
-        public static DeviceSelector FromDeviceType(HardwareWalletModels deviceType, string devicePath = null)
+        public static DeviceSelector FromDeviceType(string deviceType, string devicePath = null)
         {
             return new LambdaDeviceSelector(w =>
             {
                 w.Add($"--device-type"); 
-                w.Add(deviceType.ToHwiFriendlyString());
+                w.Add(deviceType.ToString().ToLowerInvariant());
                 if (!string.IsNullOrEmpty(devicePath))
                 {
                     w.Add($"--device-path");

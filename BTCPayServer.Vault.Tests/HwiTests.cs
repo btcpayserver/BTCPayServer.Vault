@@ -169,7 +169,7 @@ namespace BTCPayServer.Vault.Tests
             if (addressType == ScriptPubKeyType.Legacy)
             {
                 var prevTx = xpub.Network.CreateTransaction();
-                prevTx.Inputs.Add(RandomOutpoint(), new Key().ScriptPubKey);
+                prevTx.Inputs.Add(RandomOutpoint(), ((IDestination)new Key()).ScriptPubKey);
                 var txout = prevTx.Outputs.Add(money, pubkey.GetScriptPubKey(addressType));
                 var coin = new Coin(new OutPoint(prevTx, 0), txout);
                 builder.AddCoins(coin);

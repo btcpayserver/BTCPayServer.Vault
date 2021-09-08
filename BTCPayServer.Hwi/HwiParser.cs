@@ -104,32 +104,6 @@ namespace BTCPayServer.Hwi
 			return false;
 		}
 
-		public static bool TryParseHardwareWalletVendor(JToken token, out HardwareWalletModels vendor)
-		{
-			vendor = HardwareWalletModels.Unknown;
-
-			if (token is null)
-			{
-				return false;
-			}
-
-			try
-			{
-				var typeString = token.Value<string>();
-				if (Enum.TryParse(typeString, ignoreCase: true, out HardwareWalletModels t))
-				{
-					vendor = t;
-					return true;
-				}
-			}
-			catch
-			{
-				return false;
-			}
-
-			return false;
-		}
-
 		public static IEnumerable<HwiEnumerateEntry> ParseHwiEnumerateResponse(string responseString)
 		{
 			var jarr = JArray.Parse(responseString);
@@ -166,7 +140,7 @@ namespace BTCPayServer.Hwi
 
 		public static HwiEnumerateEntry ParseHwiEnumerateEntry(JObject json)
 		{
-			JToken modelToken = json["model"];
+			string model = json["model"]?.Value<string>();
 			var pathString = json["path"]?.ToString()?.Trim();
 			var serialNumberString = json["serial_number"]?.ToString()?.Trim();
 			var fingerprintString = json["fingerprint"]?.ToString()?.Trim();
@@ -204,12 +178,6 @@ namespace BTCPayServer.Hwi
 			{
 				code = err.ErrorCode;
 				errorString = err.Message;
-			}
-
-			HardwareWalletModels model = HardwareWalletModels.Unknown;
-			if (TryParseHardwareWalletVendor(modelToken, out HardwareWalletModels t))
-			{
-				model = t;
 			}
 
 			return new HwiEnumerateEntry(
@@ -315,11 +283,6 @@ namespace BTCPayServer.Hwi
                 }
             }
 			return arguments.ToArray();
-		}
-
-		public static string ToHwiFriendlyString(this HardwareWalletModels me)
-		{
-			return me.ToString().ToLowerInvariant();
 		}
 	}
 }

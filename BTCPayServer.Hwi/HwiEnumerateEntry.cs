@@ -8,7 +8,7 @@ namespace BTCPayServer.Hwi
 {
     public class HwiEnumerateEntry
     {
-        public HardwareWalletModels Model { get; }
+        public string Model { get; }
         public string Path { get; }
         public string SerialNumber { get; }
         public HDFingerprint? Fingerprint { get; }
@@ -27,7 +27,7 @@ namespace BTCPayServer.Hwi
         }
 
         public HwiEnumerateEntry(
-            HardwareWalletModels model,
+            string model,
             string path,
             string serialNumber,
             HDFingerprint? fingerprint,

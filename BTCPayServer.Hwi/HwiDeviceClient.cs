@@ -13,7 +13,7 @@ namespace BTCPayServer.Hwi
 {
     public class HwiDeviceClient
     {
-        public HwiDeviceClient(HwiClient hwiClient, DeviceSelector deviceSelector, HardwareWalletModels model, HDFingerprint? fingerprint)
+        public HwiDeviceClient(HwiClient hwiClient, DeviceSelector deviceSelector, string model, HDFingerprint? fingerprint)
         {
             HwiClient = hwiClient ?? throw new ArgumentNullException(nameof(hwiClient));
             DeviceSelector = deviceSelector ?? throw new ArgumentNullException(nameof(deviceSelector));
@@ -27,7 +27,7 @@ namespace BTCPayServer.Hwi
         public string Password { get; set; }
         public HwiClient HwiClient { get; }
         public DeviceSelector DeviceSelector { get; }
-        public HardwareWalletModels Model { get; }
+        public string Model { get; }
         public HDFingerprint? Fingerprint { get; }
 
         public Task PromptPinAsync(CancellationToken cancellationToken = default)
