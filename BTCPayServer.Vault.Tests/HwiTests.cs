@@ -30,6 +30,26 @@ namespace BTCPayServer.Vault.Tests
 
 
         [Fact]
+        public void CanParseVersion()
+        {
+            var v = new[]
+            {
+                ("hwi.exe 1.0.1", new Version(1,0,1)),
+                ("hwi 1.0.1", new Version(1,0,1)),
+                ("hwi 1.2", new Version(1,2,0)),
+                ("pouet 2.1", new Version(2,1,0)),
+                ("pouet 2.1rl", new Version(2,1,0)),
+                ("pouet 2.1 rl", new Version(2,1,0)),
+                ("long 2.1.3.4 rl", new Version(2,1,3)),
+            };
+            foreach (var o in v)
+            {
+                Assert.Equal(o.Item2, HwiParser.ParseVersion(o.Item1));
+            }
+        }
+
+
+        [Fact]
         public async Task CanGetVersion()
         {
             var tester = await CreateTester(false);

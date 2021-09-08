@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using BTCPayServer.Helpers;
+using System.Text.RegularExpressions;
 
 namespace BTCPayServer.Hwi
 {
@@ -200,39 +201,18 @@ namespace BTCPayServer.Hwi
 			return rawPath.Replace(@"\\", @"\");
 		}
 
-		public static bool TryParseVersion(string hwiResponse, string substringFrom, out Version version)
-		{
-			int startIndex = hwiResponse.IndexOf(substringFrom) + substringFrom.Length;
-			var versionString = hwiResponse.Substring(startIndex).Trim();
-			version = null;
-			if (Version.TryParse(versionString, out Version v))
-			{
-				version = v;
-				return true;
-			}
-
-			return false;
-		}
-
+        static Regex VersionRegex = new Regex(@"(\d+)\.(\d+)(\.(\d+))?");
 		public static bool TryParseVersion(string hwiResponse, out Version version)
 		{
 			version = null;
-
-			// Order matters! https://github.com/zkSNACKs/WalletWasabi/pull/1905/commits/cecefcc50af140cc06cb93961cda86f9b21db11b
-
-			// Example output: hwi.exe 1.0.1
-			if (TryParseVersion(hwiResponse, "hwi.exe", out Version v2))
-			{
-				version = v2;
-			}
-
-			// Example output: hwi 1.0.1
-			if (TryParseVersion(hwiResponse, "hwi", out Version v1))
-			{
-				version = v1;
-			}
-
-			return version != null;
+            var m = VersionRegex.Match(hwiResponse);
+            if (!m.Success || m.Groups.Count < 5)
+                return false;
+            int.TryParse(m.Groups[1].Value, out var major);
+            int.TryParse(m.Groups[2].Value, out var minor);
+            int.TryParse(m.Groups[4].Value, out var build);
+            version = new Version(major, minor, build);
+            return true;
 		}
 
 		public static Version ParseVersion(string hwiResponse)
