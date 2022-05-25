@@ -89,6 +89,6 @@ jobs:
       - uses: actions/checkout@v2
       - run: ./Build/CI/makerelease.sh
         env:
-          X_GITHUB_TOKEN: ${{ secrets.X_GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           AZURE_STORAGE_CONNECTION_STRING: ${{ secrets.AZURE_STORAGE_CONNECTION_STRING }}
   

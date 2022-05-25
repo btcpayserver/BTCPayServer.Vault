@@ -6,11 +6,6 @@ if ! [[ "$AZURE_STORAGE_CONNECTION_STRING" ]] || ! [[ "$AZURE_STORAGE_CONTAINER"
     exit 0
 fi
 
-if ! [[ "$X_GITHUB_TOKEN" ]]; then
-    echo "Skipping github release (X_GITHUB_TOKEN is not set)"
-    exit 0
-fi
-
 if ! [[ "$GITHUB_REF" ]]; then
     echo "Skipping github release (GITHUB_REF is not set)"
     exit 0
@@ -68,7 +63,7 @@ for f in *; do
   echo "Uploading $f to github release"
   curl --fail -s -S \
     -H "Accept: application/vnd.github.v3+json" \
-    -H "Authorization: token $X_GITHUB_TOKEN" \
+    -H "Authorization: token $GITHUB_TOKEN" \
     -H "Content-Type: $media_type" \
     --data-binary @"$f" \
     "https://uploads.github.com/repos/$GITHUB_REPOSITORY/releases/$release_id/assets?name=$f"

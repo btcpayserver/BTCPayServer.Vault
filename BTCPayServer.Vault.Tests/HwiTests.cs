@@ -96,7 +96,7 @@ namespace BTCPayServer.Vault.Tests
         public async Task CanGetXPub()
         {
             var tester = await CreateTester();
-            await tester.Device.GetXPubAsync(new KeyPath("1'"));
+            await tester.Device.GetXPubAsync(new KeyPath("44'/0'/0'/0/0"));
         }
 
 
@@ -105,8 +105,10 @@ namespace BTCPayServer.Vault.Tests
         public async Task CanSignMessage()
         {
             var tester = await CreateTester();
-            var signature = await tester.Device.SignMessageAsync("I am satoshi", new KeyPath("44'/1'/0'/0/0"));
-            var xpub = await tester.Device.GetXPubAsync(new KeyPath("44'/1'/0'/0/0"));
+            var accountPath = tester.GetKeyPath(ScriptPubKeyType.Legacy);
+            var addrPath = accountPath.Derive(new KeyPath("0/0"));
+            var signature = await tester.Device.SignMessageAsync("I am satoshi", addrPath);
+            var xpub = await tester.Device.GetXPubAsync(addrPath);
             Assert.True(xpub.GetPublicKey().VerifyMessage("I am satoshi", signature));
         }
 
@@ -115,11 +117,11 @@ namespace BTCPayServer.Vault.Tests
         public async Task CanDisplayAddress()
         {
             var tester = await CreateTester();
-            await tester.Device.DisplayAddressAsync(ScriptPubKeyType.Legacy, GetKeyPath(ScriptPubKeyType.Legacy).Derive("0/1"));
+            await tester.Device.DisplayAddressAsync(ScriptPubKeyType.Legacy, tester.GetKeyPath(ScriptPubKeyType.Legacy).Derive("0/1"));
             if (tester.Network.Consensus.SupportSegwit)
             {
-                await tester.Device.DisplayAddressAsync(ScriptPubKeyType.Segwit, GetKeyPath(ScriptPubKeyType.Segwit).Derive("0/1"));
-                await tester.Device.DisplayAddressAsync(ScriptPubKeyType.SegwitP2SH, GetKeyPath(ScriptPubKeyType.SegwitP2SH).Derive("0/1"));
+                await tester.Device.DisplayAddressAsync(ScriptPubKeyType.Segwit, tester.GetKeyPath(ScriptPubKeyType.Segwit).Derive("0/1"));
+                await tester.Device.DisplayAddressAsync(ScriptPubKeyType.SegwitP2SH, tester.GetKeyPath(ScriptPubKeyType.SegwitP2SH).Derive("0/1"));
             }
         }
 
@@ -128,7 +130,6 @@ namespace BTCPayServer.Vault.Tests
         public async Task CanSign()
         {
             var tester = await CreateTester();
-
             // Should show we are sending 2.0 BTC three time
             var psbt = await tester.Device.SignPSBTAsync(await CreatePSBT(tester, ScriptPubKeyType.Legacy));
             AssertFullySigned(tester, psbt);
@@ -151,7 +152,7 @@ namespace BTCPayServer.Vault.Tests
 
         private async Task<PSBT> CreatePSBT(HwiTester tester, ScriptPubKeyType addressType)
         {
-            var accountKeyPath = new RootedKeyPath(tester.Device.Fingerprint.Value, GetKeyPath(addressType));
+            var accountKeyPath = new RootedKeyPath(tester.Device.Fingerprint.Value, tester.GetKeyPath(addressType));
             var accountKey = await tester.Device.GetXPubAsync(accountKeyPath.KeyPath);
             Logger.LogInformation($"Signing with xpub {accountKeyPath}: {accountKey}...");
             List<Transaction> knownTransactions = new List<Transaction>();
@@ -166,21 +167,6 @@ namespace BTCPayServer.Vault.Tests
             psbt.AddKeyPath(accountKey, new KeyPath[] { new KeyPath("0/0"), new KeyPath("0/1"), new KeyPath("1/0") });
             psbt.RebaseKeyPaths(accountKey, accountKeyPath);
             return psbt;
-        }
-
-        private KeyPath GetKeyPath(ScriptPubKeyType addressType)
-        {
-            switch (addressType)
-            {
-                case ScriptPubKeyType.Legacy:
-                    return new KeyPath("44'/1'/0'");
-                case ScriptPubKeyType.Segwit:
-                    return new KeyPath("84'/1'/0'");
-                case ScriptPubKeyType.SegwitP2SH:
-                    return new KeyPath("49'/1'/0'");
-                default:
-                    throw new NotSupportedException(addressType.ToString());
-            }
         }
 
         private void CreateCoin(TransactionBuilder builder, List<Transaction> knownTransactions, ScriptPubKeyType addressType, Money money, BitcoinExtPubKey xpub, string path)
@@ -219,10 +205,13 @@ namespace BTCPayServer.Vault.Tests
         {
             return new OutPoint(RandomUtils.GetUInt256(), 0);
         }
-
-        async Task<HwiTester> CreateTester(bool needDevice = true)
+        Task<HwiTester> CreateTester(bool needDevice = true)
         {
-            var tester = await HwiTester.CreateAsync(LoggerFactory);
+            return CreateTester(Network.Main, needDevice);
+        }
+        async Task<HwiTester> CreateTester(Network network, bool needDevice = true)
+        {
+            var tester = await HwiTester.CreateAsync(network, LoggerFactory);
             if (needDevice)
                 await tester.EnsureHasDevice();
             return tester;

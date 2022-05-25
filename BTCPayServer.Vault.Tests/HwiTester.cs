@@ -23,7 +23,7 @@ namespace BTCPayServer.Vault.Tests
         private ILogger _logger;
         private ILogger _HwiLogger;
 
-        public HwiTester(ILoggerFactory loggerFactory, string hwiPath)
+        public HwiTester(Network network, ILoggerFactory loggerFactory, string hwiPath)
         {
             if (hwiPath == null)
                 throw new ArgumentNullException(nameof(hwiPath));
@@ -31,7 +31,8 @@ namespace BTCPayServer.Vault.Tests
                 throw new ArgumentNullException(nameof(loggerFactory));
             _logger = loggerFactory.CreateLogger("HwiTester");
             _HwiLogger = loggerFactory.CreateLogger("CliTransport");
-            Client = new HwiClient(Network)
+            Network = network;
+            Client = new HwiClient(network)
             {
                 IgnoreInvalidNetwork = true,
                 Transport = new LegacyCompatibilityTransport(new CliTransport(Path.GetDirectoryName(hwiPath))
@@ -41,10 +42,10 @@ namespace BTCPayServer.Vault.Tests
             };
         }
 
-        public static async Task<HwiTester> CreateAsync(ILoggerFactory loggerFactory)
+        public static async Task<HwiTester> CreateAsync(Network network, ILoggerFactory loggerFactory)
         {
             var hwi = await HwiVersions.Latest.Current.EnsureIsDeployed();
-            return new HwiTester(loggerFactory, hwi);
+            return new HwiTester(network, loggerFactory, hwi);
         }
 
         public async Task EnsureHasDevice()
@@ -54,7 +55,7 @@ namespace BTCPayServer.Vault.Tests
                 throw new InvalidOperationException("No device supported by HWI has been plugged");
         }
 
-        public Network Network => NBitcoin.Network.RegTest;
+        public Network Network { get; }
 
         public HwiClient Client
         {
@@ -65,6 +66,22 @@ namespace BTCPayServer.Vault.Tests
         {
             get;
             set;
+        }
+
+        public KeyPath GetKeyPath(ScriptPubKeyType addressType)
+        {
+            var network = Network.ChainName == ChainName.Mainnet ? "0'" : "1'";
+            switch (addressType)
+            {
+                case ScriptPubKeyType.Legacy:
+                    return new KeyPath($"44'/{network}/0'");
+                case ScriptPubKeyType.Segwit:
+                    return new KeyPath($"84'/{network}/0'");
+                case ScriptPubKeyType.SegwitP2SH:
+                    return new KeyPath($"49'/{network}/0'");
+                default:
+                    throw new NotSupportedException(addressType.ToString());
+            }
         }
     }
 }
