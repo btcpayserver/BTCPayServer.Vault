@@ -59,7 +59,7 @@ This is why BTCPayServer Vault always ask permission to user first before allowi
 
 This is a two step process:
 
-1. Install the latest version of the [.NET Core 3.1 SDK](https://dotnet.microsoft.com/download/dotnet-core/3.1)
+1. Install the latest version of the [.NET Core 6.0 SDK](https://dotnet.microsoft.com/download/dotnet-core/6.0)
 2. Run `dotnet build`
 
 If you want to run it for testing:

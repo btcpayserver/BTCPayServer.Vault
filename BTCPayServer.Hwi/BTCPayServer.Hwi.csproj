@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <Import Project="Version.csproj" Condition="Exists('Version.csproj')" />
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.1;netcoreapp2.1</TargetFrameworks>
+    <TargetFrameworks>netstandard2.1;net6.0</TargetFrameworks>
     <Company>BTCPay Server</Company>
     <Copyright>Copyright © BTCPay Server</Copyright>
     <Description>A wrapper library around the hwi bitcoin-core project</Description>

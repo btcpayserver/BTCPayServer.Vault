@@ -3,7 +3,7 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <OutputType Condition=" '$(Configuration)' == 'Release' ">WinExe</OutputType>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <Company>The BTCPayServer Team</Company>
     <Title>BTCPayServer Vault</Title>
     <AssemblyTitle>$(Title)</AssemblyTitle>
@@ -22,7 +22,7 @@
   <ItemGroup>
     <PackageReference Include="Avalonia" Version="0.9.12" />
     <PackageReference Include="AvalonStudio.Shell" Version="0.9.9" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="3.1.1" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="6.0.0" />
     <PackageReference Include="NicolasDorier.RateLimits" Version="1.1.0" />
   </ItemGroup>
 
