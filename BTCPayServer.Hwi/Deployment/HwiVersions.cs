@@ -89,7 +89,7 @@ namespace BTCPayServer.Hwi.Deployment
             using (var stream = File.Open(processName, FileMode.Open, FileAccess.Read))
             using (var bufferedStream = new BufferedStream(stream, 1024 * 32))
             {
-                var sha = new SHA256Managed();
+                var sha = SHA256.Create();
                 checksum = sha.ComputeHash(bufferedStream);
             }
             return Encoders.Hex.EncodeData(checksum);
