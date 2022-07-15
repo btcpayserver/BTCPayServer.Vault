@@ -54,7 +54,7 @@
   </ItemGroup>
 
   <PropertyGroup Condition="'$(GithubDistrib)' == 'true'">
-    <PublishTrimmed>true</PublishTrimmed>
+    <PublishTrimmed>false</PublishTrimmed>
     <SelfContained>true</SelfContained>
   </PropertyGroup>
 </Project>
