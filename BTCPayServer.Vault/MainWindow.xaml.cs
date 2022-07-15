@@ -16,26 +16,6 @@ namespace BTCPayServer.Vault
 {
     public class MainWindow : Window
     {
-        static Size NormalSize = new Size(622, 220);
-        static Size ExpandedSize = new Size(622, 433);
-        /// <summary>
-        /// Workaround https://github.com/AvaloniaUI/Avalonia/issues/3290 and https://github.com/AvaloniaUI/Avalonia/issues/3291
-        /// Because our app can only have two size we just resize based on the state of IsVisible of the MainViewModel
-        /// </summary>
-        void ResizeHack()
-        {
-            Size newSize = MainViewModel.IsVisible ? ExpandedSize : NormalSize;
-
-            if (newSize != this.ClientSize)
-            {
-                this.ClientSize = newSize;
-                // On Mac, resizing down will make the windows jump down, so we need to set it back up
-                if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX) && newSize == NormalSize)
-                {
-                    this.Position = this.Position.WithY(this.Position.Y - (int)(ExpandedSize.Height - NormalSize.Height));
-                }
-            }
-        }
 
         public MainWindow()
         {
@@ -43,7 +23,7 @@ namespace BTCPayServer.Vault
             Title = Extensions.GetTitle();
         }
 
-        DispatcherTimer _ResizeHackTimer;
+        private DispatcherTimer _BlinkTimer;
         private void InitializeComponent()
         {
             AvaloniaXamlLoader.Load(this);
@@ -56,14 +36,12 @@ namespace BTCPayServer.Vault
                 Indicator.StoppedRunning += OnStoppedRunning;
                 DataContext = ServiceProvider.GetRequiredService<MainWindowViewModel>();
                 MainViewModel.PropertyChanged += MainViewModel_PropertyChanged;
-                _ResizeHackTimer = new DispatcherTimer(TimeSpan.FromSeconds(1), DispatcherPriority.Normal, (_, __) =>
+                _BlinkTimer = new DispatcherTimer(TimeSpan.FromSeconds(1), DispatcherPriority.Normal, (_, __) =>
                 {
-                    ResizeHack();
                     if (MainViewModel.IsVisible && this.WindowState == WindowState.Minimized)
                         this.Blink();
                 });
-                _ResizeHackTimer.Start();
-                this.ResizeHack();
+                _BlinkTimer.Start();
             }
         }
         private void MainViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -72,7 +50,6 @@ namespace BTCPayServer.Vault
             {
                 Context.Post(_ =>
                 {
-                    this.ResizeHack();
                     this.ActivateHack();
                 }, null);
             }
@@ -86,7 +63,7 @@ namespace BTCPayServer.Vault
                 Indicator.Running -= OnRunning;
                 Indicator.StoppedRunning -= OnStoppedRunning;
                 MainViewModel.PropertyChanged -= MainViewModel_PropertyChanged;
-                _ResizeHackTimer.Stop();
+                _BlinkTimer.Stop();
             }
         }
 
