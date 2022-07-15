@@ -10,8 +10,6 @@ using Avalonia.Controls;
 using Avalonia.Platform;
 using Avalonia.Rendering;
 using Avalonia.Threading;
-using AvalonStudio.Shell;
-using AvalonStudio.Shell.Extensibility.Platforms;
 using Microsoft.Extensions.DependencyInjection;
 using Avalonia.Controls.Platform;
 using System.Reflection;

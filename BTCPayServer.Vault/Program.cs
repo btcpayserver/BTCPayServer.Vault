@@ -16,7 +16,6 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Hosting.Server;
 using System.IO;
 using Avalonia;
-using Avalonia.Logging.Serilog;
 using Microsoft.AspNetCore.Connections;
 using System.Net.Sockets;
 using System.Threading;
@@ -73,6 +72,6 @@ namespace BTCPayServer.Vault
         public static AppBuilder BuildAvaloniaApp()
     => AppBuilder.Configure<App>()
         .UsePlatformDetect()
-        .LogToDebug();
+        .LogToTrace();
     }
 }
