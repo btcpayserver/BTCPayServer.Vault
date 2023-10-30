@@ -96,12 +96,12 @@ namespace BTCPayServer.Vault
 
         AvaloniaSynchronizationContext Context;
 
-        internal async Task<bool> Authorize(string origin)
+        internal async Task<bool> Authorize(OriginReason originReason)
         {
             var tcs = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
             Context.Post((state) =>
             {
-                MainViewModel.Authorize(origin, tcs);
+                MainViewModel.Authorize(originReason, tcs);
             }, null);
             return await tcs.Task;
         }

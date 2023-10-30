@@ -8,6 +8,6 @@ namespace BTCPayServer.Vault.HWI
 {
     public interface IPermissionPrompt
     {
-        Task<bool> AskPermission(string origin, CancellationToken cancellationToken);
+        Task<bool> AskPermission(OriginReason originReason, CancellationToken cancellationToken);
     }
 }
