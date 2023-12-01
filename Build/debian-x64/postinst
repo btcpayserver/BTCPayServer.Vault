@@ -11,5 +11,5 @@ fi
 
 getent group plugdev > /dev/null || groupadd plugdev
 
-echo "In order to give access to your harware wallet to the current, non root user, you need to run:
+echo "In order to give access to your hardware wallet to the current, non root user, you need to run:
 sudo usermod -aG plugdev \`whoami\`"
