@@ -37,8 +37,19 @@ namespace BTCPayServer.Vault.HWI
 
         internal async Task Handle(HttpContext ctx)
         {
-            if (ctx.Request.Path.Value == "")
+            if (!ctx.Request.Headers.TryGetValue("Origin", out var origin))
             {
+                ctx.Response.StatusCode = 400;
+                return;
+            }
+            var originReason = new OriginReason(origin, "hwi");
+            if (ctx.Request.Path.Value == "" || ctx.Request.Path.Value == "/")
+            {
+                if (!await _permissionsService.IsGranted(originReason))
+                {
+                    ctx.Response.StatusCode = 401;
+                    return;
+                }
                 if (!(await TryExtractArguments(ctx.Request, ctx.RequestAborted) is string[] args))
                 {
                     ctx.Response.StatusCode = 400;
@@ -52,23 +63,19 @@ namespace BTCPayServer.Vault.HWI
             }
             else if (ctx.Request.Path.StartsWithSegments("/request-permission"))
             {
-                if (!ctx.Request.Headers.TryGetValue("Origin", out var origin))
-                {
-                    ctx.Response.StatusCode = 400;
-                    return;
-                }
-
+                
                 if (!await _rateLimitService.Throttle(RateLimitZones.Prompt, ThrottleSingletonObject, ctx.RequestAborted))
                 {
                     ctx.Response.StatusCode = 429;
                     return;
                 }
-                if (await _permissionsService.IsGranted(origin))
+                
+                if (await _permissionsService.IsGranted(originReason))
                 {
                     ctx.Response.StatusCode = 200;
                     return;
                 }
-                if (!await _permissionPrompt.AskPermission(origin, ctx.RequestAborted))
+                if (!await _permissionPrompt.AskPermission(originReason, ctx.RequestAborted))
                 {
                     _logger.LogInformation($"Permission to {origin} got denied");
                     ctx.Response.StatusCode = 401;

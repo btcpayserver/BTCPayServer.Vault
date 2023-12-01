@@ -36,16 +36,14 @@ namespace BTCPayServer.Vault
         {
             this.Accept = new LambdaCommand(() =>
             {
-                this.IsVisible = false;
-                this.AuthorizedOrigins.Add(this.Origin);
-                this.Origin = null;
+                this.AuthorizedOrigins.Add(OriginReason);
+                OriginReason = null;
                 this.taskCompletionSource.TrySetResult(true);
                 this.taskCompletionSource = null;
             });
             this.Reject = new LambdaCommand(() =>
             {
-                this.IsVisible = false;
-                this.Origin = null;
+                this.OriginReason = null;
                 this.taskCompletionSource.TrySetResult(false);
                 this.taskCompletionSource = null;
             });
@@ -71,7 +69,78 @@ namespace BTCPayServer.Vault
             }
         }
 
-        public List<string> AuthorizedOrigins { get; set; } = new List<string>();
+
+        private bool _HWIVisible;
+        public bool HWIVisible
+        {
+            get
+            {
+                return _HWIVisible;
+            }
+            set
+            {
+                if (value != _HWIVisible)
+                {
+                    _HWIVisible = value;
+                    if (PropertyChanged != null)
+                        PropertyChanged(this, new PropertyChangedEventArgs("HWIVisible"));
+                }
+            }
+        }
+
+
+        private bool _NFCVisible;
+        public bool NFCVisible
+        {
+            get
+            {
+                return _NFCVisible;
+            }
+            set
+            {
+                if (value != _NFCVisible)
+                {
+                    _NFCVisible = value;
+                    if (PropertyChanged != null)
+                        PropertyChanged(this, new PropertyChangedEventArgs("NFCVisible"));
+                }
+            }
+        }
+
+        public List<OriginReason> AuthorizedOrigins { get; set; } = new List<OriginReason>();
+        OriginReason _OriginReason;
+
+        public OriginReason OriginReason
+        {
+            get
+            {
+                return _OriginReason;
+            }
+            set
+            {
+                if (_OriginReason != value)
+                {
+                    _OriginReason = value;
+                    if (value is null)
+                    {
+                        Origin = null;
+                        IsVisible = false;
+                        HWIVisible = false;
+                        NFCVisible = false;
+                    }
+                    else
+                    {
+                        Origin = value.Origin;
+                        IsVisible = true;
+                        HWIVisible = value.Reason == "hwi";
+                        NFCVisible = value.Reason == "nfc";
+                    }
+                    if (PropertyChanged != null)
+                        PropertyChanged(this, new PropertyChangedEventArgs("OriginReason"));
+                }
+            }
+        }
+
 
         private string _Origin;
         public string Origin
@@ -90,6 +159,8 @@ namespace BTCPayServer.Vault
                 }
             }
         }
+
+
 
         public ICommand Accept { get; }
         public ICommand Reject { get; }
@@ -125,25 +196,25 @@ namespace BTCPayServer.Vault
         }
 
         TaskCompletionSource<bool> taskCompletionSource;
-        internal void Authorize(string origin, TaskCompletionSource<bool> tcs)
+        internal void Authorize(OriginReason originReason, TaskCompletionSource<bool> tcs)
         {
-            if (AuthorizedOrigins.Contains(origin))
+            if (AuthorizedOrigins.Contains(originReason))
             {
                 tcs.TrySetResult(true);
                 return;
             }
+
             if (taskCompletionSource != null)
             {
-                if (Origin != origin)
+                if (_OriginReason != originReason)
                     taskCompletionSource.TrySetResult(false);
                 else
-                    taskCompletionSource.Task.ContinueWith(result => taskCompletionSource.TrySetResult(result.Result));
+                    taskCompletionSource.Task.ContinueWith(result => taskCompletionSource?.TrySetResult(result.Result));
                 return;
             }
             else
             {
-                IsVisible = true;
-                Origin = origin;
+                OriginReason = originReason;
                 taskCompletionSource = tcs;
             }
         }

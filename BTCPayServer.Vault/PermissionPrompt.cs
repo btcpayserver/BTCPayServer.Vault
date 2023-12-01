@@ -9,25 +9,29 @@ using Microsoft.AspNetCore.Hosting.Server;
 using Microsoft.AspNetCore.Hosting.Server.Features;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.Http;
+using BTCPayServer.Vault.Services;
 
 namespace BTCPayServer.Vault
 {
     public class PermissionPrompt : IPermissionPrompt
     {
         private readonly LinkGenerator _linkGenerator;
+        private readonly PermissionsService _permissionsService;
         private readonly MainWindow _mainWindow;
-        HttpContext httpContext;
         public PermissionPrompt(LinkGenerator linkGenerator,
-                                IHttpContextAccessor httpContextAccessor,
+                                PermissionsService permissionsService,
                                 MainWindow mainWindow)
         {
             _linkGenerator = linkGenerator;
+            _permissionsService = permissionsService;
             _mainWindow = mainWindow;
-            httpContext = httpContextAccessor.HttpContext;
         }
-        public async Task<bool> AskPermission(string origin, CancellationToken cancellationToken)
+        public async Task<bool> AskPermission(OriginReason originReason, CancellationToken cancellationToken)
         {
-            return await _mainWindow.Authorize(origin);
+            var result = await _mainWindow.Authorize(originReason);
+            if (result)
+                await _permissionsService.Grant(originReason);
+            return result;
         }
     }
 }

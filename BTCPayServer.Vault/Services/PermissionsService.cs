@@ -3,20 +3,21 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using NBitcoin;
 
 namespace BTCPayServer.Vault.Services
 {
     public class PermissionsService
     {
-        ConcurrentDictionary<string, GrantedPermission> _permissions = new ConcurrentDictionary<string, GrantedPermission>();
-        public Task Grant(string origin)
+        ConcurrentDictionary<OriginReason, GrantedPermission> _permissions = new ConcurrentDictionary<OriginReason, GrantedPermission>();
+        public Task Grant(OriginReason originReason)
         {
-            _permissions.TryAdd(origin, new GrantedPermission(origin));
+            _permissions.TryAdd(originReason, new GrantedPermission(originReason));
             return Task.CompletedTask;
         }
-        public Task UpdateAccessed(string origin)
+        public Task UpdateAccessed(OriginReason originReason)
         {
-            if (_permissions.TryGetValue(origin, out var permission))
+            if (_permissions.TryGetValue(originReason, out var permission))
                 permission.LastAccessed = DateTimeOffset.UtcNow;
             return Task.CompletedTask;
         }
@@ -26,28 +27,28 @@ namespace BTCPayServer.Vault.Services
             return Task.FromResult(_permissions.Values);
         }
 
-        public Task Revoke(string origin)
+        public Task Revoke(OriginReason originReason)
         {
-            _permissions.TryRemove(origin, out _);
+            _permissions.TryRemove(originReason, out _);
             return Task.CompletedTask;
         }
 
-        public Task<bool> IsGranted(string origin)
+        public Task<bool> IsGranted(OriginReason originReason)
         {
-            return Task.FromResult(_permissions.TryGetValue(origin, out _));
+            return Task.FromResult(_permissions.TryGetValue(originReason, out _));
         }
     }
 
     public class GrantedPermission
     {
-        public GrantedPermission(string origin)
+        public GrantedPermission(OriginReason originReason)
         {
-            Origin = origin;
+            OriginReason = originReason;
             Created = DateTimeOffset.UtcNow;
         }
 
         public DateTimeOffset Created { get; set; }
         public DateTimeOffset? LastAccessed { get; set; }
-        public string Origin { get; set; }
+        public OriginReason OriginReason { get; set; }
     }
 }
