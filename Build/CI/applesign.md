@@ -5,7 +5,7 @@ This document how to setup your travis environment so that it can properly sign 
 
 At the end of this process, you will have configured `APPLE_DEV_ID_CERT` and `APPLE_DEV_ID_CERT_PASSWORD` to the correct value for travis to sign your MAC application.
 
-You will also need to set `APPLE_ID` and `APPLE_ID_PASSWORD`, using [app-specific password](https://support.apple.com/en-us/HT204397).
+You will also need to set `APPLE_ID`, `APPLE_ID_PASSWORD` and `APPLE_TEAM_ID`, using [app-specific password](https://support.apple.com/en-us/HT204397).
 
 ## How to
 If you are on linux and try to sign with an apple certificate you need to do the following steps:
