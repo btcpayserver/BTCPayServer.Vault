@@ -65,6 +65,7 @@ jobs:
       - run: ./Build/CI/applesign.sh
         env:
           APPLE_ID: ${{ secrets.APPLE_ID }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
           APPLE_ID_PASSWORD: ${{ secrets.APPLE_ID_PASSWORD }}
           APPLE_DEV_ID_CERT: ${{ secrets.APPLE_DEV_ID_CERT }}
           APPLE_DEV_ID_CERT_PASSWORD: ${{ secrets.APPLE_DEV_ID_CERT_PASSWORD }}

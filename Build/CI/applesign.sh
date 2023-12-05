@@ -94,7 +94,7 @@ echo "DMG signed"
 
 echo "Notarize $dmg_file with bundle id $bundle_id"
 
-sudo xcrun notarytool submit --apple-id "$APPLE_ID" --password "$APPLE_ID_PASSWORD" --team-id "RA7UV6QS8W" --wait "$dmg_file"
+sudo xcrun notarytool submit --apple-id "$APPLE_ID" --password "$APPLE_ID_PASSWORD" --team-id "$APPLE_TEAM_ID" --wait "$dmg_file"
 
 sudo xcrun stapler staple "$dmg_file"
 
