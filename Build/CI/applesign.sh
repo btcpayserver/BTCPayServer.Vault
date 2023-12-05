@@ -94,31 +94,7 @@ echo "DMG signed"
 
 echo "Notarize $dmg_file with bundle id $bundle_id"
 
-sudo xcrun altool --notarize-app -t osx -f "$dmg_file" --primary-bundle-id "$bundle_id" -u "$APPLE_ID" -p "$APPLE_ID_PASSWORD" --output-format xml | tee notarize_result
-request_id="$(cat notarize_result | grep -A1 "RequestUUID" | sed -n 's/\s*<string>\([^<]*\)<\/string>/\1/p' | xargs)"
-echo "Notarization in progress, request id: $request_id"
-echo "Waiting for approval..."
-while true; do
-    echo -n "."
-    sleep 10 # We need to wait 10 sec, even for the first loop because Apple might still not have their own data...
-    set +e
-    sudo xcrun altool --notarization-info "$request_id" -u "$APPLE_ID" -p "$APPLE_ID_PASSWORD" > notarization_progress
-    set -e
-    if grep -q "Status: success" notarization_progress; then
-        echo ""
-        cat notarization_progress
-        echo "Notarization succeed"
-        break
-    elif grep -q "Status: in progress" notarization_progress; then
-        continue
-    elif grep -q "Could not find the RequestUUID" notarization_progress; then
-        continue
-    else
-        cat notarization_progress
-        echo "Notarization failed"
-        exit 1
-    fi
-done
+sudo xcrun notarytool submit --apple-id "$APPLE_ID" --password "$APPLE_ID_PASSWORD" --wait "$dmg_file"
 
 sudo xcrun stapler staple "$dmg_file"
 
