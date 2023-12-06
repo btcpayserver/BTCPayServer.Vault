@@ -17,12 +17,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
   </ItemGroup>
 
 
   <ItemGroup>
-    <PackageReference Include="NBitcoin" Version="6.0.8" />
+    <PackageReference Include="NBitcoin" Version="7.0.31" />
   </ItemGroup>
 
 </Project>
