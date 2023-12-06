@@ -47,22 +47,12 @@ namespace BTCPayServer.Vault
                 result.UsePlatformDetect();
             }
 
-            // TODO remove this overriding of RenderTimer when Avalonia 0.9 is released.
-            // fixes "Thread Leak" issue in 0.8.1 Avalonia.
-            var old = result.WindowingSubsystemInitializer;
-
-            result.UseWindowingSubsystem(() =>
-            {
-                old();
-
-                AvaloniaLocator.CurrentMutable.Bind<IRenderTimer>().ToConstant(new DefaultRenderTimer(60));
-            });
             var title = GetTitle();
 
             result = result
-                .With(new Win32PlatformOptions { AllowEglInitialization = true, UseDeferredRendering = true })
-                .With(new X11PlatformOptions { UseGpu = useGpuLinux, WmClass = title })
-                .With(new AvaloniaNativePlatformOptions { UseDeferredRendering = true, UseGpu = true })
+                .With(new Win32PlatformOptions())
+                .With(new X11PlatformOptions {  WmClass = title })
+                .With(new AvaloniaNativePlatformOptions())
                 .With(new MacOSPlatformOptions { ShowInDock = true });
             services.AddSingleton(result);
             services.AddSingleton<MainWindow>();
