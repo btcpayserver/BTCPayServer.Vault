@@ -18,14 +18,14 @@
         <DockPanel>
             <TextBlock DockPanel.Dock="Left" FontSize="18">The vault is now ready to be used by web applications</TextBlock>
             <StackPanel DockPanel.Dock="Right" IsVisible="{Binding IsLoading}" VerticalAlignment="Center" HorizontalAlignment="Right" Orientation="Horizontal">
-                <DrawingPresenter Drawing="{DynamicResource spinner}"></DrawingPresenter>
+                <Image Source="{DynamicResource spinner}"/>
                 <TextBlock VerticalAlignment="Center" Margin="5,0,0,0" Text="{Binding CurrentOperation}"></TextBlock>
             </StackPanel>
         </DockPanel>
         <StackPanel IsVisible="{Binding IsVisible}" Margin="0,15,0,0">
             <Separator HorizontalAlignment="Left" Height="3" Background="{DynamicResource btcpay-color-primary}" Width="128" Margin="0,0,0,15"></Separator>
             <DockPanel>
-                <DrawingPresenter DockPanel.Dock="Left" Height="128" Width="128" VerticalAlignment="Center" HorizontalAlignment="Center" Drawing="{DynamicResource warning}" />
+                <Image DockPanel.Dock="Left" Height="128" Width="128" VerticalAlignment="Center" HorizontalAlignment="Center" Source="{DynamicResource warning}" />
                 <StackPanel IsVisible="{Binding HWIVisible}" Margin="10,0,0,0" VerticalAlignment="Center">
                     <TextBlock>A website is requesting access to your hardware wallets.</TextBlock>
                     <TextBlock>If you accept, the website will be able to:</TextBlock>
