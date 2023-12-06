@@ -18,7 +18,7 @@ namespace BTCPayServer.Vault
         {
 
         }
-        public IServiceProvider ServiceProvider { get; private set; }
+
         public IHostApplicationLifetime HostApplicationLifetime { get; private set; }
         public IHost Host { get; private set; }
         public IClassicDesktopStyleApplicationLifetime Desktop { get; private set; }
@@ -30,15 +30,14 @@ namespace BTCPayServer.Vault
         }
         public override void OnFrameworkInitializationCompleted()
         {
-            ServiceProvider = AvaloniaLocator.CurrentMutable.GetService<IServiceProvider>();
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             {
                 Desktop = desktop;
-                Desktop.MainWindow = ServiceProvider.GetRequiredService<MainWindow>();
+                Desktop.MainWindow = Program.CurrentServiceProvider.GetRequiredService<MainWindow>();
                 Desktop.Exit += Desktop_Exit;
                 Desktop.Startup += Desktop_Startup;
-                HostApplicationLifetime = ServiceProvider.GetRequiredService<IHostApplicationLifetime>();
-                Host = ServiceProvider.GetRequiredService<IHost>();
+                HostApplicationLifetime = Program.CurrentServiceProvider.GetRequiredService<IHostApplicationLifetime>();
+                Host = Program.CurrentServiceProvider.GetRequiredService<IHost>();
             }
             base.OnFrameworkInitializationCompleted();
         }

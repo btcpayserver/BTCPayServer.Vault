@@ -27,8 +27,7 @@ namespace BTCPayServer.Vault
         private void InitializeComponent()
         {
             AvaloniaXamlLoader.Load(this);
-            Context = AvaloniaSynchronizationContext.Current as AvaloniaSynchronizationContext;
-            if (AvaloniaLocator.CurrentMutable?.GetService<IServiceProvider>() is IServiceProvider serviceProvider)
+            if (Program.CurrentServiceProvider is { } serviceProvider)
             {
                 ServiceProvider = serviceProvider;
                 Indicator = ServiceProvider.GetRequiredService<IRunningIndicator>();

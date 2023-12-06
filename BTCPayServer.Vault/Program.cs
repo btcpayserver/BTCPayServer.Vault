@@ -47,11 +47,16 @@ namespace BTCPayServer.Vault
 #endif
                             })
                             .Build();
+            
+            CurrentServiceProvider = host.Services;
+            
             host.Services.GetRequiredService<AppBuilder>()
                          .With(host.Services)
                          .With(host)
                          .StartWithClassicDesktopLifetime(args);
         }
+
+        public static IServiceProvider CurrentServiceProvider { get; private set; }
 
         private static bool TestPortFree()
         {
