@@ -39,7 +39,7 @@ namespace BTCPayServer.Vault
             if (ReferenceEquals(platformImpl, null))
                 return;
 
-            var platformHandle = platformImpl.Handle;
+            var platformHandle = window.TryGetPlatformHandle();
             if (ReferenceEquals(platformHandle, null))
                 return;
 
@@ -65,7 +65,7 @@ namespace BTCPayServer.Vault
             if (ReferenceEquals(platformImpl, null))
                 return;
 
-            var platformHandle = platformImpl.Handle;
+            var platformHandle = window.TryGetPlatformHandle();
             if (ReferenceEquals(platformHandle, null))
                 return;
             var handle = platformHandle.Handle;
