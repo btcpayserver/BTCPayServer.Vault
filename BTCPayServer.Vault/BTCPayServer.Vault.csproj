@@ -3,7 +3,8 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <OutputType Condition=" '$(Configuration)' == 'Release' ">WinExe</OutputType>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
+    <LangVersion>12</LangVersion>
     <Company>The BTCPayServer Team</Company>
     <Title>BTCPayServer Vault</Title>
     <AssemblyTitle>$(Title)</AssemblyTitle>

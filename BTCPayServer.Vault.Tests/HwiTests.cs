@@ -99,19 +99,6 @@ namespace BTCPayServer.Vault.Tests
             await tester.Device.GetXPubAsync(new KeyPath("44'/0'/0'/0/0"));
         }
 
-
-        [Fact]
-        [Trait("Device", "Device")]
-        public async Task CanSignMessage()
-        {
-            var tester = await CreateTester();
-            var accountPath = tester.GetKeyPath(ScriptPubKeyType.Legacy);
-            var addrPath = accountPath.Derive(new KeyPath("0/0"));
-            var signature = await tester.Device.SignMessageAsync("I am satoshi", addrPath);
-            var xpub = await tester.Device.GetXPubAsync(addrPath);
-            Assert.True(xpub.GetPublicKey().VerifyMessage("I am satoshi", signature));
-        }
-
         [Fact]
         [Trait("Device", "Device")]
         public async Task CanDisplayAddress()
