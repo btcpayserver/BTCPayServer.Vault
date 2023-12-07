@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/sdk:6.0 AS builder
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS builder
 
 RUN wget -qO /tmp/hwi.tar.gz https://github.com/bitcoin-core/HWI/releases/download/2.1.1/hwi-2.1.1-linux-amd64.tar.gz && \
     tar -zxvf /tmp/hwi.tar.gz -C /tmp hwi && \

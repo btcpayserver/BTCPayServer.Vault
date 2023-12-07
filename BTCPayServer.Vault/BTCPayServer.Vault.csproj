@@ -61,4 +61,10 @@
     <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
     <SelfContained>true</SelfContained>
   </PropertyGroup>
+  <ItemGroup Condition="'$(GithubDistrib)' == 'true'">
+    <TrimmerRootAssembly Include="BTCPayServer.Vault"/>
+    <TrimmerRootAssembly Include="Avalonia.Themes.Simple"/>
+    <TrimmerRootAssembly Include="Avalonia.Base"/>
+    <TrimmerRootAssembly Include="Avalonia.FreeDesktop"/>
+  </ItemGroup>
 </Project>

@@ -20,7 +20,7 @@ jobs:
     name: debian-x64
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - run: ./Build/CI/build.sh
         env:
           RID: debian-x64
@@ -30,7 +30,7 @@ jobs:
     name: linux-x64
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - run: ./Build/CI/build.sh
         env:
           RID: linux-x64
@@ -39,7 +39,7 @@ jobs:
     name: osx-x64
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - run: ./Build/CI/build.sh
         env:
           RID: osx-x64
@@ -48,7 +48,7 @@ jobs:
     name: win-x64
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - run: ./Build/CI/build.sh
         env:
           RID: win-x64
@@ -61,7 +61,7 @@ jobs:
     needs: [osx-x64]
     if: startsWith( github.ref, 'refs/tags/')
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - run: ./Build/CI/applesign.sh
         env:
           APPLE_ID: ${{ secrets.APPLE_ID }}
@@ -76,7 +76,7 @@ jobs:
     needs: [win-x64, osx-x64, linux-x64, debian-x64, applesign]
     if: ${{ always() }}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - run: ./Build/CI/pgpsign.sh
         env:
           PGP_KEY: ${{ secrets.PGP_KEY }}
@@ -87,7 +87,7 @@ jobs:
     needs: [pgpsign, applesign]
     if: startsWith( github.ref, 'refs/tags/')
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - run: ./Build/CI/makerelease.sh
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

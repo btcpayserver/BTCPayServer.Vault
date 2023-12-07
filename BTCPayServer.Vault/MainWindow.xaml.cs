@@ -93,7 +93,7 @@ namespace BTCPayServer.Vault
         public IServiceProvider ServiceProvider { get; private set; }
         public IRunningIndicator Indicator { get; private set; }
 
-        AvaloniaSynchronizationContext Context;
+        AvaloniaSynchronizationContext Context = new AvaloniaSynchronizationContext();
 
         internal async Task<bool> Authorize(OriginReason originReason)
         {

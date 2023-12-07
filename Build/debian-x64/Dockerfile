@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/sdk:6.0 AS builder
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS builder
 
 # Optimize docker cache, do not make it one layer
 RUN apt-get update
@@ -15,6 +15,7 @@ ARG PGP_KEY=""
 RUN ! [[ "${PGP_KEY}" ]] || apt-get install -y debsigs
 
 WORKDIR /source
+ENV DOTNET_RUNTIME "linux-x64"
 ENV RUNTIME "debian-x64"
 COPY "Build/common" "Build/common"
 ENV EXPORT_VARIABLES "source Build/common/export-variables.sh"
