@@ -23,8 +23,6 @@ namespace BTCPayServer.Vault
     {
         public static void AddAvalonia<TApp>(this IServiceCollection services) where TApp : Application, new()
         {
-            bool useGpuLinux = true;
-
             var result = AppBuilder.Configure<TApp>();
 
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
@@ -32,15 +30,6 @@ namespace BTCPayServer.Vault
                 result
                     .UseWin32()
                     .UseSkia();
-            }
-            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-            {
-                if (DetectLLVMPipeRasterizer())
-                {
-                    useGpuLinux = false;
-                }
-
-                result.UsePlatformDetect();
             }
             else
             {
