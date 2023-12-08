@@ -99,6 +99,7 @@ sudo xcrun notarytool submit --apple-id "$APPLE_ID" --password "$APPLE_ID_PASSWO
 sudo xcrun stapler staple "$dmg_file"
 
 echo "Installing az..."
+export HOMEBREW_NO_INSTALLED_DEPENDENTS_CHECK=1
 brew update
 brew install azure-cli || true
 BLOB_NAME="$DIRECTORY_NAME/$dmg_file"
