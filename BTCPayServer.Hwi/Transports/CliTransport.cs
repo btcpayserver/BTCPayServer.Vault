@@ -11,6 +11,8 @@ using NBitcoin.Logging;
 using Microsoft.Extensions;
 using BTCPayServer.Hwi.Process;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Linq;
 
 namespace BTCPayServer.Hwi.Transports
 {
@@ -43,7 +45,15 @@ namespace BTCPayServer.Hwi.Transports
                 Executable = fileName,
                 OutputCapture = new OutputCapture(),
             };
-            processSpec.Arguments = new ReadOnlyCollection<string>(arguments);
+            if (arguments.Contains("signtx", StringComparer.OrdinalIgnoreCase))
+            {
+                processSpec.Arguments = new ReadOnlyCollection<string>(new string[] { "--stdin" });
+                processSpec.Stdin = arguments.Concat(new[] { string.Empty }).ToArray();
+            }
+            else
+            {
+                processSpec.Arguments = new ReadOnlyCollection<string>(arguments);
+            }
 
             try
             {

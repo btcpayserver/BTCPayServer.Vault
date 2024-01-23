@@ -109,6 +109,13 @@ namespace BTCPayServer.Hwi.Process
                     process.BeginErrorReadLine();
                 }
 
+                if (processSpec.Stdin is not null)
+                {
+                    foreach (var l in processSpec.Stdin)
+                        process.StandardInput.WriteLine(l);
+                    process.StandardInput.Close();
+                }
+
                 await processState.Task;
 
                 exitCode = process.ExitCode;
@@ -133,6 +140,7 @@ namespace BTCPayServer.Hwi.Process
                     WorkingDirectory = processSpec.WorkingDirectory,
                     RedirectStandardOutput = processSpec.IsOutputCaptured,
                     RedirectStandardError = processSpec.IsErrorCaptured,
+                    RedirectStandardInput = processSpec.Stdin is not null
                 }
             };
 
@@ -276,6 +284,7 @@ namespace BTCPayServer.Hwi.Process
         public bool IsErrorCaptured => ErrorCapture != null;
 
         public CancellationToken CancelOutputCapture { get; set; }
+        public string[] Stdin { get; set; }
 
         public sealed class ProcessSpecEnvironmentVariables : Dictionary<string, string>
         {
