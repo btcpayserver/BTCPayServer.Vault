@@ -19,7 +19,7 @@
   <ItemGroup>
     <PackageReference Include="Avalonia.Desktop" Version="11.0.6" />
     <PackageReference Include="Avalonia.Themes.Simple" Version="11.0.6" />
-    <PackageReference Include="BTCPayServer.NTag424.PCSC" Version="1.0.16" />
+    <PackageReference Include="BTCPayServer.NTag424.PCSC" Version="1.0.18" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
   </ItemGroup>
 
@@ -62,9 +62,9 @@
     <SelfContained>true</SelfContained>
   </PropertyGroup>
   <ItemGroup Condition="'$(GithubDistrib)' == 'true'">
-    <TrimmerRootAssembly Include="BTCPayServer.Vault"/>
-    <TrimmerRootAssembly Include="Avalonia.Themes.Simple"/>
-    <TrimmerRootAssembly Include="Avalonia.Base"/>
-    <TrimmerRootAssembly Include="Avalonia.FreeDesktop"/>
+    <TrimmerRootAssembly Include="BTCPayServer.Vault" />
+    <TrimmerRootAssembly Include="Avalonia.Themes.Simple" />
+    <TrimmerRootAssembly Include="Avalonia.Base" />
+    <TrimmerRootAssembly Include="Avalonia.FreeDesktop" />
   </ItemGroup>
 </Project>
