@@ -7,9 +7,9 @@ RUN apt-get install -y --no-install-recommends imagemagick
 
 RUN apt-get install -y --no-install-recommends git icnsutils
 
-RUN wget -qO /tmp/hwi.tar.gz https://github.com/bitcoin-core/HWI/releases/download/2.3.1/hwi-2.3.1-mac-x86_64.tar.gz && \
+RUN wget -qO /tmp/hwi.tar.gz https://github.com/bitcoin-core/HWI/releases/download/3.0.0/hwi-3.0.0-mac-x86_64.tar.gz && \
     tar -zxvf /tmp/hwi.tar.gz -C /tmp hwi && \
-    echo "9059b8f7cf6fe42f6e37cd8015cd11cb8fb736650797b25da849c625ed61ea62 /tmp/hwi" | sha256sum -c - && \
+    echo "d05c046d5718bf92b348a786aad15cb0f0132fcccf57a646758610240327a977 /tmp/hwi" | sha256sum -c - && \
     rm /tmp/hwi.tar.gz
 
 WORKDIR /source

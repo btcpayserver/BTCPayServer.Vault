@@ -6,9 +6,9 @@ RUN apt-get install -y --no-install-recommends imagemagick
 ###
 
 RUN apt-get install -y --no-install-recommends nsis unzip wine xxd osslsigncode openssl
-RUN wget -qO "/tmp/hwi.zip" https://github.com/bitcoin-core/HWI/releases/download/2.3.1/hwi-2.3.1-windows-x86_64.zip && \
+RUN wget -qO "/tmp/hwi.zip" https://github.com/bitcoin-core/HWI/releases/download/3.0.0/hwi-3.0.0-windows-x86_64.zip && \
     unzip "/tmp/hwi.zip" -d "/tmp" && \
-    echo "460c8b83a9d8888ad769ffdc34dbe3ad7ecd27b22035494bdeb268d943be1791 /tmp/hwi.exe" | sha256sum -c - && \
+    echo "38b3f02374c300516b4583a1195ffe1cac1159f9885b8ab434fd450e290c907a /tmp/hwi.exe" | sha256sum -c - && \
     rm "/tmp/hwi.zip" && \
     # Need to setup with rcedit because https://github.com/dotnet/sdk/issues/3943
     # I prebuild the binaries with VS 2019 on commit b807b34a644c86c0b0d89c7f073967e79202731a
