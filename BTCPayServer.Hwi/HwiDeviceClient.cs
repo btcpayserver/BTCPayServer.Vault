@@ -113,6 +113,9 @@ namespace BTCPayServer.Hwi
                 case ScriptPubKeyType.SegwitP2SH:
                     commandArguments.Add("sh_wit");
                     break;
+                case ScriptPubKeyType.TaprootBIP86:
+                    commandArguments.Add("tap");
+                    break;
             }
 
             var response = await SendCommandAsync(
