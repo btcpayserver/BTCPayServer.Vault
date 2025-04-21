@@ -16,6 +16,7 @@ namespace BTCPayServer.Hwi
         public bool? NeedsPassphraseSent { get; }
         public string Error { get; }
         public HwiErrorCode? Code { get; }
+        public JObject RawData { get; }
         public DeviceSelector DeviceSelector { get; }
 
 
@@ -34,7 +35,8 @@ namespace BTCPayServer.Hwi
             bool? needsPinSent,
             bool? needsPassphraseSent,
             string error,
-            HwiErrorCode? code)
+            HwiErrorCode? code,
+            JObject rawData)
         {
             Model = model;
             Path = path;
@@ -44,6 +46,7 @@ namespace BTCPayServer.Hwi
             NeedsPassphraseSent = needsPassphraseSent;
             Error = error;
             Code = code;
+            RawData = rawData;
             DeviceSelector = fingerprint is HDFingerprint fp ? DeviceSelectors.FromFingerprint(fp) :
                                                                DeviceSelectors.FromDeviceType(Model, path);
         }

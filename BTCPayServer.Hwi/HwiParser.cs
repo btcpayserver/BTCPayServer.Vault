@@ -189,7 +189,8 @@ namespace BTCPayServer.Hwi
 				needsPinSent: needsPinSent,
 				needsPassphraseSent: needsPassphraseSent,
 				error: errorString,
-				code: code);
+				code: code,
+                json);
 		}
 
 		public static string NormalizeRawDevicePath(string rawPath)
