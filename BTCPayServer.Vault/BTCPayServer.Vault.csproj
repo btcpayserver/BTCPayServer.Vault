@@ -19,7 +19,7 @@
   <ItemGroup>
     <PackageReference Include="Avalonia.Desktop" Version="11.0.6" />
     <PackageReference Include="Avalonia.Themes.Simple" Version="11.0.6" />
-    <PackageReference Include="BTCPayServer.NTag424.PCSC" Version="1.0.18" />
+    <PackageReference Include="BTCPayServer.NTag424.PCSC" Version="1.0.22" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
   </ItemGroup>
 
