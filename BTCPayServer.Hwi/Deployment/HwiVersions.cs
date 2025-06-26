@@ -101,8 +101,31 @@ namespace BTCPayServer.Hwi.Deployment
                 Extractor = new TarExtractor()
             }
         };
+        
+        public static HwiVersion v3_1_0 { get; } = new HwiVersion()
+        {
+            Version = "3.1.0",
+            Windows = new HwiDownloadInfo()
+            {
+                Link = "https://github.com/bitcoin-core/HWI/releases/download/{0}/hwi-{0}-windows-x86_64.zip",
+                Hash = "42b491941d26b41ca51a671eb8d533557ba7261d32a70f843bbe6a5af997fb25",
+                Extractor = new ZipExtractor()
+            },
+            Linux = new HwiDownloadInfo()
+            {
+                Link = "https://github.com/bitcoin-core/HWI/releases/download/{0}/hwi-{0}-linux-x86_64.tar.gz",
+                Hash = "4732e06e879b51eb5b42ce334c54373d7901556227dca4a63d342190f04b22c9",
+                Extractor = new TarExtractor()
+            },
+            Mac = new HwiDownloadInfo()
+            {
+                Link = "https://github.com/bitcoin-core/HWI/releases/download/{0}/hwi-{0}-mac-x86_64.tar.gz",
+                Hash = "bf5079c8899ca62bb9c48f78b53368cd43525e4900474db7d47f7c251eeaacde",
+                Extractor = new TarExtractor()
+            }
+        };
 
-        public static HwiVersion Latest => v3_0_0;
+        public static HwiVersion Latest => v3_1_0;
     }
 
     public class HwiVersion
@@ -120,6 +143,8 @@ namespace BTCPayServer.Hwi.Deployment
                    throw new NotSupportedException();
             }
         }
+
+        public string Version { get; set; }
     }
 
     public class HwiDownloadInfo
@@ -155,8 +180,9 @@ namespace BTCPayServer.Hwi.Deployment
 download:
             if (!File.Exists(processFullPath))
             {
-                var data = await HttpClient.GetStreamAsync(Link);
-                var downloadedFile = Path.Combine(destinationDirectory, Link.Split('/').Last());
+                var link = HwiVersions.Latest.Version is null ? Link : Link.Replace("{0}", HwiVersions.Latest.Version);
+                var data = await HttpClient.GetStreamAsync(link);
+                var downloadedFile = Path.Combine(destinationDirectory, link.Split('/').Last());
                 try
                 {
                     using (var fs = File.Open(downloadedFile, FileMode.Create, FileAccess.ReadWrite))
