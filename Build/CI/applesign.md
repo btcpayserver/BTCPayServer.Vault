@@ -44,7 +44,7 @@ cer_file="developerID_application.cer"
 pem_file="developerID_application.pem"
 cert_output_file="developerID_application.p12"
 openssl x509 -in "$cer_file" -inform DER -out "$pem_file" -outform PEM
-openssl pkcs12 -export -inkey "$rsa_key_file" -in "$pem_file" -out "$cert_output_file"
+openssl pkcs12 -export -inkey "$rsa_key_file" -in "$pem_file" -legacy -out "$cert_output_file"
 ```
 
 Now enter a password, don't pick an empty one as the rest would fail.
