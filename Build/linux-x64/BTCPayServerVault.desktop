@@ -1,0 +1,7 @@
+[Desktop Entry]
+
+Type=Application
+Name=BTCPayServer Vault
+Exec=/usr/local/bin/BTCPayServer.Vault
+Icon=BTCPayServerVault
+Categories=Utility;

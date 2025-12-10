@@ -18,6 +18,7 @@ WORKDIR /source
 ENV DOTNET_RUNTIME "linux-x64"
 ENV RUNTIME "debian-x64"
 COPY "Build/common" "Build/common"
+COPY "Build/linux-x64" "Build/linux-x64"
 ENV EXPORT_VARIABLES "source Build/common/export-variables.sh"
 COPY BTCPayServer.Vault/BTCPayServer.Vault.csproj BTCPayServer.Vault/BTCPayServer.Vault.csproj
 COPY BTCPayServer.Hwi/BTCPayServer.Hwi.csproj BTCPayServer.Hwi/BTCPayServer.Hwi.csproj
@@ -29,6 +30,7 @@ RUN $EXPORT_VARIABLES && dotnet_publish && mv /tmp/hwi "$PUBLISH_FOLDER/"
 
 COPY "Build/${RUNTIME}" "Build/${RUNTIME}"
 COPY BTCPayServerVault.png BTCPayServerVault.png
+
 RUN $EXPORT_VARIABLES && \
     find "$PUBLISH_FOLDER" -type f -exec chmod 644 {} \; && \
     find "$PUBLISH_FOLDER" -type f \( -name 'hwi' -o -name "$EXECUTABLE" \) -exec chmod +x {} \; && \
@@ -50,7 +52,7 @@ RUN $EXPORT_VARIABLES && \
     cp "$RESOURCES/BTCPayServer.Vault.desktop" "$debiandir/usr/share/applications/" && \
     replaceProjectVariables "$debiandir/usr/share/applications/BTCPayServer.Vault.desktop" && \
     mkdir -p "$debiandir/lib/udev/rules.d" && \
-    cp $RESOURCES/udev/* "$debiandir/lib/udev/rules.d/" && \
+    cp $RESOURCES_LINUX/udev/* "$debiandir/lib/udev/rules.d/" && \
     sizeinkb="$(du -k --max-depth=0 $debiandir | cut -f 1)" && \
     sed -i "s/{SIZEINKB}/$sizeinkb/g" "$debiandir/DEBIAN/control" && \
     dpkg --build "$debiandir" && mv /tmp/debian.deb "$DIST/BTCPayServerVault-$VERSION.deb" && \

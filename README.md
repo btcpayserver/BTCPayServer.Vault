@@ -32,6 +32,37 @@ You can use brew:
 brew install btcpayserver-vault
 ```
 
+### On Arch Linux
+
+Download the tarball on our [release page](https://github.com/btcpayserver/BTCPayServer.Vault/releases/latest)
+
+```bash
+tar -xvf <tarball.tar.gz>
+sudo ./install-arch.sh
+```
+
+If BTCPay Server fails to detect your hardware wallet, you may need to restart.
+
+
+Check if you try to run the `hwi` executable. If not, install python9 dependencies, and run
+
+```bash
+ln -s /usr/lib/libcrypt.so.2 /usr/lib/libcrypt.so.1
+```
+
+### On Debian
+
+Download the `.deb` package on our [release page](https://github.com/btcpayserver/BTCPayServer.Vault/releases/latest)
+
+```bash
+sudo apt install <package.deb>
+```
+
+### Other linux
+
+Inspire you from [install-arch.sh](Build/linux-x64/install-arch.sh).
+We provide the udev rules and desktop entries in the tarball.
+
 ## How does BTCPayServer Vault work
 
 When running the BTCPayServer Vault, a local webserver is hosted on `http://127.0.0.1:65092` which web applications, via your local browser, can connect to in order to interact with your hardware wallet.
