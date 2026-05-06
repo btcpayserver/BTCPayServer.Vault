@@ -20,7 +20,7 @@ chmod +x /opt/BTCPayServer.Vault/BTCPayServer.Vault
 
 echo "/opt/BTCPayServer.Vault created"
 
-ln -s /opt/BTCPayServer.Vault/BTCPayServer.Vault /usr/local/bin/BTCPayServer.Vault
+ln -sfnT /opt/BTCPayServer.Vault/BTCPayServer.Vault /usr/local/bin/BTCPayServer.Vault
 
 chmod +x /usr/local/bin/BTCPayServer.Vault
 echo "/usr/local/bin/BTCPayServer.Vault created"
