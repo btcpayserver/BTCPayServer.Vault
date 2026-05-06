@@ -7,34 +7,8 @@ if [ "$(id -u)" -ne 0 ]; then
     exit 1
 fi
 
-if ! getent group plugdev > /dev/null; then
-    echo "Creating system group plugdev"
-    groupadd -r plugdev
-else
-    echo "Group plugdev already exists"
-fi
-
 SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd -P)"
 RULES_DIR="$SCRIPT_DIR/udev"
-
-echo 'Adding udev rules to /usr/local/lib/udev/rules.d'
-
-shopt -s nullglob
-for f in "$RULES_DIR"/*; do
-    install -Dm644 "$f" "/usr/local/lib/udev/rules.d/$(basename "$f")"
-    echo "Installed $(basename "$f")"
-done
-shopt -u nullglob
-
-
-udevadm control --reload-rules
-udevadm trigger
-
-echo "udevadm triggered and reloaded"
-
-gpasswd -a $SUDO_USER plugdev
-
-echo "User $SUDO_USER added to plugdev"
 
 install -Dm644 "$SCRIPT_DIR/BTCPayServerVault.desktop" /usr/share/applications/BTCPayServerVault.desktop
 install -Dm644 "$SCRIPT_DIR/BTCPayServerVault.png" /usr/share/icons/hicolor/64x64/apps/BTCPayServerVault.png
