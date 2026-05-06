@@ -5,9 +5,9 @@ RUN apt-get update
 RUN apt-get install -y --no-install-recommends imagemagick
 ###
 
-RUN wget -qO /tmp/hwi.tar.gz https://github.com/bitcoin-core/HWI/releases/download/3.1.0/hwi-3.1.0-linux-x86_64.tar.gz && \
+RUN wget -qO /tmp/hwi.tar.gz https://github.com/bitcoin-core/HWI/releases/download/3.2.0/hwi-3.2.0-linux-x86_64.tar.gz && \
     tar -zxvf /tmp/hwi.tar.gz -C /tmp hwi && \
-    echo "4732e06e879b51eb5b42ce334c54373d7901556227dca4a63d342190f04b22c9 /tmp/hwi" | sha256sum -c - && \
+    echo "d9cc65de95e3cf93fd3c953d589184a00180624ffc5ad17aade97616a8919fa6 /tmp/hwi" | sha256sum -c - && \
     rm /tmp/hwi.tar.gz
 
 SHELL ["/bin/bash", "-c"]
