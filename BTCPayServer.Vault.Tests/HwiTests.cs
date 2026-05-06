@@ -5,15 +5,12 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.DependencyInjection;
 using NBitcoin;
 using Xunit;
-using Xunit.Abstractions;
 using BTCPayServer.Hwi;
 using BTCPayServer.Hwi.Transports;
 using System.Collections.Generic;
 using System.Net;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Hosting.Server.Features;
-using Microsoft.AspNetCore.Builder;
-using BTCPayServer.Vault;
 
 namespace BTCPayServer.Vault.Tests
 {

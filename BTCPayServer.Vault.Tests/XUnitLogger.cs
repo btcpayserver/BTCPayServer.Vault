@@ -1,19 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using Microsoft.Extensions.Logging;
-using Xunit.Abstractions;
+using Xunit;
 
 namespace BTCPayServer.Vault.Tests
 {
-    class XUnitLoggerFactory : ILoggerFactory
+    class XUnitLoggerFactory(ITestOutputHelper testOutput) : ILoggerFactory
     {
-        public XUnitLoggerFactory(ITestOutputHelper testOutput)
-        {
-            TestOutput = testOutput;
-        }
-
-        public ITestOutputHelper TestOutput { get; }
+        public ITestOutputHelper TestOutput { get; } = testOutput;
 
         public void AddProvider(ILoggerProvider provider)
         {

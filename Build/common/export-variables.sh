@@ -2,7 +2,7 @@
 
 DOTNET_RUNTIME=${DOTNET_RUNTIME:-$RUNTIME}
 BUILD_ARGS="--runtime $DOTNET_RUNTIME -p:Configuration=Release -p:GithubDistrib=true"
-FRAMEWORK="net8.0"
+FRAMEWORK="net10.0"
 DIST="/source/dist"
 RESOURCES="/source/Build/${RUNTIME}"
 RESOURCES_COMMON="/source/Build/common"
