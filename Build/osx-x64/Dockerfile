@@ -1,5 +1,11 @@
 FROM mcr.microsoft.com/dotnet/sdk:10.0 AS builder
 
+ARG RUNTIME=osx-x64
+ARG RESOURCE_RUNTIME=osx-x64
+ARG HWI_PACKAGE_ARCH=x86_64
+ARG HWI_SHA256=b3764a530b635e7a7348c9185e09e74b389f5f585094fe316f700eec7c761875
+ARG ARCHITECTURE_PRIORITY=x86_64
+
 # Optimize docker cache, do not make it one layer
 RUN apt-get update
 RUN apt-get install -y --no-install-recommends imagemagick
@@ -7,15 +13,17 @@ RUN apt-get install -y --no-install-recommends imagemagick
 
 RUN apt-get install -y --no-install-recommends git icnsutils
 
-RUN wget -qO /tmp/hwi.tar.gz https://github.com/bitcoin-core/HWI/releases/download/3.2.0/hwi-3.2.0-mac-x86_64.tar.gz && \
+RUN wget -qO /tmp/hwi.tar.gz "https://github.com/bitcoin-core/HWI/releases/download/3.2.0/hwi-3.2.0-mac-${HWI_PACKAGE_ARCH}.tar.gz" && \
     tar -zxvf /tmp/hwi.tar.gz -C /tmp hwi && \
-    echo "b3764a530b635e7a7348c9185e09e74b389f5f585094fe316f700eec7c761875 /tmp/hwi" | sha256sum -c - && \
+    echo "$HWI_SHA256 /tmp/hwi" | sha256sum -c - && \
     rm /tmp/hwi.tar.gz
 
 WORKDIR /source
-ENV RUNTIME "osx-x64"
+ENV RUNTIME=$RUNTIME
+ENV RESOURCE_RUNTIME=$RESOURCE_RUNTIME
+ENV ARCHITECTURE_PRIORITY=$ARCHITECTURE_PRIORITY
 COPY "Build/common" "Build/common"
-ENV EXPORT_VARIABLES "source Build/common/export-variables.sh"
+ENV EXPORT_VARIABLES="source Build/common/export-variables.sh"
 COPY BTCPayServer.Vault/BTCPayServer.Vault.csproj BTCPayServer.Vault/BTCPayServer.Vault.csproj
 COPY BTCPayServer.Hwi/BTCPayServer.Hwi.csproj BTCPayServer.Hwi/BTCPayServer.Hwi.csproj
 
@@ -25,7 +33,7 @@ COPY BTCPayServer.Hwi BTCPayServer.Hwi
 COPY BTCPayServer.Vault BTCPayServer.Vault
 RUN $EXPORT_VARIABLES && dotnet_publish && mv /tmp/hwi "$PUBLISH_FOLDER/"
 
-COPY "Build/${RUNTIME}" "Build/${RUNTIME}"
+COPY "Build/${RESOURCE_RUNTIME}" "Build/${RESOURCE_RUNTIME}"
 COPY BTCPayServerVault.png BTCPayServerVault.png
 RUN $EXPORT_VARIABLES && \
     replaceProjectVariables "$RESOURCES/Info.plist" && \
