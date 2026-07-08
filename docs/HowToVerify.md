@@ -75,6 +75,8 @@ You should see that the file you downloaded has the right hash:
 BTCPayServerVault-osx-x64-1.0.7.dmg: OK
 ```
 
+On Apple Silicon Macs, use the `osx-arm64` DMG instead of the `osx-x64` DMG.
+
 Then check the actual signature:
 
 ```bash

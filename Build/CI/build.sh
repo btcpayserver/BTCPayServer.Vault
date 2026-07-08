@@ -4,14 +4,19 @@ set -e
 
 DOCKER_IMAGE_NAME="vault-$RID"
 DOCKER_BUILD_ARGS=""
+DOCKERFILE="Build/$RID/Dockerfile"
 if [[ "$PGP_KEY" ]]; then
      DOCKER_BUILD_ARGS="--build-arg "PGP_KEY=$PGP_KEY""
 fi
 if [[ "$WINDOWS_CERT" ]]; then
      DOCKER_BUILD_ARGS="$DOCKER_BUILD_ARGS --build-arg "WINDOWS_CERT=$WINDOWS_CERT" --build-arg "WINDOWS_CERT_PASSWORD=$WINDOWS_CERT_PASSWORD""
 fi
+if [[ "$RID" == "osx-arm64" ]]; then
+     DOCKERFILE="Build/osx-x64/Dockerfile"
+     DOCKER_BUILD_ARGS="$DOCKER_BUILD_ARGS --build-arg RUNTIME=osx-arm64 --build-arg HWI_PACKAGE_ARCH=arm64 --build-arg HWI_SHA256=87a8991848a0216213ddf6497c753cebbda492626afaf5608c30931155c922c3 --build-arg ARCHITECTURE_PRIORITY=arm64"
+fi
 
-docker build -t "$DOCKER_IMAGE_NAME" $DOCKER_BUILD_ARGS -f "Build/$RID/Dockerfile" .
+docker build -t "$DOCKER_IMAGE_NAME" $DOCKER_BUILD_ARGS -f "$DOCKERFILE" .
 docker run --rm -v "$(pwd)/dist:/opt/dist" "$DOCKER_IMAGE_NAME"
 
 if [[ "$GITHUB_REF" ]]; then

@@ -4,7 +4,9 @@ DOTNET_RUNTIME=${DOTNET_RUNTIME:-$RUNTIME}
 BUILD_ARGS="--runtime $DOTNET_RUNTIME -p:Configuration=Release -p:GithubDistrib=true"
 FRAMEWORK="net10.0"
 DIST="/source/dist"
-RESOURCES="/source/Build/${RUNTIME}"
+RESOURCE_RUNTIME=${RESOURCE_RUNTIME:-$RUNTIME}
+ARCHITECTURE_PRIORITY=${ARCHITECTURE_PRIORITY:-x86_64}
+RESOURCES="/source/Build/${RESOURCE_RUNTIME}"
 RESOURCES_COMMON="/source/Build/common"
 RESOURCES_LINUX="/source/Build/linux-x64"
 PROJECT_FILE="/source/BTCPayServer.Vault/BTCPayServer.Vault.csproj"
@@ -29,6 +31,7 @@ replaceProjectVariables () {
   sed -i "s/{DESCRIPTION}/$DESCRIPTION/g" "$1"
   sed -i "s/{EXECUTABLE}/$EXECUTABLE/g" "$1"
   sed -i "s/{COMPANY}/$COMPANY/g" "$1"
+  sed -i "s/{ArchitecturePriority}/$ARCHITECTURE_PRIORITY/g" "$1"
 }
 
 dotnet_publish () {
