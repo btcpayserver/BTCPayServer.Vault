@@ -89,6 +89,7 @@ jobs:
       - run: ./Build/CI/pgpsign.sh
         env:
           PGP_KEY: ${{ secrets.PGP_KEY }}
+          PGP_KEY_PASSWORD: ${{ secrets.PGP_KEY_PASSWORD }}
           AZURE_STORAGE_CONNECTION_STRING: ${{ secrets.AZURE_STORAGE_CONNECTION_STRING }}
   makerelease:
     name: makerelease

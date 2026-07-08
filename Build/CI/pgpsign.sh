@@ -25,8 +25,8 @@ done
 mv /tmp/SHA256SUMS SHA256SUMS
 curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
 
-echo "$PGP_KEY" | base64 --decode | gpg --import --no-tty
+echo "$PGP_KEY" | base64 --decode | gpg --batch --yes --no-tty --import
 echo "PGP keys correctly imported"
-gpg --no-tty --digest-algo sha256 --clearsign SHA256SUMS
+printf '%s' "${PGP_KEY_PASSWORD:-}" | gpg --batch --yes --no-tty --pinentry-mode loopback --passphrase-fd 0 --digest-algo sha256 --clearsign SHA256SUMS
 az storage blob upload -f "SHA256SUMS.asc" -c "$AZURE_STORAGE_CONTAINER" -n "$DIRECTORY_NAME/SHA256SUMS.asc"
 rm SHA256SUMS
